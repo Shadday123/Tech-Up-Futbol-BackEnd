@@ -6,11 +6,11 @@ import java.util.Date;
 
 
 @Data
-public class Torneo {
+public class Tournament {
     private Date fechainicial;
     private Date fechaFinal;
     private int cantEquipos;
     private double costoPorEquipo;
-    private EstadoTorneo estado;
+    private StatusTournament estado;
 
 }

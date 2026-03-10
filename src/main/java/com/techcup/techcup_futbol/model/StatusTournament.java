@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol.model;
 
-public enum EstadoTorneo {
+public enum StatusTournament {
     BORRADOR,
     ACTIVO,
     EN_PROGRESO,
