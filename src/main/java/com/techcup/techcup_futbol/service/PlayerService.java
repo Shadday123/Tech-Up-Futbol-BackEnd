@@ -13,7 +13,7 @@ public interface PlayerService {
     }
 
     default void cambiarDisponibilidad(Player jugador){
-        boolean disponibilidad = jugador.isDisponible()
+        boolean disponibilidad = jugador.isDisponible();
         if(disponibilidad){
             jugador.setDisponible(false);
         }
