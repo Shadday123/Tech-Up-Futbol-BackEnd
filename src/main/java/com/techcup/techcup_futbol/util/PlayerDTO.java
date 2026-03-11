@@ -1,13 +1,30 @@
 package com.techcup.techcup_futbol.util;
+import com.techcup.techcup_futbol.model.PositionEnum;
 import lombok.Data;
 
 @Data
 public class PlayerDTO {
 
-    private Long id;
-    private String nombre;
-    private String correo;
-    private String foto;
-    private boolean disponible;
+    private String id;
+
+    private String fullname;
+
+    private String email;
+
+    private int numberID;
+
+    private PositionEnum position;
+
+    private int dorsalNumber;
+
+    private String photoUrl;
+
+    private boolean haveTeam;
+
+    private int age;
+
+    private String gender;
+
+    private boolean captain;
 
 }
