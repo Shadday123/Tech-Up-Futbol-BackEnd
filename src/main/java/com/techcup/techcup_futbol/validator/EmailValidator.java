@@ -1,7 +1,5 @@
-package com.techcup.techcup_futbol.util;
+package com.techcup.techcup_futbol.validator;
 
-
-import java.util.regex.Pattern;
 
 public class EmailValidator {
 

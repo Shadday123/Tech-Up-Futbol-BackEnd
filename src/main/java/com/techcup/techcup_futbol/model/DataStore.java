@@ -8,14 +8,10 @@ import java.time.LocalDateTime;
 
 public class DataStore {
 
-    // Mapas para cada entidad (simulación de tablas de BD)
     public static Map<String, Player> jugadores = new HashMap<>();
     public static Map<String, Team> equipos = new HashMap<>();
-    public static Map<String, Match> partidos = new HashMap<>();
     public static Map<String, Tournament> torneos = new HashMap<>();
-    public static Map<String, MatchEvent> eventos = new HashMap<>();
 
-    // Método para inicializar todos los datos de prueba
     public static void inicializarDatos() {
         inicializarJugadores();
         inicializarEquipos();
@@ -87,7 +83,7 @@ public class DataStore {
         jugador4.setSemester(8);
         jugadores.put(jugador4.getId(), jugador4);
 
-        // StudentPlayer 5
+        // StudentPlayer
         StudentPlayer jugador5 = new StudentPlayer();
         jugador5.setId("J005");
         jugador5.setFullname("Ana García");
@@ -103,7 +99,7 @@ public class DataStore {
         jugador5.setSemester(6);
         jugadores.put(jugador5.getId(), jugador5);
 
-        // StudentPlayer 6
+        // StudentPlayer
         StudentPlayer jugador6 = new StudentPlayer();
         jugador6.setId("J006");
         jugador6.setFullname("Miguel Ángel López");
@@ -119,7 +115,7 @@ public class DataStore {
         jugador6.setSemester(4);
         jugadores.put(jugador6.getId(), jugador6);
 
-        // RelativePlayer 7
+        // RelativePlayer
         RelativePlayer jugador7 = new RelativePlayer();
         jugador7.setId("J007");
         jugador7.setFullname("Laura Torres");
@@ -225,8 +221,6 @@ public class DataStore {
     public static void limpiarDatos() {
         jugadores.clear();
         equipos.clear();
-        partidos.clear();
         torneos.clear();
-        eventos.clear();
     }
 }
