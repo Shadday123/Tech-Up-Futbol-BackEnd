@@ -2,12 +2,12 @@
 
 ## Resumen de Patrones Seleccionados
 
-| Patrón | Tipo | Problema que resuelve en TechCup |
-|--------|------|----------------------------------|
-| Strategy | Comportamental | Múltiples reglas de validación de equipos que pueden cambiar entre torneos |
-| State | Comportamental | Ciclo de vida del torneo y de los pagos con transiciones controladas |
-| Factory Method | Creacional | Creación de diferentes tipos de usuarios con reglas de registro distintas |
-| Observer | Comportamental | Propagación de eventos cuando se registran resultados de partidos |
+| Patrón         | Tipo           | Problema que resuelve en TechCup                                           |
+|----------------|----------------|----------------------------------------------------------------------------|
+| Strategy       | Comportamental | Múltiples reglas de validación de equipos que pueden cambiar entre torneos |
+| State          | Comportamental | Ciclo de vida del torneo y de los pagos con transiciones controladas       |
+| Factory Method | Creacional     | Creación de diferentes tipos de usuarios con reglas de registro distintas  |
+| Observer       | Comportamental | Propagación de eventos cuando se registran resultados de partidos          |
 
 ---
 
@@ -70,13 +70,13 @@ La clase Torneo mantiene una referencia a su estado actual (EstadoTorneo estadoA
 
 El sistema TechCup permite el registro de diferentes tipos de participantes, cada uno con reglas de registro distintas:
 
-| Tipo de Usuario | Método de Registro | Validación de Correo |
-|-----------------|-------------------|---------------------|
-| Estudiante | Correo institucional | @escuelaing.edu.co |
-| Graduado | Correo institucional | @escuelaing.edu.co |
-| Profesor | Correo institucional | @escuelaing.edu.co |
-| Personal Administrativo | Correo institucional | @escuelaing.edu.co |
-| Familiar | Correo personal Gmail | @gmail.com |
+| Tipo de Usuario         | Método de Registro    | Validación de Correo |
+|-------------------------|-----------------------|----------------------|
+| Estudiante              | Correo institucional  | @escuelaing.edu.co   |
+| Graduado                | Correo institucional  | @escuelaing.edu.co   |
+| Profesor                | Correo institucional  | @escuelaing.edu.co   |
+| Personal Administrativo | Correo institucional  | @escuelaing.edu.co   |
+| Familiar                | Correo personal Gmail | @gmail.com           |
 
 Cada tipo de usuario puede tener atributos específicos (por ejemplo, el estudiante tiene semestre, el graduado tiene año de graduación) y validaciones particulares. Sin Factory Method, el controlador o servicio tendría que contener lógica condicional para determinar qué tipo de objeto crear y qué validaciones aplicar, generando acoplamiento y dificultando la extensión.
 
@@ -127,9 +127,21 @@ Los observers se implementan como listeners independientes:
 
 ## Conclusión
 
-| Patrón | Principio SOLID que refuerza | Beneficio práctico |
-|--------|-----------------------------|--------------------|
-| Strategy | Open/Closed — Agregar validaciones sin modificar el servicio | Reglas de equipo intercambiables y testeables de forma aislada |
-| State | Single Responsibility — Cada estado gestiona su propia lógica | Transiciones controladas que previenen estados inválidos en torneos y pagos |
-| Factory Method | Dependency Inversion — El servicio depende de abstracciones, no de tipos concretos | Nuevos tipos de usuario sin modificar lógica existente |
-| Observer | Open/Closed + Loose Coupling — Nuevos listeners sin tocar el publicador | Módulos desacoplados que reaccionan a resultados de partidos de forma independiente |
+| Patrón         | Principio SOLID que refuerza                                                       | Beneficio práctico                                                                  |
+|----------------|------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| Strategy       | Open/Closed — Agregar validaciones sin modificar el servicio                       | Reglas de equipo intercambiables y testeables de forma aislada                      |
+| State          | Single Responsibility — Cada estado gestiona su propia lógica                      | Transiciones controladas que previenen estados inválidos en torneos y pagos         |
+| Factory Method | Dependency Inversion — El servicio depende de abstracciones, no de tipos concretos | Nuevos tipos de usuario sin modificar lógica existente                              |
+| Observer       | Open/Closed + Loose Coupling — Nuevos listeners sin tocar el publicador            | Módulos desacoplados que reaccionan a resultados de partidos de forma independiente |
+
+
+## Diagramas de Componentes General
+
+![ComponentesGeneral (1).jpg](docs/Images/ComponentesGeneral%20%281%29.jpg)
+
+## Diagrama de Componentes Especifico
+
+
+## Diagrama de clases
+
+![TechUp (1).jpg](docs/Images/TechUp%20%281%29.jpg)
