@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.util;
+package com.techcup.techcup_futbol.controller;
 import com.techcup.techcup_futbol.model.PositionEnum;
 import lombok.Data;
 
