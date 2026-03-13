@@ -8,8 +8,6 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class RelativePlayer extends Player {
 
-    private int semester;
-
     @Override
     public void changeAvailability() {
         this.haveTeam = !this.haveTeam;

@@ -1,5 +1,6 @@
 package com.techcup.techcup_futbol;
 
+import com.techcup.techcup_futbol.model.DataStore;
 import com.techcup.techcup_futbol.model.Player;
 import com.techcup.techcup_futbol.model.PositionEnum;
 import com.techcup.techcup_futbol.model.StudentPlayer;
@@ -20,6 +21,7 @@ class PlayerServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        DataStore.limpiarDatos(); // evita que datos de un test se filtren al siguiente
         playerService = new PlayerServiceImpl();
 
         jugadorTest = new StudentPlayer();

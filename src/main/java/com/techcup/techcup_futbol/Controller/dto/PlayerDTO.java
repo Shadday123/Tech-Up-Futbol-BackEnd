@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.controller;
+package com.techcup.techcup_futbol.Controller.dto;
 
 import com.techcup.techcup_futbol.model.PositionEnum;
 import jakarta.validation.constraints.*;
@@ -36,4 +36,9 @@ public class PlayerDTO {
 
     private boolean captain;
 
+    // "STUDENT", "INSTITUTIONAL", "RELATIVE"
+    @NotBlank(message = "El tipo de jugador es obligatorio")
+    private String playerType;
+
+    private int semester; // solo aplica para StudentPlayer
 }

@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.controller;
+package com.techcup.techcup_futbol.Controller.dto;
 import lombok.Data;
 import java.util.List;
 

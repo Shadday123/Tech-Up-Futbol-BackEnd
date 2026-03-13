@@ -1,5 +1,6 @@
 package com.techcup.techcup_futbol.service;
 
+import com.techcup.techcup_futbol.model.DataStore;
 import com.techcup.techcup_futbol.model.Player;
 import org.springframework.stereotype.Service;
 
@@ -10,22 +11,18 @@ import java.util.Optional;
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-    private final List<Player> jugadores = new ArrayList<>();
-
-    //CREATE
+    // CREATE
     @Override
     public void registrar(Player jugador, String correo) {
-
-        if(correo.endsWith("@escuelaing.edu.co") || correo.endsWith("@gmail.com")){
+        if (correo.endsWith("@escuelaing.edu.co") || correo.endsWith("@gmail.com")) {
             jugador.setEmail(correo);
-            jugadores.add(jugador);
-        }else{
+            DataStore.jugadores.put(jugador.getId(), jugador);
+        } else {
             throw new IllegalArgumentException("Correo no válido");
         }
-
     }
 
-    //UPDATE
+    // UPDATE
     @Override
     public void actualizarPerfil(Player jugador, String foto) {
         jugador.setPhotoUrl(foto);
@@ -33,26 +30,23 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void cambiarDisponibilidad(Player jugador) {
-        jugador.setHaveTeam(!jugador.isHaveTeam());
+        jugador.changeAvailability();
     }
 
-    //READ
+    // READ
     @Override
     public List<Player> listarJugadores() {
-        return jugadores;
+        return new ArrayList<>(DataStore.jugadores.values());
     }
 
     @Override
     public Optional<Player> buscarPorId(String id) {
-        return jugadores.stream()
-                .filter(j -> j.getId().equals(id))
-                .findFirst();
+        return Optional.ofNullable(DataStore.jugadores.get(id));
     }
 
-    //DELETE
+    // DELETE
     @Override
     public void eliminarJugador(String id) {
-        jugadores.removeIf(j -> j.getId().equals(id));
+        DataStore.jugadores.remove(id);
     }
-
 }

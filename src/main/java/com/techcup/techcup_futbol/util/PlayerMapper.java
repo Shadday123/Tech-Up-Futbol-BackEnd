@@ -1,16 +1,27 @@
 package com.techcup.techcup_futbol.util;
-import com.techcup.techcup_futbol.controller.PlayerDTO;
-import com.techcup.techcup_futbol.model.Player;
-import com.techcup.techcup_futbol.model.StudentPlayer;
+
+import com.techcup.techcup_futbol.Controller.dto.PlayerDTO;
+import com.techcup.techcup_futbol.model.*;
 
 public class PlayerMapper {
 
-    public static Player toModel(PlayerDTO dto){
-
-        StudentPlayer player = new StudentPlayer();
+    public static Player toModel(PlayerDTO dto) {
+        Player player = switch (dto.getPlayerType().toUpperCase()) {
+            case "STUDENT" -> {
+                StudentPlayer s = new StudentPlayer();
+                s.setSemester(dto.getSemester());
+                yield s;
+            }
+            case "INSTITUTIONAL" -> new InstitutionalPlayer();
+            case "RELATIVE"      -> new RelativePlayer();
+            default -> throw new IllegalArgumentException(
+                    "Tipo de jugador no válido: " + dto.getPlayerType()
+            );
+        };
 
         player.setFullname(dto.getFullname());
         player.setEmail(dto.getEmail());
+        player.setNumberID(dto.getNumberID());
         player.setPhotoUrl(dto.getPhotoUrl());
         player.setAge(dto.getAge());
         player.setGender(dto.getGender());
@@ -21,13 +32,13 @@ public class PlayerMapper {
         return player;
     }
 
-    public static PlayerDTO toDTO(Player player){
-
+    public static PlayerDTO toDTO(Player player) {
         PlayerDTO dto = new PlayerDTO();
 
         dto.setId(player.getId());
         dto.setFullname(player.getFullname());
         dto.setEmail(player.getEmail());
+        dto.setNumberID(player.getNumberID());
         dto.setPhotoUrl(player.getPhotoUrl());
         dto.setAge(player.getAge());
         dto.setGender(player.getGender());
@@ -36,7 +47,16 @@ public class PlayerMapper {
         dto.setDorsalNumber(player.getDorsalNumber());
         dto.setHaveTeam(player.isHaveTeam());
 
+        // determinar tipo y atributos específicos
+        if (player instanceof StudentPlayer s) {
+            dto.setPlayerType("STUDENT");
+            dto.setSemester(s.getSemester());
+        } else if (player instanceof InstitutionalPlayer) {
+            dto.setPlayerType("INSTITUTIONAL");
+        } else if (player instanceof RelativePlayer) {
+            dto.setPlayerType("RELATIVE");
+        }
+
         return dto;
     }
-
 }

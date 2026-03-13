@@ -9,8 +9,6 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class InstitutionalPlayer extends Player {
 
-    private int semester;
-
     @Override
     public void changeAvailability() {
         this.haveTeam = !this.haveTeam;
