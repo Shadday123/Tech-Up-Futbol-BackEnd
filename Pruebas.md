@@ -36,3 +36,41 @@
 ### **CS-03: Validación de Nombre Único**
 * **Condición**: Intentar crear un torneo con un nombre idéntico a uno ya registrado.
 * **Resultado**: El sistema debe lanzar un error de negocio para evitar duplicidad de torneos con el mismo nombre en la plataforma.
+
+
+# Registro de Jugadores 
+
+Este documento detalla los escenarios de prueba para el registro y perfil deportivo de los jugadores en **TechCup Fútbol**, integrando las reglas del documento maestro y los validadores de dominio.
+
+## 1. Happy Path (Escenarios de Éxito)
+
+| ID | Escenario | Entrada (Input) | Resultado Esperado (Output)                                 |
+|:---|:---|:---|:------------------------------------------------------------|
+| **HP-P01** | Registro Estudiante | Correo `@escuelaing.edu.co`, semestre y datos básicos. | Código **201 Created**. Jugador guardado en el `DataStore`. |
+| **HP-P02** | Registro Familiar | Correo `@gmail.com`, parentesco (Relationship) y datos básicos. | Código **201 Created**. Perfil creado exitosamente.         |
+| **HP-P03** | Perfil Deportivo | Posición válida (`DEFENDER`) y dorsal (1-99). | Código **200 OK**. Atributos deportivos actualizados.       |
+| **HP-P04** | Disponibilidad | Marcarse como "disponible para equipo". | Código **200 OK**. El campo `available` cambia a `true`.    |
+
+## 2. Error Path (Escenarios de Fallo)
+
+| ID         | Escenario | Causa del Error | Resultado Esperado                                      |
+|:-----------|:---|:---|:--------------------------------------------------------|
+| **EP-P01** | Dominio Inválido | Uso de correo `@outlook.com` o `@yahoo.es`. | Excepción `IllegalArgumentException` (Error 400).       |
+| **EP-P02** | ID Duplicado | Registrar un `numberID` que ya existe en el sistema. | El validador lanza "A player with this ID is already registered". |
+| **EP-P03** | Dorsal Fuera de Rango | Intentar asignar el dorsal `0` o `101`. | Código **400 Bad Request**. El rango permitido es 1-99. |
+
+## 3. Conditional Scenarios (Lógica de Negocio)
+
+### **CS-P01: Validación de Datos por Tipo de Actor**
+**Contexto**: El sistema diferencia entre Estudiantes y Familiares.
+**Condición**: Un registro de tipo `StudentPlayer` se envía sin el número de semestre.
+**Resultado**: El sistema debe rechazar la petición o asignar un error de validación, ya que el semestre es obligatorio para este perfil.
+
+### **CS-P02: Unicidad de Correo Electrónico**
+**Contexto**: El email es el identificador único para la autenticación.
+**Condición**: Un usuario intenta registrarse con un email que ya está asociado a otro `numberID`.
+**Resultado**: El `PlayerValidator` debe detectar el conflicto en el `DataStore` y bloquear la creación del segundo perfil.
+
+### **CS-P03: Consistencia de Posiciones**
+**Condición**: Se intenta enviar una posición que no existe en el `PositionEnum` (ej: "Mago").
+**Resultado**: El sistema responde con **400 Bad Request** debido a que el JSON no puede ser mapeado al Enum definido.
