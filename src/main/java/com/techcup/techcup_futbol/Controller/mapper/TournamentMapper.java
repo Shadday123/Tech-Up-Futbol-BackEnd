@@ -1,5 +1,5 @@
-package com.techcup.techcup_futbol.util;
-import com.techcup.techcup_futbol.model.Tournament;
+package com.techcup.techcup_futbol.Controller.mapper;
+import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.Controller.dto.TournamentDTO;
 
 public class TournamentMapper {

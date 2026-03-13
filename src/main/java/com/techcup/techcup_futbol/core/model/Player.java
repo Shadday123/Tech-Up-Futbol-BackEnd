@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.model;
+package com.techcup.techcup_futbol.core.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,6 +1,10 @@
-package com.techcup.techcup_futbol.util;
+package com.techcup.techcup_futbol.Controller.mapper;
 
 import com.techcup.techcup_futbol.Controller.dto.PlayerDTO;
+import com.techcup.techcup_futbol.core.model.InstitutionalPlayer;
+import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.RelativePlayer;
+import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.model.*;
 
 public class PlayerMapper {

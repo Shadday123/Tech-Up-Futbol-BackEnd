@@ -1,6 +1,6 @@
-package com.techcup.techcup_futbol.service;
+package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.model.Player;
+import com.techcup.techcup_futbol.core.model.Player;
 
 import java.util.List;
 import java.util.Optional;

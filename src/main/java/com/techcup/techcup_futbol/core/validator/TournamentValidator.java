@@ -1,7 +1,7 @@
-package com.techcup.techcup_futbol.validator;
+package com.techcup.techcup_futbol.core.validator;
 
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
-import com.techcup.techcup_futbol.model.TournamentState;
+import com.techcup.techcup_futbol.core.model.TournamentState;
 
 public class TournamentValidator {
 

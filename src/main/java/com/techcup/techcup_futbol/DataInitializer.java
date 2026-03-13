@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.model.DataStore;
+import com.techcup.techcup_futbol.core.model.DataStore;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

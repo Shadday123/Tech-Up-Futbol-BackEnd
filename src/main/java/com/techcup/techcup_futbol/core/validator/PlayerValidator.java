@@ -1,8 +1,7 @@
-package com.techcup.techcup_futbol.validator;
+package com.techcup.techcup_futbol.core.validator;
 
 import com.techcup.techcup_futbol.Controller.dto.PlayerRegistrationRequest;
-import com.techcup.techcup_futbol.model.DataStore;
-import java.util.regex.Pattern;
+import com.techcup.techcup_futbol.core.model.DataStore;
 
 public class PlayerValidator {
 

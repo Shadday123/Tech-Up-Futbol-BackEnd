@@ -1,10 +1,10 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.model.DataStore;
-import com.techcup.techcup_futbol.model.Player;
-import com.techcup.techcup_futbol.model.PositionEnum;
-import com.techcup.techcup_futbol.model.StudentPlayer;
-import com.techcup.techcup_futbol.service.PlayerServiceImpl;
+import com.techcup.techcup_futbol.core.model.DataStore;
+import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.PositionEnum;
+import com.techcup.techcup_futbol.core.model.StudentPlayer;
+import com.techcup.techcup_futbol.core.service.PlayerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;

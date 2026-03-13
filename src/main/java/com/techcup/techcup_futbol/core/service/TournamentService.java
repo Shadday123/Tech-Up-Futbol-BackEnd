@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.service;
+package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;

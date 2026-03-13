@@ -1,11 +1,11 @@
-package com.techcup.techcup_futbol.service;
+package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.model.Tournament;
+import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
-import com.techcup.techcup_futbol.model.TournamentState;
-import com.techcup.techcup_futbol.validator.TournamentValidator;
-import com.techcup.techcup_futbol.model.DataStore;
+import com.techcup.techcup_futbol.core.model.TournamentState;
+import com.techcup.techcup_futbol.core.validator.TournamentValidator;
+import com.techcup.techcup_futbol.core.model.DataStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

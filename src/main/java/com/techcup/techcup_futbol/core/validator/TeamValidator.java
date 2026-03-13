@@ -1,13 +1,12 @@
-package com.techcup.techcup_futbol.validator;
+package com.techcup.techcup_futbol.core.validator;
 
-import com.techcup.techcup_futbol.model.*;
+
+import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.StudentPlayer;
+import com.techcup.techcup_futbol.core.model.Team;
+import com.techcup.techcup_futbol.exception.TeamException;
+;
 import java.util.*;
-
-class TeamException extends Exception {
-    public TeamException(String message) {
-        super(message);
-    }
-}
 
 public class TeamValidator {
 

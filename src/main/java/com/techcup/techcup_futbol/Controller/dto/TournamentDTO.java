@@ -1,5 +1,5 @@
 package com.techcup.techcup_futbol.Controller.dto;
-import com.techcup.techcup_futbol.model.TournamentState;
+import com.techcup.techcup_futbol.core.model.TournamentState;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 

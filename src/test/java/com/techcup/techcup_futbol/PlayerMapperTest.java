@@ -1,8 +1,9 @@
 package com.techcup.techcup_futbol;
 
+import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.model.*;
 import com.techcup.techcup_futbol.Controller.dto.PlayerDTO;
-import com.techcup.techcup_futbol.util.PlayerMapper;
+import com.techcup.techcup_futbol.Controller.mapper.PlayerMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
