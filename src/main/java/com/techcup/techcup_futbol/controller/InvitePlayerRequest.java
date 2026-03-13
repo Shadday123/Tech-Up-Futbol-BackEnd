@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 public class InvitePlayerRequest {
 
-    @NotBlank(message = "Team id is required")
-    private String teamId;
+    @NotBlank(message = "El nombre del equipo es necesario")
+    private String teamName;
 
-    @NotBlank(message = "Player id is required")
+    @NotBlank(message = "El jugador es necesario")
     private String playerId;
 }
