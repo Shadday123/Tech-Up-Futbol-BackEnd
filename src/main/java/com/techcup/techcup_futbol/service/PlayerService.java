@@ -2,23 +2,20 @@ package com.techcup.techcup_futbol.service;
 
 import com.techcup.techcup_futbol.model.Player;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface PlayerService {
-    default void registrar(Player jugador, String correo){
-        if (correo.endsWith("@escuelaing.edu.co")){
 
-        }
-    }
-    default void actualizarPerfil(Player jugador, String foto){
-        jugador.setFoto(foto);
-    }
+    void registrar(Player jugador, String correo);
 
-    default void cambiarDisponibilidad(Player jugador){
-        boolean disponibilidad = jugador.isDisponible()
-        if(disponibilidad){
-            jugador.setDisponible(false);
-        }
-        else{
-            jugador.setDisponible(true);
-        }
-    }
+    void actualizarPerfil(Player jugador, String foto);
+
+    void cambiarDisponibilidad(Player jugador);
+
+    List<Player> listarJugadores();
+
+    Optional<Player> buscarPorId(String id);
+
+    void eliminarJugador(String id);
 }

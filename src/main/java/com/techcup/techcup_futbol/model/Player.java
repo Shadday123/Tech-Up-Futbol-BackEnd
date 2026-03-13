@@ -1,17 +1,38 @@
 package com.techcup.techcup_futbol.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class Player {
-    private String nombre;
-    private String correo;
-    private String tipo;
-    private List<Posicion> posiciones;
-    private String dorsal;
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Player {
 
-    private String foto;
-    private boolean disponible;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    protected String id;
+
+    protected String fullname;
+    protected String email;
+    protected int numberID;
+
+    @Enumerated(EnumType.STRING)
+    protected PositionEnum position;
+
+    protected int dorsalNumber;
+
+    protected String photoUrl;
+
+    protected boolean haveTeam;
+
+    protected int age;
+
+    protected String gender;
+
+    protected boolean captain;
+
+    public abstract void changeAvailability();
+
+    public abstract void respondToInvitation(boolean accept);
+
 }
