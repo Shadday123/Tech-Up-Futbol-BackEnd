@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.Controller;
+package com.techcup.techcup_futbol.util;
 import com.techcup.techcup_futbol.model.Tournament;
 import com.techcup.techcup_futbol.Controller.dto.TournamentDTO;
 
