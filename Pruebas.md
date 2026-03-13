@@ -74,3 +74,41 @@ Este documento detalla los escenarios de prueba para el registro y perfil deport
 ### **CS-P03: Consistencia de Posiciones**
 **Condición**: Se intenta enviar una posición que no existe en el `PositionEnum` (ej: "Mago").
 **Resultado**: El sistema responde con **400 Bad Request** debido a que el JSON no puede ser mapeado al Enum definido.
+
+# Creación de equipos
+
+Este documento detalla los escenarios de prueba para la creación, administración y validación de equipos en **TechCup Fútbol**, asegurando el cumplimiento de las restricciones de conformación y las reglas de los programas académicos.
+
+## 1. Happy Path (Escenarios de Éxito)
+
+| ID | Escenario                  | Entrada (Input) | Resultado Esperado (Output) |
+|:---|:---------------------------|:---|:---|
+| **HP-T01** | Creación de Equipo         | Nombre único, URL de escudo, colores y Capitán asignado. | Código **201 Created**. Equipo registrado en estado `PENDING`. |
+| **HP-T02** | Invitación Exitosa         | ID de un jugador disponible e ID de un equipo propio. | Código **200 OK**. El jugador recibe la notificación en su perfil. |
+| **HP-T03** | Nómina Válida de un equipo | Registro de entre 7 y 12 jugadores con mayoría de Ingeniería. | Código **200 OK**. El equipo es marcado como apto para participar. |
+| **HP-T04** | Consulta de Equipo         | Petición `GET /api/teams/{id}` con un ID válido. | Código **200 OK**. Retorna el JSON con la alineación y escudo. |
+
+## 2. Error Path (Escenarios de Fallo)
+
+| ID | Escenario | Causa del Error | Resultado Esperado |
+|:---|:---|:---|:---|
+| **EP-T01** | Nombre Duplicado | Intentar crear un equipo con un nombre que ya existe. | Código **400 Bad Request**. Mensaje: "Team name already taken". |
+| **EP-T02** | Jugador Ocupado | Invitar a un jugador que ya pertenece a otro equipo. | El sistema bloquea la acción por restricción de unicidad. |
+| **EP-T03** | Tamaño Inválido | Intentar cerrar un equipo con menos de 7 o más de 12 integrantes. | Error de validación de negocio. Bloqueo de cambio a "Aprobado". |
+| **EP-T04** | Minoría de Programa | Equipo con menos del 50% de miembros de Ingeniería (Sistemas/IA/etc). | Código **400 Bad Request**. Incumplimiento de regla de programas. |
+
+## 3. Conditional Scenarios (Lógica de Negocio)
+
+### **CS-T01: Validación de Rol de Capitán**
+* **Contexto**: Según el reglamento, solo ciertos actores pueden liderar equipos.
+* **Condición**: Un usuario registrado con el rol de `Árbitro` intenta crear un equipo.
+* **Resultado**: El sistema debe denegar la operación, ya que el perfil de árbitro no tiene permisos de capitanía.
+
+### **CS-T02: Bloqueo de Cambios en Torneo Activo**
+* **Contexto**: No se permiten cambios de equipo una vez que la competición inicia.
+* **Condición**: Un jugador intenta aceptar una invitación cuando el torneo ya está en estado `ACTIVE`.
+* **Resultado**: El sistema debe rechazar la transacción, manteniendo la nómina fija hasta el final del torneo.
+
+### **CS-T03: Asignación de Recurso Visual por Defecto**
+* **Condición**: El capitán crea el equipo pero no proporciona una URL para el escudo.
+* **Resultado**: El sistema debe asignar automáticamente la imagen `default-shield.png` para asegurar la integridad visual en la tabla de posiciones.
