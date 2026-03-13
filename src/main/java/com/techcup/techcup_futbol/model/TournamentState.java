@@ -5,6 +5,7 @@ public enum TournamentState {
     DELETED,
     ACTIVE,
     IN_PROGRESS,
-    COMPLETED
+    COMPLETED,
+    DRAFT
 
 }
