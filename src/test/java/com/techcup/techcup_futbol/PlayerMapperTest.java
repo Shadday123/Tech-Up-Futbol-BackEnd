@@ -2,7 +2,7 @@ package com.techcup.techcup_futbol;
 import com.techcup.techcup_futbol.model.Player;
 import com.techcup.techcup_futbol.model.PositionEnum;
 import com.techcup.techcup_futbol.model.StudentPlayer;
-import com.techcup.techcup_futbol.util.PlayerDTO;
+import com.techcup.techcup_futbol.controller.PlayerDTO;
 import com.techcup.techcup_futbol.util.PlayerMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
