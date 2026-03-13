@@ -141,6 +141,7 @@ Los observers se implementan como listeners independientes:
 
 ## Diagrama de Componentes Especifico
 
+![Diagrama de componentes especifico.png](docs/Images/Diagrama%20de%20componentes%20especifico.png)
 
 ## Diagrama de clases
 
