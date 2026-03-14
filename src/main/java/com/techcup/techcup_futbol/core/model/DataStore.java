@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.model;
+package com.techcup.techcup_futbol.core.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +18,10 @@ public class DataStore {
         inicializarTorneos();
     }
 
-    //  JUGADORES
+    // JUGADORES
     private static void inicializarJugadores() {
-        // StudentPlayer  - Capitán
+
+        // StudentPlayer - Capitán equipo 1
         StudentPlayer jugador1 = new StudentPlayer();
         jugador1.setId("J001");
         jugador1.setFullname("Carlos Rodríguez");
@@ -36,7 +37,7 @@ public class DataStore {
         jugador1.setSemester(6);
         jugadores.put(jugador1.getId(), jugador1);
 
-        // StudentPlayer
+        // StudentPlayer - equipo 1
         StudentPlayer jugador2 = new StudentPlayer();
         jugador2.setId("J002");
         jugador2.setFullname("Juan Pérez");
@@ -52,6 +53,7 @@ public class DataStore {
         jugador2.setSemester(5);
         jugadores.put(jugador2.getId(), jugador2);
 
+        // InstitutionalPlayer - equipo 1
         InstitutionalPlayer jugador3 = new InstitutionalPlayer();
         jugador3.setId("J003");
         jugador3.setFullname("Pedro Sánchez");
@@ -64,10 +66,9 @@ public class DataStore {
         jugador3.setAge(23);
         jugador3.setGender("Masculino");
         jugador3.setCaptain(false);
-        jugador3.setSemester(0);
         jugadores.put(jugador3.getId(), jugador3);
 
-        // StudentPlayer - Capitán
+        // StudentPlayer - Capitán equipo 2
         StudentPlayer jugador4 = new StudentPlayer();
         jugador4.setId("J004");
         jugador4.setFullname("Luis Martínez");
@@ -83,11 +84,11 @@ public class DataStore {
         jugador4.setSemester(8);
         jugadores.put(jugador4.getId(), jugador4);
 
-        // StudentPlayer
+        // StudentPlayer - equipo 2
         StudentPlayer jugador5 = new StudentPlayer();
         jugador5.setId("J005");
         jugador5.setFullname("Ana García");
-        jugador5.setEmail("ana.garcia@gmail.com");
+        jugador5.setEmail("ana.garcia@escuelaing.edu.co");
         jugador5.setNumberID(123460);
         jugador5.setPosition(PositionEnum.Defender);
         jugador5.setDorsalNumber(3);
@@ -99,7 +100,7 @@ public class DataStore {
         jugador5.setSemester(6);
         jugadores.put(jugador5.getId(), jugador5);
 
-        // StudentPlayer
+        // StudentPlayer - equipo 3
         StudentPlayer jugador6 = new StudentPlayer();
         jugador6.setId("J006");
         jugador6.setFullname("Miguel Ángel López");
@@ -108,14 +109,14 @@ public class DataStore {
         jugador6.setPosition(PositionEnum.Winger);
         jugador6.setDorsalNumber(11);
         jugador6.setPhotoUrl("miguel.jpg");
-        jugador6.setHaveTeam(false);
+        jugador6.setHaveTeam(true);
         jugador6.setAge(20);
         jugador6.setGender("Masculino");
         jugador6.setCaptain(false);
         jugador6.setSemester(4);
         jugadores.put(jugador6.getId(), jugador6);
 
-        // RelativePlayer
+        // RelativePlayer - equipo 2
         RelativePlayer jugador7 = new RelativePlayer();
         jugador7.setId("J007");
         jugador7.setFullname("Laura Torres");
@@ -124,17 +125,33 @@ public class DataStore {
         jugador7.setPosition(PositionEnum.Midfielder);
         jugador7.setDorsalNumber(6);
         jugador7.setPhotoUrl("laura.jpg");
-        jugador7.setHaveTeam(false);
+        jugador7.setHaveTeam(true);
         jugador7.setAge(22);
         jugador7.setGender("Femenino");
         jugador7.setCaptain(false);
-        jugador7.setSemester(0);
         jugadores.put(jugador7.getId(), jugador7);
+
+        // StudentPlayer - equipo 3 (reemplaza a J002/J005 que estaban duplicados)
+        StudentPlayer jugador8 = new StudentPlayer();
+        jugador8.setId("J008");
+        jugador8.setFullname("Sofía Ramírez");
+        jugador8.setEmail("sofia.ramirez@escuelaing.edu.co");
+        jugador8.setNumberID(123463);
+        jugador8.setPosition(PositionEnum.GoalKeeper);
+        jugador8.setDorsalNumber(12);
+        jugador8.setPhotoUrl("sofia.jpg");
+        jugador8.setHaveTeam(true);
+        jugador8.setAge(21);
+        jugador8.setGender("Femenino");
+        jugador8.setCaptain(false);
+        jugador8.setSemester(3);
+        jugadores.put(jugador8.getId(), jugador8);
     }
 
     // EQUIPOS
     private static void inicializarEquipos() {
-        // Equipo 1 - Los Galácticos
+
+        // Equipo 1 - Los Galácticos: J001, J002, J003, J005
         Team equipo1 = new Team();
         equipo1.setId("E001");
         equipo1.setTeamName("Los Galácticos");
@@ -151,6 +168,7 @@ public class DataStore {
 
         equipos.put(equipo1.getId(), equipo1);
 
+        // Equipo 2 - Los Titanes: J004, J007 (ya no incluye J002 ni J005)
         Team equipo2 = new Team();
         equipo2.setId("E002");
         equipo2.setTeamName("Los Titanes");
@@ -160,23 +178,23 @@ public class DataStore {
 
         List<Player> jugadoresEquipo2 = new ArrayList<>();
         jugadoresEquipo2.add(jugadores.get("J004"));
-        jugadoresEquipo2.add(jugadores.get("J002"));
-        jugadoresEquipo2.add(jugadores.get("J005"));
         jugadoresEquipo2.add(jugadores.get("J007"));
         equipo2.setPlayers(jugadoresEquipo2);
 
         equipos.put(equipo2.getId(), equipo2);
 
+        // Equipo 3 - Los Guerreros: J003 era capitán pero ya está en E001,
+        // se asigna J006 como capitán y se agregan J006, J008
         Team equipo3 = new Team();
         equipo3.setId("E003");
         equipo3.setTeamName("Los Guerreros");
         equipo3.setShieldUrl("guerreros_escudo.png");
         equipo3.setUniformColors("Verde y Negro");
-        equipo3.setCaptain(jugadores.get("J003"));
+        equipo3.setCaptain(jugadores.get("J006"));
 
         List<Player> jugadoresEquipo3 = new ArrayList<>();
-        jugadoresEquipo3.add(jugadores.get("J003"));
         jugadoresEquipo3.add(jugadores.get("J006"));
+        jugadoresEquipo3.add(jugadores.get("J008"));
         equipo3.setPlayers(jugadoresEquipo3);
 
         equipos.put(equipo3.getId(), equipo3);

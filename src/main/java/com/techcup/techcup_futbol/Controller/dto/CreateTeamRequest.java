@@ -1,22 +1,21 @@
 package com.techcup.techcup_futbol.Controller.dto;
 
-
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
-public record CreateTeamRequest(
-        @NotBlank(message = "El nombre del equipo es obligatorio")
-        @Size(min = 3, max = 20, message = "El nombre debe tener entre 3 y 20 caracteres")
-        String name,
+@Data
+public class CreateTeamRequest {
 
-        @NotBlank(message = "Debes proporcionar un escudo")
-        String logoUrl,
+    @NotBlank(message = "El nombre del equipo es necesario")
+    private String teamName;
 
-        @NotBlank(message = "Define los colores del equipo")
-        String colorPrimary,
+    @NotBlank(message = "La imagen del equipo es necesario")
+    private String shieldUrl;
 
-        String colorSecondary,
+    @NotBlank(message = "Los colores de los uniformes son necesarios")
+    private String uniformColors;
 
-        @NotBlank(message = "El equipo debe tener un capitán asignado")
-        String captainId
-) {}
+    @NotNull(message = "El capitan es necesario")
+    private String captainId;
+}

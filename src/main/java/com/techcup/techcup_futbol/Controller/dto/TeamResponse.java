@@ -1,14 +1,14 @@
 package com.techcup.techcup_futbol.Controller.dto;
-
-
+import lombok.Data;
 import java.util.List;
 
-public record TeamResponse(
-        String id,
-        String name,
-        String logoUrl,
-        String status, // Ejemplo: "PENDING", "APPROVED"
-        String captainName,
-        List<String> playerNames, // Lista simple de nombres de los integrantes
-        int totalPlayers // Para validar fácilmente si hay entre 7 y 12
-) {}
+@Data
+public class TeamResponse {
+
+    private String id;
+    private String teamName;
+    private String shieldUrl;
+    private String uniformColors;
+    private String captainName;
+    private List<String> players;
+}

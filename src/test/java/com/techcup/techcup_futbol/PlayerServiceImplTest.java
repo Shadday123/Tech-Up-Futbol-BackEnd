@@ -1,9 +1,10 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.model.Player;
-import com.techcup.techcup_futbol.model.PositionEnum;
-import com.techcup.techcup_futbol.model.StudentPlayer;
-import com.techcup.techcup_futbol.service.PlayerServiceImpl;
+import com.techcup.techcup_futbol.core.model.DataStore;
+import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.PositionEnum;
+import com.techcup.techcup_futbol.core.model.StudentPlayer;
+import com.techcup.techcup_futbol.core.service.PlayerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
@@ -20,6 +21,7 @@ class PlayerServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        DataStore.limpiarDatos(); // evita que datos de un test se filtren al siguiente
         playerService = new PlayerServiceImpl();
 
         jugadorTest = new StudentPlayer();

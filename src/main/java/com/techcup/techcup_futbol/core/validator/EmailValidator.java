@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.validator;
+package com.techcup.techcup_futbol.core.validator;
 
 
 public class EmailValidator {

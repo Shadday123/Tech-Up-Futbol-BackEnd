@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol.Controller.dto;
 
-import com.techcup.techcup_futbol.model.PositionEnum;
+import com.techcup.techcup_futbol.core.model.PositionEnum;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

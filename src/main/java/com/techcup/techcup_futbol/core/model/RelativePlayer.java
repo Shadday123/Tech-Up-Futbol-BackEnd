@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.model;
+package com.techcup.techcup_futbol.core.model;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,8 +7,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 public class RelativePlayer extends Player {
-
-    private int semester;
 
     @Override
     public void changeAvailability() {

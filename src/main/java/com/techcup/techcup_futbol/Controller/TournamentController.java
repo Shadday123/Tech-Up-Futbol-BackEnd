@@ -3,7 +3,7 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
-import com.techcup.techcup_futbol.service.TournamentService;
+import com.techcup.techcup_futbol.core.service.TournamentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

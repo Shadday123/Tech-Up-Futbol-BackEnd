@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.model;
+package com.techcup.techcup_futbol.core.model;
 
 import jakarta.persistence.Entity;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-public class InstitutionalPlayer extends Player {
+public class StudentPlayer extends Player {
 
     private int semester;
 
