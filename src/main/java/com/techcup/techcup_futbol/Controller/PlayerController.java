@@ -1,8 +1,8 @@
 package com.techcup.techcup_futbol.Controller;
 
 
-import com.techcup.techcup_futbol.model.Player;
-import com.techcup.techcup_futbol.service.PlayerService;
+import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.service.PlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

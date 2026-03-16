@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlayerServiceImplTest {
+class PlayerServiceTest {
 
     private PlayerServiceImpl playerService;
     private Player jugadorTest;
