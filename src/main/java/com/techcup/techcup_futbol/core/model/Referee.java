@@ -1,7 +1,6 @@
 package com.techcup.techcup_futbol.core.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +14,8 @@ import java.util.List;
 public class Referee {
 
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     private String fullname;

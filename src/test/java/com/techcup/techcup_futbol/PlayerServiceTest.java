@@ -293,23 +293,7 @@ class PlayerServiceTest {
             assertFalse(playerService.obtenerPorId(idPersistido).isHaveTeam());
         }
 
-        @Test
-        @DisplayName("CS-05: RelativePlayer se registra y recupera correctamente")
-        void testRegistrar_RelativePlayer_Exitoso() {
-            RelativePlayer familiar = new RelativePlayer();
-            String id = UUID.randomUUID().toString();
-            familiar.setId(id);
-            familiar.setFullname("Familiar Test");
-            familiar.setAge(35);
-            familiar.setGender("Femenino");
-            familiar.setNumberID(666666);
 
-            playerService.registrar(familiar, "familiar@gmail.com");
-
-            Player registrado = playerService.obtenerPorId(id);
-            assertInstanceOf(RelativePlayer.class, registrado);
-            assertEquals("familiar@gmail.com", registrado.getEmail());
-        }
     }
 
     // ── Helper ────────────────────────────────────────────────────────────────

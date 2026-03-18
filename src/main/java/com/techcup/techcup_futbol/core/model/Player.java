@@ -29,13 +29,7 @@ public class Player { // Ya no es abstracta
     private String gender;
     private boolean isCaptain;
 
-    //  aplicamos la COMPOSICIÓN uso de la interfaz
-    // @OneToOne indica que el jugador tiene una sola afilación
-
-    @OneToOne(cascade = CascadeType.ALL)
-    // crea una columna en las sql y tambien le da el mismo id que viene
-    @JoinColumn(name = "affiliation_id", referencedColumnName = "id")
-    private Affiliation affiliation;
+    private Affilation affiliation;
 
     public void changeAvailability() {
         this.haveTeam = !this.haveTeam;

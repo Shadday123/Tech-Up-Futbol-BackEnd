@@ -1,8 +1,6 @@
 package com.techcup.techcup_futbol.core.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -10,6 +8,7 @@ import lombok.Data;
 public class MatchEvent {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     private String type;

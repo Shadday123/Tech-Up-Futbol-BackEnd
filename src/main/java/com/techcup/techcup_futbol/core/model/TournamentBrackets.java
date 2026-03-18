@@ -9,6 +9,8 @@ import java.util.List;
 @Entity
 public class TournamentBrackets {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ManyToOne

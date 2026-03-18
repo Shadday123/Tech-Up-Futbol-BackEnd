@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class Match {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @OneToOne
