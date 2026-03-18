@@ -4,9 +4,12 @@ import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.Controller.dto.PlayerDTO;
 import com.techcup.techcup_futbol.Controller.mapper.PlayerMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Player Mapper Tests")
 class PlayerMapperTest {
 
     private PlayerDTO dtoEstudiante;
@@ -16,8 +19,6 @@ class PlayerMapperTest {
 
     @BeforeEach
     void setUp() {
-
-        // DTO base para StudentPlayer
         dtoEstudiante = new PlayerDTO();
         dtoEstudiante.setId("J001");
         dtoEstudiante.setFullname("Carlos Rodríguez");
@@ -33,7 +34,6 @@ class PlayerMapperTest {
         dtoEstudiante.setPlayerType("STUDENT");
         dtoEstudiante.setSemester(6);
 
-        // DTO para InstitutionalPlayer
         dtoInstitucional = new PlayerDTO();
         dtoInstitucional.setId("J002");
         dtoInstitucional.setFullname("Pedro Sánchez");
@@ -45,7 +45,6 @@ class PlayerMapperTest {
         dtoInstitucional.setGender("Masculino");
         dtoInstitucional.setPlayerType("INSTITUTIONAL");
 
-        // DTO para RelativePlayer
         dtoFamiliar = new PlayerDTO();
         dtoFamiliar.setId("J003");
         dtoFamiliar.setFullname("Laura Torres");
@@ -57,7 +56,6 @@ class PlayerMapperTest {
         dtoFamiliar.setGender("Femenino");
         dtoFamiliar.setPlayerType("RELATIVE");
 
-        // Player modelo para toDTO()
         playerCompleto = new StudentPlayer();
         playerCompleto.setId("J001");
         playerCompleto.setFullname("Carlos Rodríguez");
@@ -73,9 +71,8 @@ class PlayerMapperTest {
         ((StudentPlayer) playerCompleto).setSemester(6);
     }
 
-    // HAPPY PATH TESTS
-
     @Test
+    @DisplayName("HP-M01: DTO STUDENT → StudentPlayer con todos los campos")
     void testToModel_DTOEstudiante_RetornaStudentPlayer() {
         Player resultado = PlayerMapper.toModel(dtoEstudiante);
 
@@ -93,6 +90,7 @@ class PlayerMapperTest {
     }
 
     @Test
+    @DisplayName("HP-M02: DTO INSTITUTIONAL → InstitutionalPlayer")
     void testToModel_DTOInstitucional_RetornaInstitutionalPlayer() {
         Player resultado = PlayerMapper.toModel(dtoInstitucional);
 
@@ -102,6 +100,7 @@ class PlayerMapperTest {
     }
 
     @Test
+    @DisplayName("HP-M03: DTO RELATIVE → RelativePlayer")
     void testToModel_DTOFamiliar_RetornaRelativePlayer() {
         Player resultado = PlayerMapper.toModel(dtoFamiliar);
 
@@ -111,6 +110,7 @@ class PlayerMapperTest {
     }
 
     @Test
+    @DisplayName("HP-M04: StudentPlayer → DTO con tipo STUDENT y semestre")
     void testToDTO_StudentPlayer_RetornaDTOConTipoYSemestre() {
         PlayerDTO resultado = PlayerMapper.toDTO(playerCompleto);
 
@@ -127,19 +127,21 @@ class PlayerMapperTest {
     }
 
     @Test
+    @DisplayName("HP-M05: InstitutionalPlayer → DTO con tipo INSTITUTIONAL")
     void testToDTO_InstitutionalPlayer_RetornaDTOConTipo() {
-        InstitutionalPlayer institucional = new InstitutionalPlayer();
-        institucional.setId("J002");
-        institucional.setFullname("Pedro Sánchez");
-        institucional.setEmail("pedro@gmail.com");
+        InstitutionalPlayer inst = new InstitutionalPlayer();
+        inst.setId("J002");
+        inst.setFullname("Pedro Sánchez");
+        inst.setEmail("pedro@gmail.com");
 
-        PlayerDTO resultado = PlayerMapper.toDTO(institucional);
+        PlayerDTO resultado = PlayerMapper.toDTO(inst);
 
         assertNotNull(resultado);
         assertEquals("INSTITUTIONAL", resultado.getPlayerType());
     }
 
     @Test
+    @DisplayName("HP-M06: RelativePlayer → DTO con tipo RELATIVE")
     void testToDTO_RelativePlayer_RetornaDTOConTipo() {
         RelativePlayer familiar = new RelativePlayer();
         familiar.setId("J003");
@@ -153,46 +155,47 @@ class PlayerMapperTest {
     }
 
     @Test
-    void testToModel_ToDTO_RoundTrip_ConservaDatos() {
+    @DisplayName("HP-M07: Round-trip toModel → toDTO conserva datos")
+    void testRoundTrip_ConservaDatos() {
         PlayerDTO dto = PlayerMapper.toDTO(playerCompleto);
-        Player modeloConvertido = PlayerMapper.toModel(dto);
+        Player convertido = PlayerMapper.toModel(dto);
 
-        assertNotNull(modeloConvertido);
-        assertInstanceOf(StudentPlayer.class, modeloConvertido);
-        assertEquals(playerCompleto.getFullname(), modeloConvertido.getFullname());
-        assertEquals(playerCompleto.getEmail(), modeloConvertido.getEmail());
-        assertEquals(playerCompleto.getPosition(), modeloConvertido.getPosition());
-        assertEquals(playerCompleto.getDorsalNumber(), modeloConvertido.getDorsalNumber());
-        assertEquals(playerCompleto.getAge(), modeloConvertido.getAge());
-        assertEquals(playerCompleto.getGender(), modeloConvertido.getGender());
-        assertEquals(playerCompleto.isCaptain(), modeloConvertido.isCaptain());
+        assertNotNull(convertido);
+        assertInstanceOf(StudentPlayer.class, convertido);
+        assertEquals(playerCompleto.getFullname(), convertido.getFullname());
+        assertEquals(playerCompleto.getEmail(), convertido.getEmail());
+        assertEquals(playerCompleto.getPosition(), convertido.getPosition());
+        assertEquals(playerCompleto.getDorsalNumber(), convertido.getDorsalNumber());
+        assertEquals(playerCompleto.getAge(), convertido.getAge());
+        assertEquals(playerCompleto.getGender(), convertido.getGender());
+        assertEquals(playerCompleto.isCaptain(), convertido.isCaptain());
     }
 
-    // ERROR PATH TESTS
-
     @Test
+    @DisplayName("EP-M01: DTO null → retorna null")
     void testToModel_DTONull_RetornaNull() {
-        Player resultado = PlayerMapper.toModel(null);
-        assertNull(resultado);
+        assertNull(PlayerMapper.toModel(null));
     }
 
     @Test
+    @DisplayName("EP-M02: Player null → retorna null")
     void testToDTO_PlayerNull_RetornaNull() {
-        PlayerDTO resultado = PlayerMapper.toDTO(null);
-        assertNull(resultado);
+        assertNull(PlayerMapper.toDTO(null));
     }
 
     @Test
-    void testToModel_PlayerTypeTipoInvalido_LanzaExcepcion() {
+    @DisplayName("EP-M03: playerType inválido lanza IllegalArgumentException")
+    void testToModel_TipoInvalido_LanzaExcepcion() {
         dtoEstudiante.setPlayerType("TIPO_INVALIDO");
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            PlayerMapper.toModel(dtoEstudiante);
-        });
+        assertThrows(IllegalArgumentException.class, () ->
+                PlayerMapper.toModel(dtoEstudiante)
+        );
     }
 
     @Test
-    void testToModel_CamposOpcionalesNull_ManejaCorrectamente() {
+    @DisplayName("CS-M01: Campos opcionales null se manejan sin error")
+    void testToModel_CamposOpcionalesNull() {
         dtoEstudiante.setPhotoUrl(null);
         dtoEstudiante.setNumberID(0);
 

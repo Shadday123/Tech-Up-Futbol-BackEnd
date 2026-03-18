@@ -1,262 +1,329 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.core.model.DataStore;
-import com.techcup.techcup_futbol.core.model.Player;
-import com.techcup.techcup_futbol.core.model.PositionEnum;
-import com.techcup.techcup_futbol.core.model.StudentPlayer;
+import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.PlayerServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.techcup.techcup_futbol.exception.PlayerException;
+import org.junit.jupiter.api.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Player Service Tests")
 class PlayerServiceTest {
 
     private PlayerServiceImpl playerService;
-    private Player jugadorTest;
-    private String idTest;
+    private Player jugadorPersistido;
+    private String idPersistido;
 
     @BeforeEach
     void setUp() {
-        DataStore.limpiarDatos(); // evita que datos de un test se filtren al siguiente
+        DataStore.limpiarDatos();
         playerService = new PlayerServiceImpl();
 
-        jugadorTest = new StudentPlayer();
-        idTest = UUID.randomUUID().toString();
-        jugadorTest.setId(idTest);
-        jugadorTest.setFullname("Jugador Test");
-        jugadorTest.setEmail("test@escuelaing.edu.co");
-        jugadorTest.setNumberID(999999);
-        jugadorTest.setPosition(PositionEnum.Midfielder);
-        jugadorTest.setDorsalNumber(10);
-        jugadorTest.setPhotoUrl("test.jpg");
-        jugadorTest.setHaveTeam(false);
-        jugadorTest.setAge(20);
-        jugadorTest.setGender("Masculino");
-        jugadorTest.setCaptain(false);
+        jugadorPersistido = new StudentPlayer();
+        idPersistido = UUID.randomUUID().toString();
+        jugadorPersistido.setId(idPersistido);
+        jugadorPersistido.setFullname("Jugador Test");
+        jugadorPersistido.setEmail("test@escuelaing.edu.co");
+        jugadorPersistido.setNumberID(999999);
+        jugadorPersistido.setPosition(PositionEnum.Midfielder);
+        jugadorPersistido.setDorsalNumber(10);
+        jugadorPersistido.setAge(20);
+        jugadorPersistido.setGender("Masculino");
+        jugadorPersistido.setHaveTeam(false);
+        ((StudentPlayer) jugadorPersistido).setSemester(5);
+        DataStore.jugadores.put(idPersistido, jugadorPersistido);
     }
 
-    // HAPPY PATH TESTS
+    // ── Happy Path ────────────────────────────────────────────────────────────
 
-    @Test
-    void testRegistrar_CorreoInstitucional_Exitoso() {
-        String correo = "test@escuelaing.edu.co";
+    @Nested
+    @DisplayName("Happy Path")
+    class HappyPathTests {
 
-        playerService.registrar(jugadorTest, correo);
+        @Test
+        @DisplayName("HP-01: Registrar con correo institucional")
+        void testRegistrar_CorreoInstitucional_Exitoso() {
+            StudentPlayer nuevo = buildStudent(UUID.randomUUID().toString(),
+                    "nuevo@escuelaing.edu.co", 111111);
 
-        List<Player> jugadores = playerService.listarJugadores();
-        assertEquals(1, jugadores.size());
-        assertEquals(correo, jugadores.get(0).getEmail());
-    }
+            playerService.registrar(nuevo, "nuevo@escuelaing.edu.co");
 
-    @Test
-    void testRegistrar_CorreoGmail_Exitoso() {
-        String correo = "test@gmail.com";
-
-        playerService.registrar(jugadorTest, correo);
-
-        List<Player> jugadores = playerService.listarJugadores();
-        assertEquals(1, jugadores.size());
-        assertEquals(correo, jugadores.get(0).getEmail());
-    }
-
-    @Test
-    void testActualizarPerfil_NuevaFoto_ActualizaExitosamente() {
-        String nuevaFoto = "nueva_foto.jpg";
-
-        playerService.actualizarPerfil(jugadorTest, nuevaFoto);
-
-        assertEquals(nuevaFoto, jugadorTest.getPhotoUrl());
-    }
-
-    @Test
-    void testCambiarDisponibilidad_Alternar_Exitoso() {
-        boolean estadoInicial = jugadorTest.isHaveTeam();
-
-        playerService.cambiarDisponibilidad(jugadorTest);
-        boolean estadoPrimerCambio = jugadorTest.isHaveTeam();
-
-        playerService.cambiarDisponibilidad(jugadorTest);
-        boolean estadoSegundoCambio = jugadorTest.isHaveTeam();
-
-        assertNotEquals(estadoInicial, estadoPrimerCambio);
-        assertEquals(estadoInicial, estadoSegundoCambio);
-    }
-
-    @Test
-    void testListarJugadores_ConRegistros_RetornaLista() {
-        playerService.registrar(jugadorTest, "test@escuelaing.edu.co");
-
-        List<Player> resultado = playerService.listarJugadores();
-
-        assertNotNull(resultado);
-        assertEquals(1, resultado.size());
-    }
-
-    @Test
-    void testBuscarPorId_JugadorExiste_RetornaJugador() {
-        playerService.registrar(jugadorTest, "test@escuelaing.edu.co");
-
-        Optional<Player> resultado = playerService.buscarPorId(idTest);
-
-        assertTrue(resultado.isPresent());
-        assertEquals(jugadorTest.getFullname(), resultado.get().getFullname());
-    }
-
-    @Test
-    void testEliminarJugador_JugadorExiste_EliminaCorrectamente() {
-        playerService.registrar(jugadorTest, "test@escuelaing.edu.co");
-
-        playerService.eliminarJugador(idTest);
-
-        assertEquals(0, playerService.listarJugadores().size());
-        assertFalse(playerService.buscarPorId(idTest).isPresent());
-    }
-
-    // ERROR PATH TESTS
-
-    @Test
-    void testRegistrar_CorreoInvalido_LanzaExcepcion() {
-        String correoInvalido = "test@hotmail.com";
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            playerService.registrar(jugadorTest, correoInvalido);
-        });
-        assertEquals(0, playerService.listarJugadores().size());
-    }
-
-    @Test
-    void testRegistrar_CorreoNulo_LanzaExcepcion() {
-        assertThrows(Exception.class, () -> {
-            playerService.registrar(jugadorTest, null);
-        });
-    }
-
-    @Test
-    void testRegistrar_CorreoVacio_LanzaExcepcion() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            playerService.registrar(jugadorTest, "");
-        });
-    }
-
-    @Test
-    void testRegistrar_JugadorNulo_LanzaExcepcion() {
-        assertThrows(NullPointerException.class, () -> {
-            playerService.registrar(null, "test@escuelaing.edu.co");
-        });
-    }
-
-    @Test
-    void testActualizarPerfil_JugadorNulo_LanzaExcepcion() {
-        assertThrows(NullPointerException.class, () -> {
-            playerService.actualizarPerfil(null, "foto.jpg");
-        });
-    }
-
-    @Test
-    void testCambiarDisponibilidad_JugadorNulo_LanzaExcepcion() {
-        assertThrows(NullPointerException.class, () -> {
-            playerService.cambiarDisponibilidad(null);
-        });
-    }
-
-    @Test
-    void testBuscarPorId_IdNoExiste_RetornaEmpty() {
-        Optional<Player> resultado = playerService.buscarPorId("ID_INEXISTENTE");
-        assertFalse(resultado.isPresent());
-    }
-
-    @Test
-    void testEliminarJugador_IdNulo_NoLanzaExcepcion() {
-        assertDoesNotThrow(() -> {
-            playerService.eliminarJugador(null);
-        });
-    }
-
-    @Test
-    void testEliminarJugador_IdNoExiste_NoLanzaExcepcion() {
-        assertDoesNotThrow(() -> {
-            playerService.eliminarJugador("ID_INEXISTENTE");
-        });
-    }
-
-    // CONDITIONAL TESTS
-
-    @Test
-    void testMultiplesRegistros_ManejaCorrectamente() {
-        Player jugador2 = new StudentPlayer();
-        jugador2.setId(UUID.randomUUID().toString());
-        jugador2.setFullname("Jugador 2");
-        jugador2.setEmail("jugador2@escuelaing.edu.co");
-
-        playerService.registrar(jugadorTest, "test@escuelaing.edu.co");
-        playerService.registrar(jugador2, "jugador2@gmail.com");
-
-        List<Player> lista = playerService.listarJugadores();
-        assertEquals(2, lista.size());
-        assertTrue(lista.stream().anyMatch(p -> p.getEmail().contains("@escuelaing.edu.co")));
-        assertTrue(lista.stream().anyMatch(p -> p.getEmail().contains("@gmail.com")));
-    }
-
-    @Test
-    void testCambiarDisponibilidad_MultiplesVeces_AlternaCorrectamente() {
-        boolean[] estados = new boolean[5];
-        estados[0] = jugadorTest.isHaveTeam();
-
-        for (int i = 1; i <= 4; i++) {
-            playerService.cambiarDisponibilidad(jugadorTest);
-            estados[i] = jugadorTest.isHaveTeam();
+            List<Player> jugadores = playerService.listarJugadores();
+            assertEquals(2, jugadores.size());
+            assertTrue(jugadores.stream()
+                    .anyMatch(p -> p.getEmail().equals("nuevo@escuelaing.edu.co")));
         }
 
-        assertNotEquals(estados[0], estados[1]);
-        assertEquals(estados[0], estados[2]);
-        assertNotEquals(estados[0], estados[3]);
-        assertEquals(estados[0], estados[4]);
+        @Test
+        @DisplayName("HP-02: Registrar con correo Gmail")
+        void testRegistrar_CorreoGmail_Exitoso() {
+            InstitutionalPlayer nuevo = new InstitutionalPlayer();
+            nuevo.setId(UUID.randomUUID().toString());
+            nuevo.setFullname("Gmail Player");
+            nuevo.setAge(25);
+            nuevo.setGender("Femenino");
+            nuevo.setNumberID(222222);
+
+            playerService.registrar(nuevo, "gmail@gmail.com");
+
+            assertTrue(playerService.listarJugadores().stream()
+                    .anyMatch(p -> p.getEmail().equals("gmail@gmail.com")));
+        }
+
+        @Test
+        @DisplayName("HP-03: Actualizar foto de perfil")
+        void testActualizarPerfil_Exitoso() {
+            playerService.actualizarPerfil(jugadorPersistido, "nueva_foto.jpg");
+
+            assertEquals("nueva_foto.jpg",
+                    playerService.obtenerPorId(idPersistido).getPhotoUrl());
+        }
+
+        @Test
+        @DisplayName("HP-04: Cambiar disponibilidad a no disponible")
+        void testCambiarDisponibilidad_ANoDisponible_Exitoso() {
+            playerService.cambiarDisponibilidad(jugadorPersistido, false);
+
+            assertTrue(playerService.obtenerPorId(idPersistido).isHaveTeam());
+        }
+
+        @Test
+        @DisplayName("HP-05: Listar jugadores retorna lista correcta")
+        void testListarJugadores_RetornaLista() {
+            List<Player> resultado = playerService.listarJugadores();
+
+            assertNotNull(resultado);
+            assertEquals(1, resultado.size());
+            assertEquals("Jugador Test", resultado.get(0).getFullname());
+        }
+
+        @Test
+        @DisplayName("HP-06: Buscar jugador existente por ID")
+        void testBuscarPorId_JugadorExiste() {
+            Optional<Player> resultado = playerService.buscarPorId(idPersistido);
+
+            assertTrue(resultado.isPresent());
+            assertEquals("Jugador Test", resultado.get().getFullname());
+        }
+
+        @Test
+        @DisplayName("HP-07: obtenerPorId retorna jugador existente")
+        void testObtenerPorId_Exitoso() {
+            Player resultado = playerService.obtenerPorId(idPersistido);
+
+            assertNotNull(resultado);
+            assertEquals(idPersistido, resultado.getId());
+        }
+
+        @Test
+        @DisplayName("HP-08: Eliminar jugador existente")
+        void testEliminarJugador_Exitoso() {
+            playerService.eliminarJugador(idPersistido);
+
+            assertEquals(0, playerService.listarJugadores().size());
+            assertFalse(playerService.buscarPorId(idPersistido).isPresent());
+        }
     }
 
-    @Test
-    void testBuscarPorId_DespuesDeEliminar_NoEncuentra() {
-        playerService.registrar(jugadorTest, "test@escuelaing.edu.co");
-        playerService.eliminarJugador(idTest);
+    // ── Error Path ────────────────────────────────────────────────────────────
 
-        Optional<Player> resultado = playerService.buscarPorId(idTest);
+    @Nested
+    @DisplayName("Error Path")
+    class ErrorPathTests {
 
-        assertFalse(resultado.isPresent());
+        @Test
+        @DisplayName("EP-01: Correo de dominio inválido lanza PlayerException")
+        void testRegistrar_CorreoInvalido_LanzaExcepcion() {
+            StudentPlayer jugador = buildStudent(UUID.randomUUID().toString(),
+                    "test@hotmail.com", 111001);
+
+            assertThrows(PlayerException.class, () ->
+                    playerService.registrar(jugador, "test@hotmail.com")
+            );
+            assertEquals(1, playerService.listarJugadores().size());
+        }
+
+        @Test
+        @DisplayName("EP-02: Correo nulo lanza PlayerException")
+        void testRegistrar_CorreoNulo_LanzaExcepcion() {
+            StudentPlayer jugador = buildStudent(UUID.randomUUID().toString(), null, 111002);
+
+            assertThrows(PlayerException.class, () ->
+                    playerService.registrar(jugador, null)
+            );
+        }
+
+        @Test
+        @DisplayName("EP-03: Correo vacío lanza PlayerException")
+        void testRegistrar_CorreoVacio_LanzaExcepcion() {
+            StudentPlayer jugador = buildStudent(UUID.randomUUID().toString(), "", 111003);
+
+            assertThrows(PlayerException.class, () ->
+                    playerService.registrar(jugador, "")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-04: ID interno nulo lanza PlayerException")
+        void testRegistrar_IdNulo_LanzaExcepcion() {
+            StudentPlayer jugador = buildStudent(null, "nuevo@escuelaing.edu.co", 111004);
+
+            assertThrows(PlayerException.class, () ->
+                    playerService.registrar(jugador, "nuevo@escuelaing.edu.co")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-05: Email duplicado lanza PlayerException")
+        void testRegistrar_EmailDuplicado_LanzaExcepcion() {
+            StudentPlayer dup = buildStudent(UUID.randomUUID().toString(),
+                    "test@escuelaing.edu.co", 555555);
+
+            assertThrows(PlayerException.class, () ->
+                    playerService.registrar(dup, "test@escuelaing.edu.co")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-06: numberID duplicado lanza PlayerException")
+        void testRegistrar_IDDuplicado_LanzaExcepcion() {
+            StudentPlayer dup = buildStudent(UUID.randomUUID().toString(),
+                    "otro@escuelaing.edu.co", 999999);
+
+            assertThrows(PlayerException.class, () ->
+                    playerService.registrar(dup, "otro@escuelaing.edu.co")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-07: Actualizar perfil de jugador inexistente lanza PlayerException")
+        void testActualizarPerfil_JugadorNoExiste_LanzaExcepcion() {
+            Player fantasma = new StudentPlayer();
+            fantasma.setId("ID_FANTASMA");
+
+            assertThrows(PlayerException.class, () ->
+                    playerService.actualizarPerfil(fantasma, "foto.jpg")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-08: buscarPorId con ID inexistente retorna Optional vacío")
+        void testBuscarPorId_NoExiste_RetornaEmpty() {
+            assertFalse(playerService.buscarPorId("ID_INEXISTENTE").isPresent());
+        }
+
+        @Test
+        @DisplayName("EP-09: obtenerPorId con ID inexistente lanza PlayerException")
+        void testObtenerPorId_NoExiste_LanzaExcepcion() {
+            assertThrows(PlayerException.class, () ->
+                    playerService.obtenerPorId("ID_INEXISTENTE")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-10: Eliminar jugador inexistente lanza PlayerException")
+        void testEliminarJugador_NoExiste_LanzaExcepcion() {
+            assertThrows(PlayerException.class, () ->
+                    playerService.eliminarJugador("ID_INEXISTENTE")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-11: Cambiar disponibilidad al mismo estado lanza PlayerException")
+        void testCambiarDisponibilidad_MismoEstado_LanzaExcepcion() {
+            // jugadorPersistido tiene haveTeam=false → ya está disponible
+            assertThrows(PlayerException.class, () ->
+                    playerService.cambiarDisponibilidad(jugadorPersistido, true)
+            );
+        }
     }
 
-    @Test
-    void testRegistrar_CorreoDuplicado_PermiteRegistro() {
-        Player jugadorDuplicado = new StudentPlayer();
-        jugadorDuplicado.setId(UUID.randomUUID().toString());
-        jugadorDuplicado.setFullname("Jugador Duplicado");
-        jugadorDuplicado.setEmail("test@escuelaing.edu.co");
+    // ── Conditional ───────────────────────────────────────────────────────────
 
-        playerService.registrar(jugadorTest, "test@escuelaing.edu.co");
-        playerService.registrar(jugadorDuplicado, "test@escuelaing.edu.co");
+    @Nested
+    @DisplayName("Conditional Scenarios")
+    class ConditionalTests {
 
-        assertEquals(2, playerService.listarJugadores().size());
+        @Test
+        @DisplayName("CS-01: Múltiples registros con dominios distintos")
+        void testMultiplesRegistros_DominiosMixtos() {
+            StudentPlayer est = buildStudent(UUID.randomUUID().toString(),
+                    "est@escuelaing.edu.co", 333333);
+            InstitutionalPlayer inst = new InstitutionalPlayer();
+            inst.setId(UUID.randomUUID().toString());
+            inst.setFullname("Institucional");
+            inst.setAge(25);
+            inst.setGender("Masculino");
+            inst.setNumberID(444444);
+
+            playerService.registrar(est,  "est@escuelaing.edu.co");
+            playerService.registrar(inst, "inst@gmail.com");
+
+            assertEquals(3, playerService.listarJugadores().size());
+        }
+
+        @Test
+        @DisplayName("CS-02: Buscar después de eliminar retorna vacío")
+        void testBuscarDespuesDeEliminar() {
+            playerService.eliminarJugador(idPersistido);
+
+            assertFalse(playerService.buscarPorId(idPersistido).isPresent());
+        }
+
+        @Test
+        @DisplayName("CS-03: listarJugadores retorna copia defensiva")
+        void testListarJugadores_CopiaDefensiva() {
+            List<Player> lista = playerService.listarJugadores();
+            lista.clear();
+
+            assertEquals(1, playerService.listarJugadores().size());
+        }
+
+        @Test
+        @DisplayName("CS-04: Cambiar disponibilidad ciclo completo")
+        void testCambiarDisponibilidad_CicloCompleto() {
+            playerService.cambiarDisponibilidad(jugadorPersistido, false);
+            assertTrue(playerService.obtenerPorId(idPersistido).isHaveTeam());
+
+            playerService.cambiarDisponibilidad(jugadorPersistido, true);
+            assertFalse(playerService.obtenerPorId(idPersistido).isHaveTeam());
+        }
+
+        @Test
+        @DisplayName("CS-05: RelativePlayer se registra y recupera correctamente")
+        void testRegistrar_RelativePlayer_Exitoso() {
+            RelativePlayer familiar = new RelativePlayer();
+            String id = UUID.randomUUID().toString();
+            familiar.setId(id);
+            familiar.setFullname("Familiar Test");
+            familiar.setAge(35);
+            familiar.setGender("Femenino");
+            familiar.setNumberID(666666);
+
+            playerService.registrar(familiar, "familiar@gmail.com");
+
+            Player registrado = playerService.obtenerPorId(id);
+            assertInstanceOf(RelativePlayer.class, registrado);
+            assertEquals("familiar@gmail.com", registrado.getEmail());
+        }
     }
 
-    @Test
-    void testRegistrar_DorsalesDuplicados_PermiteRegistro() {
-        Player jugador1 = new StudentPlayer();
-        jugador1.setId(UUID.randomUUID().toString());
-        jugador1.setFullname("Jugador 1");
-        jugador1.setEmail("jugador1@escuelaing.edu.co");
-        jugador1.setDorsalNumber(10);
+    // ── Helper ────────────────────────────────────────────────────────────────
 
-        Player jugador2 = new StudentPlayer();
-        jugador2.setId(UUID.randomUUID().toString());
-        jugador2.setFullname("Jugador 2");
-        jugador2.setEmail("jugador2@gmail.com");
-        jugador2.setDorsalNumber(10);
-
-        playerService.registrar(jugador1, "jugador1@escuelaing.edu.co");
-        playerService.registrar(jugador2, "jugador2@gmail.com");
-
-        assertEquals(2, playerService.listarJugadores().size());
+    private StudentPlayer buildStudent(String id, String email, int numberID) {
+        StudentPlayer p = new StudentPlayer();
+        p.setId(id);
+        p.setFullname("Test " + numberID);
+        p.setEmail(email);
+        p.setNumberID(numberID);
+        p.setAge(20);
+        p.setGender("Masculino");
+        p.setSemester(3);
+        p.setHaveTeam(false);
+        return p;
     }
 }

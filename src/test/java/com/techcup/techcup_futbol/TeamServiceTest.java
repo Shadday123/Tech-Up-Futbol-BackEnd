@@ -2,36 +2,18 @@ package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.TeamServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import com.techcup.techcup_futbol.exception.TeamException;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Suite de pruebas unitarias para TeamServiceImpl
- * Cubre: Happy Path, Error Path y Condicionales según pruebas.md
- *
- * Escenarios:
- * - HP-T01: Creación de Equipo
- * - HP-T02: Invitación Exitosa
- * - HP-T03: Nómina Válida de Equipo
- * - HP-T04: Consulta de Equipo
- * - EP-T01: Nombre Duplicado
- * - EP-T02: Jugador Ocupado
- * - EP-T03: Tamaño Inválido
- * - EP-T04: Minoría de Programa
- * - CS-T01: Validación de Rol de Capitán
- * - CS-T02: Bloqueo de Cambios en Torneo Activo
- * - CS-T03: Asignación de Recurso Visual por Defecto
- */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Team Service Tests")
 class TeamServiceTest {
@@ -48,10 +30,8 @@ class TeamServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Limpiar DataStore
         DataStore.limpiarDatos();
 
-        // Crear capitán del equipo
         teamCaptain = new StudentPlayer();
         teamCaptain.setId("TCAP001");
         teamCaptain.setFullname("Capitán del Equipo");
@@ -66,7 +46,6 @@ class TeamServiceTest {
         teamCaptain.setHaveTeam(false);
         DataStore.jugadores.put(teamCaptain.getId(), teamCaptain);
 
-        // Miembro 1 - StudentPlayer (Ingeniería)
         teamMember1 = new StudentPlayer();
         teamMember1.setId("TM001");
         teamMember1.setFullname("Miembro 1");
@@ -81,7 +60,6 @@ class TeamServiceTest {
         teamMember1.setHaveTeam(false);
         DataStore.jugadores.put(teamMember1.getId(), teamMember1);
 
-        // Miembro 2 - StudentPlayer (Ingeniería)
         teamMember2 = new StudentPlayer();
         teamMember2.setId("TM002");
         teamMember2.setFullname("Miembro 2");
@@ -96,7 +74,6 @@ class TeamServiceTest {
         teamMember2.setHaveTeam(false);
         DataStore.jugadores.put(teamMember2.getId(), teamMember2);
 
-        // Miembro 3 - InstitutionalPlayer (cuenta como Ingeniería)
         teamMember3 = new InstitutionalPlayer();
         teamMember3.setId("TM003");
         teamMember3.setFullname("Miembro 3");
@@ -110,7 +87,6 @@ class TeamServiceTest {
         teamMember3.setHaveTeam(false);
         DataStore.jugadores.put(teamMember3.getId(), teamMember3);
 
-        // Miembro 4 - RelativePlayer (No es Ingeniería)
         teamMember4 = new RelativePlayer();
         teamMember4.setId("TM004");
         teamMember4.setFullname("Miembro 4");
@@ -124,7 +100,6 @@ class TeamServiceTest {
         teamMember4.setHaveTeam(false);
         DataStore.jugadores.put(teamMember4.getId(), teamMember4);
 
-        // Crear equipo válido
         validTeam = new Team();
         validTeam.setId("E_TEST001");
         validTeam.setTeamName("Equipo Test");
@@ -134,379 +109,275 @@ class TeamServiceTest {
         validTeam.setPlayers(new ArrayList<>());
     }
 
-    // ==================== HAPPY PATH TESTS ====================
+    // ── Happy Path ────────────────────────────────────────────────────────────
 
     @Nested
-    @DisplayName("Happy Path - Escenarios de Éxito")
+    @DisplayName("Happy Path")
     class HappyPathTests {
 
         @Test
-        @DisplayName("HP-T01: Creación de Equipo - Con nombre único, escudo y capitán")
+        @DisplayName("HP-T01: Crear equipo con nombre único y capitán")
         void testCreateTeamSuccessfully() {
-            // Act
-            Team createdTeam = teamService.createTeam(validTeam);
+            Team created = teamService.createTeam(validTeam);
 
-            // Assert
-            assertNotNull(createdTeam);
-            assertEquals("Equipo Test", createdTeam.getTeamName());
-            assertEquals("shield_test.png", createdTeam.getShieldUrl());
-            assertEquals("Azul y Blanco", createdTeam.getUniformColors());
-            assertEquals(teamCaptain, createdTeam.getCaptain());
-            assertTrue(teamService.getAllTeams().contains(createdTeam));
+            assertNotNull(created);
+            assertEquals("Equipo Test", created.getTeamName());
+            assertEquals(teamCaptain, created.getCaptain());
+            assertTrue(teamService.getAllTeams().contains(created));
         }
 
         @Test
-        @DisplayName("HP-T02: Invitación Exitosa - A jugador disponible")
-        void testInviteAvailablePlayerSuccessfully() {
-            // Arrange
+        @DisplayName("HP-T02: Invitar jugador disponible — haveTeam pasa a true")
+        void testInviteAvailablePlayer() {
             teamService.createTeam(validTeam);
-            assertFalse(teamMember1.isHaveTeam());
 
-            // Act
             teamService.invitePlayer(validTeam.getId(), teamMember1);
 
-            // Assert
             assertTrue(validTeam.getPlayers().contains(teamMember1));
-            assertEquals(1, validTeam.getPlayers().size());
+            assertTrue(teamMember1.isHaveTeam());
         }
 
         @Test
-        @DisplayName("HP-T03: Nómina Válida - Equipo con 7-12 jugadores y mayoría de Ingeniería")
-        void testValidTeamRosterWithEngineeringMajority() {
-            // Arrange
+        @DisplayName("HP-T03: Remover jugador desvincula correctamente")
+        void testRemovePlayerDesvincula() {
             teamService.createTeam(validTeam);
-            validTeam.getPlayers().add(teamCaptain); // 1 - Engineer
-            validTeam.getPlayers().add(teamMember1); // 2 - Engineer
-            validTeam.getPlayers().add(teamMember2); // 3 - Engineer
-            validTeam.getPlayers().add(teamMember3); // 4 - Engineer (Institutional counts)
-            validTeam.getPlayers().add(teamMember4); // 5 - Non-engineer
+            teamService.invitePlayer(validTeam.getId(), teamMember1);
 
-            // Act - Verificar rango de jugadores
-            int rosterSize = validTeam.getPlayers().size();
-            long engineerCount = validTeam.getPlayers().stream()
-                    .filter(p -> p instanceof StudentPlayer || p instanceof InstitutionalPlayer)
-                    .count();
-            double engineerPercentage = (double) engineerCount / rosterSize;
+            teamService.removePlayer(validTeam.getId(), teamMember1.getId());
 
-            // Assert
-            assertTrue(rosterSize >= 7 && rosterSize <= 12);
-            assertTrue(engineerPercentage >= 0.5);
+            assertFalse(validTeam.getPlayers().contains(teamMember1));
+            assertFalse(teamMember1.isHaveTeam());
         }
 
         @Test
-        @DisplayName("HP-T04: Consulta de Equipo - GET por ID válido")
-        void testGetTeamByIdSuccessfully() {
-            // Arrange
+        @DisplayName("HP-T04: buscarPorId retorna Optional presente")
+        void testBuscarPorId_Exitoso() {
             teamService.createTeam(validTeam);
 
-            // Act
-            Team found = teamService.getTeamById(validTeam.getId());
+            Optional<Team> found = teamService.buscarPorId(validTeam.getId());
 
-            // Assert
+            assertTrue(found.isPresent());
+            assertEquals("Equipo Test", found.get().getTeamName());
+        }
+
+        @Test
+        @DisplayName("HP-T05: obtenerPorId retorna equipo existente")
+        void testObtenerPorId_Exitoso() {
+            teamService.createTeam(validTeam);
+
+            Team found = teamService.obtenerPorId(validTeam.getId());
+
             assertNotNull(found);
             assertEquals(validTeam.getId(), found.getId());
-            assertEquals("Equipo Test", found.getTeamName());
         }
 
         @Test
-        @DisplayName("HP-EXTRA: Listar todos los equipos")
-        void testGetAllTeamsSuccessfully() {
-            // Arrange
+        @DisplayName("HP-T06: getAllTeams lista todos los equipos")
+        void testGetAllTeams() {
             teamService.createTeam(validTeam);
 
-            Team secondTeam = new Team();
-            secondTeam.setId("E_TEST002");
-            secondTeam.setTeamName("Segundo Equipo");
-            secondTeam.setShieldUrl("shield2.png");
-            secondTeam.setUniformColors("Rojo y Negro");
-            secondTeam.setCaptain(teamMember1);
-            secondTeam.setPlayers(new ArrayList<>());
-            teamService.createTeam(secondTeam);
+            Team segundo = new Team();
+            segundo.setId("E_TEST002");
+            segundo.setTeamName("Segundo Equipo");
+            segundo.setShieldUrl("s2.png");
+            segundo.setUniformColors("Rojo");
+            segundo.setCaptain(teamMember1);
+            segundo.setPlayers(new ArrayList<>());
+            teamService.createTeam(segundo);
 
-            // Act
-            List<Team> allTeams = teamService.getAllTeams();
-
-            // Assert
-            assertEquals(2, allTeams.size());
-            assertTrue(allTeams.contains(validTeam));
-            assertTrue(allTeams.contains(secondTeam));
+            assertEquals(2, teamService.getAllTeams().size());
         }
 
         @Test
-        @DisplayName("HP-EXTRA: Eliminar equipo")
-        void testDeleteTeamSuccessfully() {
-            // Arrange
+        @DisplayName("HP-T07: deleteTeam elimina equipo y desvincula jugadores")
+        void testDeleteTeam() {
             teamService.createTeam(validTeam);
-            assertTrue(teamService.getAllTeams().contains(validTeam));
+            teamService.invitePlayer(validTeam.getId(), teamMember1);
 
-            // Act
             teamService.deleteTeam(validTeam.getId());
 
-            // Assert
             assertFalse(teamService.getAllTeams().contains(validTeam));
+            assertFalse(teamMember1.isHaveTeam());
         }
     }
 
-    // ==================== ERROR PATH TESTS ====================
+    // ── Error Path ────────────────────────────────────────────────────────────
 
     @Nested
-    @DisplayName("Error Path - Escenarios de Fallo")
+    @DisplayName("Error Path")
     class ErrorPathTests {
 
         @Test
-        @DisplayName("EP-T01: Nombre Duplicado - No permitir mismo nombre")
-        void testCreateTeamWithDuplicateName() {
-            // Arrange
+        @DisplayName("EP-T01: Nombre duplicado lanza TeamException")
+        void testCreateTeamDuplicateName() {
             teamService.createTeam(validTeam);
 
-            // Act
-            Team duplicateTeam = new Team();
-            duplicateTeam.setId("E_DUP001");
-            duplicateTeam.setTeamName("Equipo Test"); // Mismo nombre
-            duplicateTeam.setShieldUrl("shield_dup.png");
-            duplicateTeam.setUniformColors("Gris");
-            duplicateTeam.setCaptain(teamMember1);
-            duplicateTeam.setPlayers(new ArrayList<>());
+            Team dup = new Team();
+            dup.setId("E_DUP");
+            dup.setTeamName("Equipo Test");
+            dup.setShieldUrl("s.png");
+            dup.setUniformColors("Gris");
+            dup.setCaptain(teamMember1);
+            dup.setPlayers(new ArrayList<>());
 
-            // Assert - Verificar que ya existe
-            boolean nameExists = teamService.getAllTeams().stream()
-                    .anyMatch(t -> t.getTeamName().equals("Equipo Test"));
-            assertTrue(nameExists);
+            assertThrows(TeamException.class, () -> teamService.createTeam(dup));
         }
 
         @Test
-        @DisplayName("EP-T02: Jugador Ocupado - No permitir invitar a jugador con equipo")
-        void testCannotInvitePlayerAlreadyInTeam() {
-            // Arrange
-            teamMember1.setHaveTeam(true); // Jugador ya tiene equipo
-            teamService.createTeam(validTeam);
+        @DisplayName("EP-T02: Crear equipo sin capitán lanza TeamException")
+        void testCreateTeamSinCapitan() {
+            validTeam.setCaptain(null);
 
-            // Act
-            // Al intentar invitar, debería validarse que no está disponible
-            boolean isAvailable = !teamMember1.isHaveTeam();
-
-            // Assert
-            assertFalse(isAvailable);
+            assertThrows(TeamException.class, () -> teamService.createTeam(validTeam));
         }
 
         @Test
-        @DisplayName("EP-T03: Tamaño Inválido - Menos de 7 jugadores")
-        void testRosterTooSmall() {
-            // Arrange
+        @DisplayName("EP-T03: Invitar jugador con equipo asignado lanza TeamException")
+        void testInvitePlayerYaEnEquipo() {
+            teamMember1.setHaveTeam(true);
             teamService.createTeam(validTeam);
-            validTeam.getPlayers().add(teamCaptain);
-            validTeam.getPlayers().add(teamMember1);
-            validTeam.getPlayers().add(teamMember2);
-            // Solo 3 jugadores, menos de 7 requeridos
 
-            // Act
-            int rosterSize = validTeam.getPlayers().size();
-
-            // Assert
-            assertTrue(rosterSize < 7);
-            assertFalse(rosterSize >= 7 && rosterSize <= 12);
+            assertThrows(TeamException.class, () ->
+                    teamService.invitePlayer(validTeam.getId(), teamMember1)
+            );
         }
 
         @Test
-        @DisplayName("EP-T03: Tamaño Inválido - Más de 12 jugadores")
-        void testRosterTooLarge() {
-            // Arrange
+        @DisplayName("EP-T04: Invitar a equipo inexistente lanza TeamException")
+        void testInvitePlayerEquipoNoExiste() {
+            assertThrows(TeamException.class, () ->
+                    teamService.invitePlayer("ID_FALSO", teamMember1)
+            );
+        }
+
+        @Test
+        @DisplayName("EP-T05: Remover jugador que no pertenece al equipo lanza TeamException")
+        void testRemovePlayerNoPertenece() {
             teamService.createTeam(validTeam);
 
-            // Agregar más de 12 jugadores
-            for (int i = 0; i < 13; i++) {
-                StudentPlayer extraPlayer = new StudentPlayer();
-                extraPlayer.setId("EXTRA_" + i);
-                extraPlayer.setNumberID(200000 + i);
-                extraPlayer.setFullname("Extra Player " + i);
-                extraPlayer.setEmail("extra" + i + "@escuelaing.edu.co");
-                extraPlayer.setAge(20);
-                extraPlayer.setGender("Masculino");
-                extraPlayer.setSemester(3);
-                DataStore.jugadores.put(extraPlayer.getId(), extraPlayer);
-                validTeam.getPlayers().add(extraPlayer);
+            assertThrows(TeamException.class, () ->
+                    teamService.removePlayer(validTeam.getId(), "JUGADOR_AJENO")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-T06: obtenerPorId con ID inexistente lanza TeamException")
+        void testObtenerPorId_NoExiste() {
+            assertThrows(TeamException.class, () ->
+                    teamService.obtenerPorId("E_NOTFOUND")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-T07: deleteTeam con ID inexistente lanza TeamException")
+        void testDeleteTeam_NoExiste() {
+            assertThrows(TeamException.class, () ->
+                    teamService.deleteTeam("E_NOTFOUND")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-T08: Equipo lleno rechaza nuevo jugador con TeamException")
+        void testInvitePlayerEquipoLleno() {
+            teamService.createTeam(validTeam);
+
+            for (int i = 0; i < 12; i++) {
+                StudentPlayer extra = new StudentPlayer();
+                extra.setId("EXTRA_" + i);
+                extra.setFullname("Extra " + i);
+                extra.setHaveTeam(true);
+                validTeam.getPlayers().add(extra);
             }
 
-            // Act
-            int rosterSize = validTeam.getPlayers().size();
+            StudentPlayer unMas = new StudentPlayer();
+            unMas.setId("UNO_MAS");
+            unMas.setFullname("Uno Más");
+            unMas.setHaveTeam(false);
 
-            // Assert
-            assertTrue(rosterSize > 12);
-            assertFalse(rosterSize >= 7 && rosterSize <= 12);
-        }
-
-        @Test
-        @DisplayName("EP-T04: Minoría de Programa - Menos del 50% de Ingeniería")
-        void testInsufficientEngineeringMajority() {
-            // Arrange
-            teamService.createTeam(validTeam);
-
-            // Agregar solo jugadores NO de Ingeniería (Relativos)
-            for (int i = 0; i < 8; i++) {
-                RelativePlayer nonEngineer = new RelativePlayer();
-                nonEngineer.setId("NONENG_" + i);
-                nonEngineer.setNumberID(300000 + i);
-                nonEngineer.setFullname("Non Engineer " + i);
-                nonEngineer.setEmail("noneng" + i + "@gmail.com");
-                nonEngineer.setAge(25);
-                nonEngineer.setGender("Masculino");
-                DataStore.jugadores.put(nonEngineer.getId(), nonEngineer);
-                validTeam.getPlayers().add(nonEngineer);
-            }
-
-            // Act
-            long engineerCount = validTeam.getPlayers().stream()
-                    .filter(p -> p instanceof StudentPlayer || p instanceof InstitutionalPlayer)
-                    .count();
-            double engineerPercentage = (double) engineerCount / validTeam.getPlayers().size();
-
-            // Assert
-            assertTrue(engineerPercentage < 0.5);
-        }
-
-        @Test
-        @DisplayName("EP-EXTRA: Equipo no encontrado - GET por ID inexistente")
-        void testGetTeamWithInvalidId() {
-            // Act
-            Team found = teamService.getTeamById("E_NOTFOUND");
-
-            // Assert
-            assertNull(found);
+            assertThrows(TeamException.class, () ->
+                    teamService.invitePlayer(validTeam.getId(), unMas)
+            );
         }
     }
 
-    // ==================== CONDITIONAL SCENARIOS ====================
+    // ── Conditional ───────────────────────────────────────────────────────────
 
     @Nested
-    @DisplayName("Conditional Scenarios - Lógica de Negocio")
+    @DisplayName("Conditional Scenarios")
     class ConditionalScenarios {
 
         @Test
-        @DisplayName("CS-T01: Validación de Rol de Capitán - Solo ciertos roles pueden serlo")
-        void testCaptainRoleValidation() {
-            // Arrange - Un árbitro intenta crear equipo
-            // En el dominio solo StudentPlayer e InstitutionalPlayer pueden ser capitanes
-
-            // Act & Assert
-            assertTrue(teamCaptain instanceof StudentPlayer);
-            assertTrue(teamCaptain.isCaptain());
-
-            // Verificar que RelativePlayer no debería ser capitán
-            assertFalse(teamMember4.isCaptain());
+        @DisplayName("CS-T01: buscarPorId retorna vacío para ID inexistente")
+        void testBuscarPorId_NoExiste() {
+            assertFalse(teamService.buscarPorId("E_NOTFOUND").isPresent());
         }
 
         @Test
-        @DisplayName("CS-T02: Bloqueo de Cambios - No cambiar equipo si torneo está ACTIVE")
-        void testPreventTeamChangesWhenTournamentActive() {
-            // Arrange
+        @DisplayName("CS-T02: getAllTeams retorna copia defensiva")
+        void testGetAllTeams_CopiaDefensiva() {
+            teamService.createTeam(validTeam);
+            List<Team> lista = teamService.getAllTeams();
+            lista.clear();
+
+            assertEquals(1, teamService.getAllTeams().size());
+        }
+
+        @Test
+        @DisplayName("CS-T03: Jugador no puede estar en dos equipos simultáneamente")
+        void testJugadorNoEnDosEquipos() {
+            teamService.createTeam(validTeam);
+            teamService.invitePlayer(validTeam.getId(), teamMember1);
+
+            Team segundo = new Team();
+            segundo.setId("E_TEAM2");
+            segundo.setTeamName("Segundo Equipo");
+            segundo.setShieldUrl("s2.png");
+            segundo.setUniformColors("Rojo");
+            segundo.setCaptain(teamMember2);
+            segundo.setPlayers(new ArrayList<>());
+            teamService.createTeam(segundo);
+
+            assertThrows(TeamException.class, () ->
+                    teamService.invitePlayer(segundo.getId(), teamMember1)
+            );
+        }
+
+        @Test
+        @DisplayName("CS-T04: validateTeamForTournament con 7+ jugadores no lanza excepción")
+        void testValidateTeamForTournament_Valido() {
+            teamService.createTeam(validTeam);
+
+            for (int i = 0; i < 7; i++) {
+                StudentPlayer s = new StudentPlayer();
+                s.setId("ST_" + i);
+                s.setFullname("Jugador " + i);
+                s.setHaveTeam(true);
+                validTeam.getPlayers().add(s);
+            }
+
+            assertDoesNotThrow(() -> teamService.validateTeamForTournament(validTeam));
+        }
+
+        @Test
+        @DisplayName("CS-T05: Torneo ACTIVE bloquea cambios de equipo")
+        void testTorneoActivoBloqueaCambios() {
             Tournament activeTournament = new Tournament();
             activeTournament.setCurrentState(TournamentState.ACTIVE);
 
-            // Act
-            boolean canMakeChanges = !activeTournament.getCurrentState().equals(TournamentState.ACTIVE);
-
-            // Assert
-            assertFalse(canMakeChanges);
+            assertFalse(!activeTournament.getCurrentState().equals(TournamentState.ACTIVE));
         }
 
         @Test
-        @DisplayName("CS-T02: Permitir Cambios - Cuando torneo está en DRAFT")
-        void testAllowTeamChangesWhenTournamentInDraft() {
-            // Arrange
-            Tournament draftTournament = new Tournament();
-            draftTournament.setCurrentState(TournamentState.DRAFT);
+        @DisplayName("CS-T06: Escudo por defecto si shieldUrl es null")
+        void testEscudoPorDefecto() {
+            Team sinEscudo = new Team();
+            sinEscudo.setShieldUrl(null);
 
-            // Act
-            boolean canMakeChanges = !draftTournament.getCurrentState().equals(TournamentState.ACTIVE);
-
-            // Assert
-            assertTrue(canMakeChanges);
-        }
-
-        @Test
-        @DisplayName("CS-T03: Escudo por Defecto - Asignar default-shield.png si no hay URL")
-        void testDefaultShieldAssignment() {
-            // Arrange
-            Team teamWithoutShield = new Team();
-            teamWithoutShield.setId("E_NOIMG");
-            teamWithoutShield.setTeamName("Equipo Sin Escudo");
-            teamWithoutShield.setShieldUrl(null);
-            teamWithoutShield.setUniformColors("Blanco");
-            teamWithoutShield.setCaptain(teamCaptain);
-            teamWithoutShield.setPlayers(new ArrayList<>());
-
-            // Act - Asignar escudo por defecto si es null
-            if (teamWithoutShield.getShieldUrl() == null) {
-                teamWithoutShield.setShieldUrl("default-shield.png");
+            if (sinEscudo.getShieldUrl() == null) {
+                sinEscudo.setShieldUrl("default-shield.png");
             }
 
-            // Assert
-            assertEquals("default-shield.png", teamWithoutShield.getShieldUrl());
-        }
-
-        @Test
-        @DisplayName("CS-EXTRA: Validación de Nómina Completa")
-        void testCompleteRosterValidation() {
-            // Arrange
-            teamService.createTeam(validTeam);
-            validTeam.getPlayers().add(teamCaptain); // 1
-            validTeam.getPlayers().add(teamMember1); // 2
-            validTeam.getPlayers().add(teamMember2); // 3
-            validTeam.getPlayers().add(teamMember3); // 4
-            validTeam.getPlayers().add(teamMember4); // 5
-
-            StudentPlayer m5 = new StudentPlayer();
-            m5.setId("M5");
-            m5.setNumberID(400005);
-            m5.setFullname("Member 5");
-            m5.setEmail("m5@escuelaing.edu.co");
-            m5.setAge(20);
-            m5.setGender("Masculino");
-            m5.setSemester(2);
-            validTeam.getPlayers().add(m5); // 6
-
-            StudentPlayer m6 = new StudentPlayer();
-            m6.setId("M6");
-            m6.setNumberID(400006);
-            m6.setFullname("Member 6");
-            m6.setEmail("m6@escuelaing.edu.co");
-            m6.setAge(21);
-            m6.setGender("Femenino");
-            m6.setSemester(3);
-            validTeam.getPlayers().add(m6); // 7
-
-            // Act
-            int size = validTeam.getPlayers().size();
-            long engineers = validTeam.getPlayers().stream()
-                    .filter(p -> p instanceof StudentPlayer || p instanceof InstitutionalPlayer)
-                    .count();
-
-            // Assert
-            assertEquals(7, size);
-            assertTrue(size >= 7 && size <= 12);
-            assertTrue((double) engineers / size >= 0.5);
-        }
-
-        @Test
-        @DisplayName("CS-EXTRA: Un jugador no puede estar en dos equipos simultáneamente")
-        void testPlayerCannotBeInMultipleTeams() {
-            // Arrange
-            teamService.createTeam(validTeam);
-            validTeam.getPlayers().add(teamMember1);
-            teamMember1.setHaveTeam(true);
-
-            Team secondTeam = new Team();
-            secondTeam.setId("E_TEAM2");
-            secondTeam.setTeamName("Segundo Equipo");
-            secondTeam.setShieldUrl("shield2.png");
-            secondTeam.setUniformColors("Rojo");
-            secondTeam.setCaptain(teamMember2);
-            secondTeam.setPlayers(new ArrayList<>());
-            teamService.createTeam(secondTeam);
-
-            // Act & Assert - El jugador no debería poder agregarse al segundo equipo
-            // ya que su haveTeam es true
-            assertFalse(!teamMember1.isHaveTeam()); // No debería estar disponible
+            assertEquals("default-shield.png", sinEscudo.getShieldUrl());
         }
     }
 }
