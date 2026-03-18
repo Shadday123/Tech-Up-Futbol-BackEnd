@@ -99,15 +99,6 @@ class PlayerMapperTest {
         assertEquals(dtoInstitucional.getFullname(), resultado.getFullname());
     }
 
-    @Test
-    @DisplayName("HP-M03: DTO RELATIVE → RelativePlayer")
-    void testToModel_DTOFamiliar_RetornaRelativePlayer() {
-        Player resultado = PlayerMapper.toModel(dtoFamiliar);
-
-        assertNotNull(resultado);
-        assertInstanceOf(RelativePlayer.class, resultado);
-        assertEquals(dtoFamiliar.getFullname(), resultado.getFullname());
-    }
 
     @Test
     @DisplayName("HP-M04: StudentPlayer → DTO con tipo STUDENT y semestre")
@@ -140,19 +131,7 @@ class PlayerMapperTest {
         assertEquals("INSTITUTIONAL", resultado.getPlayerType());
     }
 
-    @Test
-    @DisplayName("HP-M06: RelativePlayer → DTO con tipo RELATIVE")
-    void testToDTO_RelativePlayer_RetornaDTOConTipo() {
-        RelativePlayer familiar = new RelativePlayer();
-        familiar.setId("J003");
-        familiar.setFullname("Laura Torres");
-        familiar.setEmail("laura@gmail.com");
 
-        PlayerDTO resultado = PlayerMapper.toDTO(familiar);
-
-        assertNotNull(resultado);
-        assertEquals("RELATIVE", resultado.getPlayerType());
-    }
 
     @Test
     @DisplayName("HP-M07: Round-trip toModel → toDTO conserva datos")

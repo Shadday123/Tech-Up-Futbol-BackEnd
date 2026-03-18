@@ -3,7 +3,6 @@ package com.techcup.techcup_futbol.Controller.mapper;
 import com.techcup.techcup_futbol.Controller.dto.PlayerDTO;
 import com.techcup.techcup_futbol.core.model.InstitutionalPlayer;
 import com.techcup.techcup_futbol.core.model.Player;
-import com.techcup.techcup_futbol.core.model.RelativePlayer;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.core.model.*;
 
@@ -17,7 +16,7 @@ public class PlayerMapper {
                 yield s;
             }
             case "INSTITUTIONAL" -> new InstitutionalPlayer();
-            case "RELATIVE"      -> new RelativePlayer();
+            case "EXTERNAL"      -> new ExternalPlayer();
             default -> throw new IllegalArgumentException(
                     "Tipo de jugador no válido: " + dto.getPlayerType()
             );
@@ -57,8 +56,8 @@ public class PlayerMapper {
             dto.setSemester(s.getSemester());
         } else if (player instanceof InstitutionalPlayer) {
             dto.setPlayerType("INSTITUTIONAL");
-        } else if (player instanceof RelativePlayer) {
-            dto.setPlayerType("RELATIVE");
+        } else if (player instanceof ExternalPlayer) {
+            dto.setPlayerType("EXTERNAL");
         }
 
         return dto;
