@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: techcup-futbol
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+springdoc:
+  swagger-ui:
+    path: /api-docs
+
+logging:
+  level:
+    root: INFO
+    org.springframework: DEBUG
+    org.hibernate: ERROR
