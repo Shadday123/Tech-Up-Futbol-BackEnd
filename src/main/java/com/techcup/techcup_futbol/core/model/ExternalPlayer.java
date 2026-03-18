@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-public class RelativePlayer extends Player {
+public class ExternalPlayer extends Player {
 
     @Override
     public void changeAvailability() {

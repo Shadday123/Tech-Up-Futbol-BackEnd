@@ -26,4 +26,18 @@ public class Match {
     private int field;
 
 
+    public int getGoalsFor(Team team) {
+        if (team.equals(localTeam)) return scoreLocal;
+        if (team.equals(visitorTeam)) return scoreVisitor;
+        return 0;
+    }
+
+    public int getGoalsAgainst(Team team) {
+        if (team.equals(localTeam)) return scoreVisitor;
+        if (team.equals(visitorTeam)) return scoreLocal;
+        return 0;
+    }
+
+
+
 }
