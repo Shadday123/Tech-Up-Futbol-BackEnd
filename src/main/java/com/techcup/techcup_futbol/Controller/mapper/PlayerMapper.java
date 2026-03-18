@@ -5,7 +5,7 @@ import com.techcup.techcup_futbol.core.model.InstitutionalPlayer;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.RelativePlayer;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
-import com.techcup.techcup_futbol.model.*;
+import com.techcup.techcup_futbol.core.model.*;
 
 public class PlayerMapper {
 
