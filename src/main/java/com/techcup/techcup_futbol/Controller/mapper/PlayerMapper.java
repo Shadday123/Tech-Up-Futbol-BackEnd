@@ -10,6 +10,11 @@ import com.techcup.techcup_futbol.core.model.*;
 public class PlayerMapper {
 
     public static Player toModel(PlayerDTO dto) {
+
+        if (dto == null){
+            return null;
+        }
+
         Player player = switch (dto.getPlayerType().toUpperCase()) {
             case "STUDENT" -> {
                 StudentPlayer s = new StudentPlayer();
@@ -37,6 +42,11 @@ public class PlayerMapper {
     }
 
     public static PlayerDTO toDTO(Player player) {
+
+        if (player == null){
+            return null;
+        }
+
         PlayerDTO dto = new PlayerDTO();
 
         dto.setId(player.getId());

@@ -60,14 +60,14 @@ class TeamMapperTest {
     void testToDTO_EquipoCompleto_RetornaEquipoCompleto(){
         TeamDTO resultado = TeamMapper.ModeltoDTo(equipoCompleto);
         assertNotNull(resultado);
-        assertInstanceOf(Team.class, resultado);
+        assertInstanceOf(TeamDTO.class, resultado);
         assertEquals(equipoCompleto.getId(), resultado.getId());
         assertEquals(equipoCompleto.getTeamName(), resultado.getTeamName());
         assertEquals(equipoCompleto.getShieldUrl(), resultado.getShieldUrl());
         assertEquals(equipoCompleto.getUniformColors(), resultado.getUniformColors());
 
     }
-
+    @Test
     void testToModel_ToDTO_RoundTrip_MantieneDatos(){
         TeamDTO dto = TeamMapper.ModeltoDTo(equipoCompleto);
         Team equipoConvertido = TeamMapper.DTOtoModel(dto);

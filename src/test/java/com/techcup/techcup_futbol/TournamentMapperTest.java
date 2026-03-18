@@ -58,7 +58,7 @@ class TournamentMapperTest {
     void testToDTO_Torneo_RetornaTorneoCompleto(){
         TournamentDTO resultado = TournamentMapper.toDTO(torneoCompleto);
         assertNotNull(resultado);
-        assertInstanceOf(Tournament.class, resultado);
+        assertInstanceOf(TournamentDTO.class, resultado);
         assertEquals(torneoCompleto.getId(), resultado.getId());
         assertEquals(torneoCompleto.getName(), resultado.getName());
         assertEquals(torneoCompleto.getStartDate(), resultado.getStartDate());
