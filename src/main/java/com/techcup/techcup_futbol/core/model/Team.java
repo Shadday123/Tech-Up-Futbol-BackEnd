@@ -7,10 +7,8 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Data
 @Entity
-@Getter
-@Setter
+@Data
 public class Team {
 
     @Id

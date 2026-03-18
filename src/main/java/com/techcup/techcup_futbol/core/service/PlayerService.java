@@ -7,15 +7,18 @@ import java.util.Optional;
 
 public interface PlayerService {
 
+    // CREATE
     void registrar(Player jugador, String correo);
 
+    // UPDATE
     void actualizarPerfil(Player jugador, String foto);
+    void cambiarDisponibilidad(Player jugador, boolean disponible);
 
-    void cambiarDisponibilidad(Player jugador);
-
+    // READ
     List<Player> listarJugadores();
-
     Optional<Player> buscarPorId(String id);
+    Player obtenerPorId(String id);          // lanza PlayerException si no existe
 
-    void eliminarJugador(String id);
+    // DELETE
+    void eliminarJugador(String id);         // lanza PlayerException si no existe
 }

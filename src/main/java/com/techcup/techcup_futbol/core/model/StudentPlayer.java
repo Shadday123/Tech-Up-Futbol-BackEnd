@@ -13,13 +13,13 @@ public class StudentPlayer extends Player {
 
     @Override
     public void changeAvailability() {
-        this.haveTeam = !this.haveTeam;
+        this.setHaveTeam(!this.isHaveTeam());
     }
 
     @Override
     public void respondToInvitation(boolean accept) {
         if (accept) {
-            this.haveTeam = true;
+            this.setHaveTeam(true);
         }
     }
 }

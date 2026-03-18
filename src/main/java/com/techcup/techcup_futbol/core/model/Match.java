@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class Match {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @OneToOne
@@ -24,6 +25,20 @@ public class Match {
     private int redCards;
 
     private int field;
+
+
+    public int getGoalsFor(Team team) {
+        if (team.equals(localTeam)) return scoreLocal;
+        if (team.equals(visitorTeam)) return scoreVisitor;
+        return 0;
+    }
+
+    public int getGoalsAgainst(Team team) {
+        if (team.equals(localTeam)) return scoreVisitor;
+        if (team.equals(visitorTeam)) return scoreLocal;
+        return 0;
+    }
+
 
 
 }

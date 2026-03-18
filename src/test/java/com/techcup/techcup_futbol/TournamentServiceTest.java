@@ -3,14 +3,11 @@ package com.techcup.techcup_futbol;
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
 import com.techcup.techcup_futbol.core.model.DataStore;
-import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.service.TournamentServiceImpl;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import com.techcup.techcup_futbol.exception.TournamentException;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
@@ -18,29 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-/**
- * Suite de pruebas unitarias para TournamentServiceImpl
- * Cubre: Happy Path, Error Path y Condicionales según pruebas.md
- *
- * Escenarios:
- * - HP-01: Creación de Torneo
- * - HP-02: Consulta por ID
- * - HP-03: Listado General
- * - HP-04: Inicio de Torneo
- * - EP-01: Campos Vacíos
- * - EP-02: Fechas Inválidas
- * - EP-03: ID Inexistente
- * - EP-04: Costo Negativo
- * - CS-01: Integridad de Máquina de Estados
- * - CS-02: Persistencia Volátil
- * - CS-03: Validación de Nombre Único
- */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tournament Service Tests")
 class TournamentServiceTest {
@@ -54,11 +33,10 @@ class TournamentServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Limpiar DataStore antes de cada prueba
         DataStore.limpiarDatos();
 
         startDate = LocalDateTime.now().plusDays(1);
-        endDate = startDate.plusDays(30);
+        endDate   = startDate.plusDays(30);
 
         validRequest = new CreateTournamentRequest(
                 "TechCup 2026",
@@ -70,348 +48,292 @@ class TournamentServiceTest {
         );
     }
 
-    // HAPPY PATH TESTS
+    // ── Happy Path ────────────────────────────────────────────────────────────
 
     @Nested
-    @DisplayName("Happy Path - Escenarios de Éxito")
+    @DisplayName("Happy Path")
     class HappyPathTests {
 
         @Test
-        @DisplayName("HP-01: Creación de Torneo - Retorna 201 Created y estado DRAFT")
+        @DisplayName("HP-01: Crear torneo retorna estado DRAFT")
         void testCreateTournamentSuccessfully() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any())).thenAnswer(invocation -> null);
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
 
-                // Act
-                TournamentResponse createdTournament = tournamentService.create(validRequest);
+                TournamentResponse created = tournamentService.create(validRequest);
 
-                // Assert
-                assertNotNull(createdTournament);
-                assertEquals("TechCup 2026", createdTournament.name());
-                assertEquals("DRAFT", createdTournament.currentState());
-                assertEquals(150.0, createdTournament.registrationFee());
-                assertTrue(DataStore.torneos.containsValue(
-                        DataStore.torneos.values().stream()
-                                .filter(t -> t.getName().equals("TechCup 2026"))
-                                .findFirst()
-                                .orElse(null)
-                ));
+                assertNotNull(created);
+                assertEquals("TechCup 2026", created.name());
+                assertEquals("DRAFT", created.currentState());
+                assertEquals(150.0, created.registrationFee());
+                assertTrue(DataStore.torneos.values().stream()
+                        .anyMatch(t -> t.getName().equals("TechCup 2026")));
             }
         }
 
         @Test
-        @DisplayName("HP-02: Consulta por ID - Retorna 200 OK con detalles del torneo")
+        @DisplayName("HP-02: Consultar torneo por ID existente")
         void testGetTournamentByIdSuccessfully() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any())).thenAnswer(invocation -> null);
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
 
-                // Arrange
                 TournamentResponse created = tournamentService.create(validRequest);
+                TournamentResponse found   = tournamentService.findById(created.id());
 
-                // Act
-                TournamentResponse found = tournamentService.findById(created.id());
-
-                // Assert
                 assertNotNull(found);
                 assertEquals(created.id(), found.id());
                 assertEquals("TechCup 2026", found.name());
-                assertEquals("DRAFT", found.currentState());
             }
         }
 
         @Test
-        @DisplayName("HP-03: Listado General - Retorna 200 OK con lista de torneos")
+        @DisplayName("HP-03: Listar torneos retorna todos los creados")
         void testGetAllTournamentsSuccessfully() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any())).thenAnswer(invocation -> null);
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
 
-                // Arrange
                 tournamentService.create(validRequest);
-                CreateTournamentRequest secondRequest = new CreateTournamentRequest(
+                tournamentService.create(new CreateTournamentRequest(
                         "TechCup 2027",
                         startDate.plusDays(40),
                         endDate.plusDays(40),
-                        200.0,
-                        10,
-                        "Reglas estándar de fútbol 11"
-                );
-                tournamentService.create(secondRequest);
+                        200.0, 10, "Reglas"
+                ));
 
-                // Act
-                List<TournamentResponse> allTournaments = tournamentService.findAll();
+                List<TournamentResponse> all = tournamentService.findAll();
 
-                // Assert
-                assertNotNull(allTournaments);
-                assertTrue(allTournaments.size() >= 2);
+                assertNotNull(all);
+                assertEquals(2, all.size());
             }
         }
 
         @Test
-        @DisplayName("HP-04: Inicio de Torneo - Cambia estado de DRAFT a ACTIVE")
+        @DisplayName("HP-04: Cambiar estado DRAFT → ACTIVE")
         void testStartTournamentSuccessfully() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any())).thenAnswer(invocation -> null);
-                mockedValidator.when(() -> TournamentValidator.validateStateTransition(any(), any())).thenAnswer(invocation -> null);
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
+                mv.when(() -> TournamentValidator.validateStateTransition(any(), any())).thenAnswer(i -> null);
 
-                // Arrange
                 TournamentResponse created = tournamentService.create(validRequest);
-
-                // Act
                 TournamentResponse started = tournamentService.updateStatus(created.id(), "ACTIVE");
 
-                // Assert
-                assertNotNull(started);
                 assertEquals("ACTIVE", started.currentState());
             }
         }
 
         @Test
-        @DisplayName("HP-EXTRA: Finalización de Torneo - Cambia estado a COMPLETED")
-        void testFinishTournamentSuccessfully() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any())).thenAnswer(invocation -> null);
-                mockedValidator.when(() -> TournamentValidator.validateStateTransition(any(), any())).thenAnswer(invocation -> null);
+        @DisplayName("HP-05: Flujo completo DRAFT → ACTIVE → IN_PROGRESS → COMPLETED")
+        void testFullStateTransitionSequence() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
+                mv.when(() -> TournamentValidator.validateStateTransition(any(), any())).thenAnswer(i -> null);
 
-                // Arrange
-                TournamentResponse created = tournamentService.create(validRequest);
-                tournamentService.updateStatus(created.id(), "ACTIVE");
-
-                // Act
-                TournamentResponse finished = tournamentService.updateStatus(created.id(), "COMPLETED");
-
-                // Assert
-                assertEquals("COMPLETED", finished.currentState());
-            }
-        }
-    }
-
-    // ERROR PATH TESTS
-
-    @Nested
-    @DisplayName("Error Path - Escenarios de Fallo")
-    class ErrorPathTests {
-
-        @Test
-        @DisplayName("EP-01: Campos Vacíos - Nombre null lanza excepción en validador")
-        void testCreateTournamentWithNullName() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any()))
-                        .thenThrow(new IllegalArgumentException("El nombre del torneo es obligatorio"));
-
-                // Act & Assert
-                assertThrows(IllegalArgumentException.class, () -> {
-                    tournamentService.create(validRequest);
-                });
+                TournamentResponse t = tournamentService.create(validRequest);
+                assertEquals("ACTIVE",
+                        tournamentService.updateStatus(t.id(), "ACTIVE").currentState());
+                assertEquals("IN_PROGRESS",
+                        tournamentService.updateStatus(t.id(), "IN_PROGRESS").currentState());
+                assertEquals("COMPLETED",
+                        tournamentService.updateStatus(t.id(), "COMPLETED").currentState());
             }
         }
 
         @Test
-        @DisplayName("EP-02: Fechas Inválidas - Fecha final anterior a inicio")
-        void testCreateTournamentWithInvalidDates() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any()))
-                        .thenThrow(new IllegalArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio"));
-
-                CreateTournamentRequest invalidRequest = new CreateTournamentRequest(
-                        "TechCup 2026",
-                        endDate, // fecha final como inicio
-                        startDate, // fecha inicio como fin
-                        150.0,
-                        8,
-                        "Reglas"
-                );
-
-                // Act & Assert
-                assertThrows(IllegalArgumentException.class, () -> {
-                    tournamentService.create(invalidRequest);
-                });
-            }
-        }
-
-        @Test
-        @DisplayName("EP-03: ID Inexistente - Buscar torneo con ID que no existe")
-        void testGetTournamentByInvalidId() {
-            // Act & Assert
-            assertThrows(NoSuchElementException.class, () -> {
-                tournamentService.findById("T999");
-            });
-        }
-
-        @Test
-        @DisplayName("EP-04: Costo Negativo - Registrar torneo con costo < 0")
-        void testCreateTournamentWithNegativeFee() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any()))
-                        .thenThrow(new IllegalArgumentException("El costo no puede ser negativo"));
-
-                CreateTournamentRequest invalidRequest = new CreateTournamentRequest(
-                        "TechCup 2026",
-                        startDate,
-                        endDate,
-                        -50.0, // costo negativo
-                        8,
-                        "Reglas"
-                );
-
-                // Act & Assert
-                assertThrows(IllegalArgumentException.class, () -> {
-                    tournamentService.create(invalidRequest);
-                });
-            }
-        }
-
-        @Test
-        @DisplayName("EP-EXTRA: Costo Cero - Registrar torneo con costo = 0")
+        @DisplayName("HP-06: Crear torneo con costo 0 es permitido")
         void testCreateTournamentWithZeroFee() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any())).thenAnswer(invocation -> null);
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
 
-                CreateTournamentRequest zeroFeeRequest = new CreateTournamentRequest(
-                        "Free Tournament",
-                        startDate,
-                        endDate,
-                        0.0,
-                        4,
-                        "Reglas"
-                );
+                TournamentResponse created = tournamentService.create(new CreateTournamentRequest(
+                        "Free Tournament", startDate, endDate, 0.0, 4, "Reglas"
+                ));
 
-                // Act
-                TournamentResponse created = tournamentService.create(zeroFeeRequest);
-
-                // Assert
                 assertEquals(0.0, created.registrationFee());
             }
         }
     }
 
-    //  CONDITIONAL SCENARIOS
+    // ── Error Path ────────────────────────────────────────────────────────────
 
     @Nested
-    @DisplayName("Conditional Scenarios - Lógica de Negocio")
-    class ConditionalScenarios {
+    @DisplayName("Error Path")
+    class ErrorPathTests {
 
         @Test
-        @DisplayName("CS-01: Máquina de Estados - No se puede finalizar sin pasar por ACTIVE")
-        void testStateTransitionValidation() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any())).thenAnswer(invocation -> null);
-                mockedValidator.when(() -> TournamentValidator.validateStateTransition(TournamentState.DRAFT, TournamentState.COMPLETED))
-                        .thenThrow(new IllegalStateException("No se puede ir directamente de DRAFT a COMPLETED"));
+        @DisplayName("EP-01: Nombre nulo lanza TournamentException")
+        void testCreateWithNullName() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any()))
+                        .thenThrow(new TournamentException("name", TournamentException.NAME_EMPTY));
 
-                // Arrange
-                TournamentResponse created = tournamentService.create(validRequest);
-
-                // Act & Assert
-                assertThrows(IllegalStateException.class, () -> {
-                    tournamentService.updateStatus(created.id(), "COMPLETED");
-                });
+                assertThrows(TournamentException.class, () ->
+                        tournamentService.create(validRequest)
+                );
             }
         }
 
         @Test
-        @DisplayName("CS-02: Persistencia Volátil - Nuevo torneo debe aparecer en listado")
-        void testPersistenceInDataStore() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any())).thenAnswer(invocation -> null);
+        @DisplayName("EP-02: Fechas inválidas lanzan TournamentException")
+        void testCreateWithInvalidDates() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any()))
+                        .thenThrow(new TournamentException("dates",
+                                String.format(TournamentException.END_DATE_NOT_AFTER_START,
+                                        endDate, startDate)));
 
-                // Arrange & Act
+                assertThrows(TournamentException.class, () ->
+                        tournamentService.create(new CreateTournamentRequest(
+                                "TechCup", endDate, startDate, 150.0, 8, "Reglas"
+                        ))
+                );
+            }
+        }
+
+        @Test
+        @DisplayName("EP-03: ID inexistente en findById lanza TournamentException")
+        void testGetByInvalidId() {
+            assertThrows(TournamentException.class, () ->
+                    tournamentService.findById("T999")
+            );
+        }
+
+        @Test
+        @DisplayName("EP-04: Costo negativo lanza TournamentException")
+        void testCreateWithNegativeFee() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any()))
+                        .thenThrow(new TournamentException("registrationFee",
+                                String.format(TournamentException.REGISTRATION_FEE_NEGATIVE, -50.0)));
+
+                assertThrows(TournamentException.class, () ->
+                        tournamentService.create(new CreateTournamentRequest(
+                                "TechCup", startDate, endDate, -50.0, 8, "Reglas"
+                        ))
+                );
+            }
+        }
+
+        @Test
+        @DisplayName("EP-05: Estado inválido en updateStatus lanza TournamentException")
+        void testUpdateStatusWithInvalidState() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
+
                 TournamentResponse created = tournamentService.create(validRequest);
-                List<TournamentResponse> allTournaments = tournamentService.findAll();
 
-                // Assert
-                assertTrue(allTournaments.stream()
+                assertThrows(TournamentException.class, () ->
+                        tournamentService.updateStatus(created.id(), "ESTADO_INVALIDO")
+                );
+            }
+        }
+
+        @Test
+        @DisplayName("EP-06: ID inexistente en updateStatus lanza TournamentException")
+        void testUpdateStatusWithInvalidId() {
+            assertThrows(TournamentException.class, () ->
+                    tournamentService.updateStatus("T999", "ACTIVE")
+            );
+        }
+    }
+
+    // ── Conditional ───────────────────────────────────────────────────────────
+
+    @Nested
+    @DisplayName("Conditional Scenarios")
+    class ConditionalScenarios {
+
+        @Test
+        @DisplayName("CS-01: Transición DRAFT → COMPLETED no permitida lanza TournamentException")
+        void testInvalidStateTransition() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
+                mv.when(() -> TournamentValidator.validateStateTransition(
+                                TournamentState.DRAFT, TournamentState.COMPLETED))
+                        .thenThrow(new TournamentException("state",
+                                String.format(TournamentException.INVALID_STATE_TRANSITION,
+                                        TournamentState.DRAFT, TournamentState.COMPLETED)));
+
+                TournamentResponse created = tournamentService.create(validRequest);
+
+                assertThrows(TournamentException.class, () ->
+                        tournamentService.updateStatus(created.id(), "COMPLETED")
+                );
+            }
+        }
+
+        @Test
+        @DisplayName("CS-02: Torneo creado aparece en findAll")
+        void testNewTournamentAppearsInFindAll() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
+
+                TournamentResponse created = tournamentService.create(validRequest);
+
+                assertTrue(tournamentService.findAll().stream()
                         .anyMatch(t -> t.id().equals(created.id())));
             }
         }
 
         @Test
-        @DisplayName("CS-03: Validación de Nombre Único - Evitar duplicados")
-        void testUniqueTournamentName() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any()))
+        @DisplayName("CS-03: Nombre duplicado es rechazado por el validator")
+        void testDuplicateTournamentName() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any()))
                         .thenAnswer(invocation -> {
                             CreateTournamentRequest req = invocation.getArgument(0);
-                            // Simular validación de nombre único
                             if (DataStore.torneos.values().stream()
                                     .anyMatch(t -> t.getName().equals(req.name()))) {
-                                throw new IllegalArgumentException("El nombre del torneo ya existe");
+                                throw new TournamentException("name", TournamentException.NAME_EMPTY);
                             }
                             return null;
                         });
 
-                // Arrange
                 tournamentService.create(validRequest);
 
-                // Act & Assert
-                assertThrows(IllegalArgumentException.class, () -> {
-                    tournamentService.create(validRequest); // Mismo nombre
-                });
+                assertThrows(TournamentException.class, () ->
+                        tournamentService.create(validRequest)
+                );
             }
         }
 
         @Test
-        @DisplayName("CS-EXTRA: Transición válida DRAFT → ACTIVE → COMPLETED")
-        void testValidStateTransitionSequence() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any())).thenAnswer(invocation -> null);
-                mockedValidator.when(() -> TournamentValidator.validateStateTransition(any(), any())).thenAnswer(invocation -> null);
+        @DisplayName("CS-04: IDs generados son únicos")
+        void testUniqueIdGeneration() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any())).thenAnswer(i -> null);
 
-                // Arrange & Act
-                TournamentResponse created = tournamentService.create(validRequest);
-                assertEquals("DRAFT", created.currentState());
+                TournamentResponse t1 = tournamentService.create(validRequest);
+                TournamentResponse t2 = tournamentService.create(new CreateTournamentRequest(
+                        "TechCup 2027",
+                        startDate.plusDays(40),
+                        endDate.plusDays(40),
+                        100.0, 4, "Reglas"
+                ));
 
-                TournamentResponse active = tournamentService.updateStatus(created.id(), "ACTIVE");
-                assertEquals("ACTIVE", active.currentState());
-
-                TournamentResponse completed = tournamentService.updateStatus(created.id(), "COMPLETED");
-                assertEquals("COMPLETED", completed.currentState());
-
-                // Assert
-                assertTrue(true); // Sequence completed without errors
+                assertNotEquals(t1.id(), t2.id());
             }
         }
 
         @Test
-        @DisplayName("CS-EXTRA: Máximos y mínimos de equipos permitidos")
-        void testTeamCountValidation() {
-            try (MockedStatic<TournamentValidator> mockedValidator = mockStatic(TournamentValidator.class)) {
-                mockedValidator.when(() -> TournamentValidator.validate(any()))
+        @DisplayName("CS-05: maxTeams mínimo es validado por el validator")
+        void testMinTeamsValidation() {
+            try (MockedStatic<TournamentValidator> mv = mockStatic(TournamentValidator.class)) {
+                mv.when(() -> TournamentValidator.validate(any()))
                         .thenAnswer(invocation -> {
                             CreateTournamentRequest req = invocation.getArgument(0);
-                            if (req.maxTeams() < 4) {
-                                throw new IllegalArgumentException("El torneo debe tener al menos 4 equipos");
-                            }
-                            if (req.maxTeams() > 32) {
-                                throw new IllegalArgumentException("El máximo de equipos permitido es 32");
+                            if (req.maxTeams() < 2) {
+                                throw new TournamentException("maxTeams",
+                                        String.format(TournamentException.MAX_TEAMS_TOO_LOW,
+                                                req.maxTeams()));
                             }
                             return null;
                         });
 
-                // Act & Assert - Min teams
-                assertThrows(IllegalArgumentException.class, () -> {
-                    CreateTournamentRequest tooSmall = new CreateTournamentRequest(
-                            "Small Tournament",
-                            startDate,
-                            endDate,
-                            100.0,
-                            2, // menor a 4
-                            "Reglas"
-                    );
-                    tournamentService.create(tooSmall);
-                });
-
-                // Act & Assert - Max teams
-                assertThrows(IllegalArgumentException.class, () -> {
-                    CreateTournamentRequest tooLarge = new CreateTournamentRequest(
-                            "Large Tournament",
-                            startDate,
-                            endDate,
-                            100.0,
-                            50, // mayor a 32
-                            "Reglas"
-                    );
-                    tournamentService.create(tooLarge);
-                });
+                assertThrows(TournamentException.class, () ->
+                        tournamentService.create(new CreateTournamentRequest(
+                                "Mini", startDate, endDate, 100.0, 1, "Reglas"
+                        ))
+                );
             }
         }
     }

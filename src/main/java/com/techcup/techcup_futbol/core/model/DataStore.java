@@ -116,20 +116,6 @@ public class DataStore {
         jugador6.setSemester(4);
         jugadores.put(jugador6.getId(), jugador6);
 
-        // RelativePlayer - equipo 2
-        RelativePlayer jugador7 = new RelativePlayer();
-        jugador7.setId("J007");
-        jugador7.setFullname("Laura Torres");
-        jugador7.setEmail("laura.torres@gmail.com");
-        jugador7.setNumberID(123462);
-        jugador7.setPosition(PositionEnum.Midfielder);
-        jugador7.setDorsalNumber(6);
-        jugador7.setPhotoUrl("laura.jpg");
-        jugador7.setHaveTeam(true);
-        jugador7.setAge(22);
-        jugador7.setGender("Femenino");
-        jugador7.setCaptain(false);
-        jugadores.put(jugador7.getId(), jugador7);
 
         // StudentPlayer - equipo 3 (reemplaza a J002/J005 que estaban duplicados)
         StudentPlayer jugador8 = new StudentPlayer();
