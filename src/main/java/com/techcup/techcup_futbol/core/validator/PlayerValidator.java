@@ -2,64 +2,76 @@ package com.techcup.techcup_futbol.core.validator;
 
 import com.techcup.techcup_futbol.Controller.dto.PlayerRegistrationRequest;
 import com.techcup.techcup_futbol.core.model.DataStore;
+import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.exception.PlayerException;
 
 public class PlayerValidator {
 
+    private PlayerValidator() {}
 
-    private static final String SCHOOL_DOMAIN = "@escuelaing.edu.co";
-    private static final String GMAIL_DOMAIN = "@gmail.com";
+    // ── Puntos de entrada ─────────────────────────────────────────────────────
 
-    public static class PlayerException extends Exception {
+    /** Validación completa desde DTO. */
+    public static void validate(PlayerRegistrationRequest request) {
+        validateFullname(request.fullname());
+        validateAge(request.age());
+        EmailValidator.validate(request.email());
+        validateUniqueEmail(request.email());
+        validateUniqueNumberID(request.numberID());
+    }
 
-        public PlayerException(String message) {
-            super(message);
+    /** Validación completa desde objeto Player + correo separado. */
+    public static void validate(Player jugador, String correo) {
+        validateFullname(jugador.getFullname());
+        validateAge(jugador.getAge());
+        EmailValidator.validate(correo);
+        validateUniqueEmail(correo);
+        validateUniqueNumberID(jugador.getNumberID());
+    }
+
+
+    public static void validateFullname(String fullname) {
+        if (fullname == null || fullname.isBlank()) {
+            throw new PlayerException("fullname", PlayerException.FULLNAME_EMPTY);
         }
     }
 
-    public static void validate(PlayerRegistrationRequest request) throws PlayerException {
-        validateEmailDomain(request.email());
-        validateUniqueness(request.numberID());
-    }
-
-    /**
-     * Valida que el correo pertenezca a los dominios permitidos.
-     */
-    public static void validateEmailDomain(String email) throws PlayerException {
-
-        String lowerEmail = email.toLowerCase();
-
-        if (!lowerEmail.endsWith(SCHOOL_DOMAIN) && !lowerEmail.endsWith(GMAIL_DOMAIN)) {
-            throw new PlayerException(
-                    "Email must belong to @escuelaing.edu.co or @gmail.com"
-            );
+    public static void validateAge(int age) {
+        if (age < 15 || age > 110) {
+            throw new PlayerException("age",
+                    String.format(PlayerException.AGE_OUT_OF_RANGE, age));
         }
     }
 
-    /**
-     * Valida que el número de identificación no esté repetido.
-     */
-    public static void validateUniqueness(Integer numberID) throws PlayerException {
+    public static void validateEmailDomain(String email) {
+        EmailValidator.validate(email);
+    }
 
+    public static void validateUniqueEmail(String email) {
         boolean exists = DataStore.jugadores.values().stream()
-                .anyMatch(p -> p.getNumberID() == numberID);
-
+                .anyMatch(p -> p.getEmail() != null
+                        && p.getEmail().equalsIgnoreCase(email));
         if (exists) {
-            throw new PlayerException(
-                    "A player with this ID number is already registered."
-            );
+            throw new PlayerException("email",
+                    String.format(PlayerException.EMAIL_ALREADY_REGISTERED, email));
+        }
+    }
+    public static void validateUniqueNumberID(Integer numberID) {
+        if (numberID == null) {
+            throw new PlayerException("numberID", PlayerException.NUMBER_ID_NULL);
+        }
+        boolean exists = DataStore.jugadores.values().stream()
+                .anyMatch(p -> numberID.equals(p.getNumberID()));
+        if (exists) {
+            throw new PlayerException("numberID",
+                    String.format(PlayerException.NUMBER_ID_ALREADY_REGISTERED, numberID));
         }
     }
 
-    /**
-     * Valida que el dorsal esté en el rango permitido.
-     */
-    public static void validateDorsal(int dorsal) throws PlayerException {
-
+    public static void validateDorsal(int dorsal) {
         if (dorsal < 1 || dorsal > 99) {
-            throw new PlayerException(
-                    "Dorsal number must be between 1 and 99."
-            );
+            throw new PlayerException("dorsal",
+                    String.format(PlayerException.DORSAL_OUT_OF_RANGE, dorsal));
         }
     }
 }
-

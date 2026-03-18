@@ -2,6 +2,9 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.validator.EmailValidator;
+import com.techcup.techcup_futbol.core.validator.PlayerValidator;
+import com.techcup.techcup_futbol.exception.PlayerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,156 +19,136 @@ import java.util.Optional;
 public class PlayerServiceImpl implements PlayerService {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    // CREATE
+    // ── CREATE
+
     @Override
     public void registrar(Player jugador, String correo) {
-        String timestamp = LocalDateTime.now().format(formatter);
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Iniciando registro — jugador: {} | email: {}",
+                ts, jugador.getFullname(), correo);
 
-        log.info("[{}] Iniciando registro de jugador", timestamp);
-        log.info("Email proporcionado: {}", correo);
-        log.info("Nombre del jugador: {}", jugador.getFullname());
-        log.info("Número ID: {}", jugador.getNumberID());
-        log.info("Edad: {}", jugador.getAge());
-        log.info("Género: {}", jugador.getGender());
-        log.info("Tipo de jugador: {}", jugador.getClass().getSimpleName());
+        if (jugador.getId() == null || jugador.getId().isBlank()) {
+            throw new PlayerException("id", PlayerException.PLAYER_ID_NULL);
+        }
 
-        // Validación de dominio de email
-        if (correo.endsWith("@escuelaing.edu.co")) {
-            log.debug(" Email institucional válido: @escuelaing.edu.co");
-        } else if (correo.endsWith("@gmail.com")) {
-            log.debug(" Email personal válido: @gmail.com");
+        PlayerValidator.validate(jugador, correo);
+
+        if (EmailValidator.esCorreoInstitucional(correo)) {
+            log.debug("Email institucional detectado: {}", correo);
         } else {
-            log.error("Dominio de email no permitido: {}", correo);
-            log.error("Dominios permitidos: @escuelaing.edu.co, @gmail.com");
-            throw new IllegalArgumentException("Correo no válido. Use @escuelaing.edu.co o @gmail.com");
+            log.debug("Email personal (gmail) detectado: {}", correo);
         }
 
-        // Validación de ID duplicado
-        if (DataStore.jugadores.values().stream()
-                .anyMatch(p -> p.getNumberID() == jugador.getNumberID())) {
-            log.error(" Ya existe jugador con número ID: {}", jugador.getNumberID());
-            throw new IllegalArgumentException("El número de ID ya está registrado");
-        }
-
-        // Validación de email duplicado
-        if (DataStore.jugadores.values().stream()
-                .anyMatch(p -> p.getEmail() != null && p.getEmail().equals(correo))) {
-            log.error("FALLO: Ya existe jugador con email: {}", correo);
-            throw new IllegalArgumentException("El email ya está registrado");
-        }
-
-        // Registrar el jugador
         jugador.setEmail(correo);
         DataStore.jugadores.put(jugador.getId(), jugador);
 
-        log.info("ÉXITO: Jugador registrado correctamente");
-        log.info("ID asignado: {}", jugador.getId());
-        log.info("Email asignado: {}", correo);
-        log.info("Total de jugadores en el sistema: {}", DataStore.jugadores.size());
+        log.info("Jugador registrado — ID: {} | Email: {} | Total: {}",
+                jugador.getId(), correo, DataStore.jugadores.size());
     }
 
-    // UPDATE - PERFIL
+    // ── UPDATE
+
     @Override
     public void actualizarPerfil(Player jugador, String foto) {
-        String timestamp = LocalDateTime.now().format(formatter);
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Actualizando foto del jugador ID: {}", ts, jugador.getId());
+        Player persistido = obtenerPorId(jugador.getId());
 
-        log.info("[{}] Actualizando foto del jugador", timestamp);
-        log.info("ID del jugador: {}", jugador.getId());
-        log.info("Nombre del jugador: {}", jugador.getFullname());
-        log.info("URL anterior: {}", jugador.getPhotoUrl());
-        log.info("URL nueva: {}", foto);
-
-        jugador.setPhotoUrl(foto);
-
-        log.info(" Foto actualizada correctamente");
+        log.debug("URL anterior: {} | URL nueva: {}", persistido.getPhotoUrl(), foto);
+        persistido.setPhotoUrl(foto);
+        log.info("Foto actualizada para jugador: {}", persistido.getFullname());
     }
 
-    // UPDATE - DISPONIBILIDAD
+    // ── UPDATE
+
     @Override
-    public void cambiarDisponibilidad(Player jugador) {
-        String timestamp = LocalDateTime.now().format(formatter);
-        boolean disponibleAntes = !jugador.isHaveTeam();
+    public void cambiarDisponibilidad(Player jugador, boolean disponible) {
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Cambiando disponibilidad — jugador: {} | disponible solicitado: {}",
+                ts, jugador.getFullname(), disponible);
 
-        log.info("[{}] Cambiando disponibilidad del jugador", timestamp);
-        log.info("ID del jugador: {}", jugador.getId());
-        log.info("Nombre del jugador: {}", jugador.getFullname());
-        log.info("Disponible ANTES: {}", disponibleAntes);
+        Player persistido = obtenerPorId(jugador.getId());
 
-        jugador.changeAvailability();
-        boolean disponibleDespues = !jugador.isHaveTeam();
+        boolean estadoActual = !persistido.isHaveTeam();
 
-        log.info("Disponible DESPUÉS: {}", disponibleDespues);
-        log.info("Estado actualizado correctamente");
+        if (estadoActual == disponible) {
+            String msg = disponible
+                    ? String.format(PlayerException.PLAYER_ALREADY_AVAILABLE, persistido.getFullname())
+                    : String.format(PlayerException.PLAYER_ALREADY_UNAVAILABLE, persistido.getFullname());
+            throw new PlayerException("availability", msg);
+        }
+
+        persistido.setHaveTeam(!disponible);
+        log.info("Disponibilidad actualizada — jugador: {} | disponible ahora: {}",
+                persistido.getFullname(), disponible);
     }
 
-    // READ - LISTAR TODOS
+    // ── READ — LISTAR TODOS ───────────────────────────────────────────────────
+
     @Override
     public List<Player> listarJugadores() {
-        String timestamp = LocalDateTime.now().format(formatter);
-        log.info("[{}] Listando todos los jugadores del sistema", timestamp);
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Listando todos los jugadores del sistema", ts);
 
         List<Player> jugadores = new ArrayList<>(DataStore.jugadores.values());
 
-        log.info("Total de jugadores encontrados: {}", jugadores.size());
-
-        if (!jugadores.isEmpty()) {
-            log.debug("Primeros 5 jugadores:");
-            jugadores.stream().limit(5).forEach(j ->
-                    log.debug("  - {} (ID: {}, Email: {})", j.getFullname(), j.getId(), j.getEmail())
-            );
+        if (jugadores.isEmpty()) {
+            log.warn("No hay jugadores registrados en el sistema.");
         } else {
-            log.warn("No hay jugadores registrados en el sistema");
+            log.info("Total de jugadores encontrados: {}", jugadores.size());
+            jugadores.stream().limit(5).forEach(j ->
+                    log.debug("  → {} (ID: {}, Email: {})",
+                            j.getFullname(), j.getId(), j.getEmail())
+            );
         }
 
         return jugadores;
     }
 
-    // READ - BUSCAR POR ID
+    // ── READ — BUSCAR POR ID
+
     @Override
     public Optional<Player> buscarPorId(String id) {
-        String timestamp = LocalDateTime.now().format(formatter);
-
-        log.info("[{}] Buscando jugador con ID: {}", timestamp, id);
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Buscando jugador con ID: {}", ts, id);
 
         Optional<Player> resultado = Optional.ofNullable(DataStore.jugadores.get(id));
 
         if (resultado.isPresent()) {
-            Player jugador = resultado.get();
-            log.info("Nombre: {}", jugador.getFullname());
-            log.info("Email: {}", jugador.getEmail());
-            log.info("Número ID: {}", jugador.getNumberID());
-            log.info("Posición: {}", jugador.getPosition());
-            log.info("Dorsal: {}", jugador.getDorsalNumber());
-            log.info("Tiene equipo: {}", jugador.isHaveTeam());
+            Player j = resultado.get();
+            log.info("Jugador encontrado — Nombre: {} | Email: {} | Dorsal: {} | Tiene equipo: {}",
+                    j.getFullname(), j.getEmail(), j.getDorsalNumber(), j.isHaveTeam());
         } else {
-            log.warn("✗ NO ENCONTRADO");
-            log.warn("El jugador con ID {} no existe en el sistema", id);
+            log.warn("No se encontró jugador con ID: {}", id);
         }
 
-        log.info("==========================================================");
         return resultado;
     }
 
+    // ── READ
+
+    @Override
+    public Player obtenerPorId(String id) {
+        return buscarPorId(id).orElseThrow(() ->
+                new PlayerException("id",
+                        String.format(PlayerException.PLAYER_NOT_FOUND, id))
+        );
+    }
+
     // DELETE
+
     @Override
     public void eliminarJugador(String id) {
-        String timestamp = LocalDateTime.now().format(formatter);
-        log.info("[{}] Intentando eliminar jugador", timestamp);
-        log.info("ID del jugador: {}", id);
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Eliminando jugador con ID: {}", ts, id);
 
-        Optional<Player> jugador = Optional.ofNullable(DataStore.jugadores.get(id));
+        Player jugador = obtenerPorId(id);
 
-        if (jugador.isPresent()) {
-            log.info("Jugador encontrado: {}", jugador.get().getFullname());
-            log.info("Email: {}", jugador.get().getEmail());
-            DataStore.jugadores.remove(id);
-            log.info(" Jugador eliminado exitosamente");
-        } else {
-            log.warn(" No se puede eliminar - Jugador no encontrado");
-        }
-
-        log.info("Total de jugadores después de eliminar: {}", DataStore.jugadores.size());
+        log.info("Eliminando jugador: {} | Email: {}", jugador.getFullname(), jugador.getEmail());
+        DataStore.jugadores.remove(id);
+        log.info("Jugador eliminado. Total restante: {}", DataStore.jugadores.size());
     }
 }

@@ -2,52 +2,68 @@ package com.techcup.techcup_futbol.core.validator;
 
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.core.model.TournamentState;
+import com.techcup.techcup_futbol.exception.TournamentException;
+
+import java.time.LocalDate;
+import java.util.Arrays;
 
 public class TournamentValidator {
 
-    /**
-     * Valida la lógica de negocio al momento de crear un torneo.
-     * @param request Datos provenientes del DTO
-     */
+    private TournamentValidator() {}
+
     public static void validate(CreateTournamentRequest request) {
-
-        // campos no nulos
         if (request == null) {
-            throw new IllegalArgumentException("La solicitud del torneo no puede ser nula.");
+            throw new TournamentException(TournamentException.REQUEST_NULL);
         }
-
-        //  fecha_fin > fecha_inicio
-        if (request.endDate().isBefore(request.startDate())) {
-            throw new IllegalArgumentException("Inconsistencia en fechas: La fecha de finalización debe ser posterior a la de inicio.");
-        }
-
-        // La fecha de inicio no puede ser igual a la fecha de fin
-        if (request.endDate().isEqual(request.startDate())) {
-            throw new IllegalArgumentException("El torneo debe tener una duración mínima de al menos un día.");
-        }
-
+        validateName(request.name());
+        validateDates(request.startDate().toLocalDate(), request.endDate().toLocalDate());
+        validateRegistrationFee(request.registrationFee());
+        validateMaxTeams(request.maxTeams());
     }
 
-    /**
-     * Valida si la transición de un estado a otro es permitida (State Pattern).
-     */
+
+    public static void validateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new TournamentException("name", TournamentException.NAME_EMPTY);
+        }
+    }
+
+    public static void validateDates(LocalDate startDate, LocalDate endDate) {
+        if (startDate == null || endDate == null) {
+            throw new TournamentException("dates", TournamentException.DATES_NULL);
+        }
+        if (!endDate.isAfter(startDate)) {
+            throw new TournamentException("dates",
+                    String.format(TournamentException.END_DATE_NOT_AFTER_START,
+                            startDate, endDate));
+        }
+    }
+
+    public static void validateRegistrationFee(double fee) {
+        if (fee < 0) {
+            throw new TournamentException("registrationFee",
+                    String.format(TournamentException.REGISTRATION_FEE_NEGATIVE, fee));
+        }
+    }
+
+    public static void validateMaxTeams(int maxTeams) {
+        if (maxTeams < 2) {
+            throw new TournamentException("maxTeams",
+                    String.format(TournamentException.MAX_TEAMS_TOO_LOW, maxTeams));
+        }
+    }
+
     public static void validateStateTransition(TournamentState current, TournamentState next) {
         boolean isAllowed = switch (current) {
-            // De borrador solo puede pasar a activo o eliminado
-            case DRAFT       -> next == TournamentState.ACTIVE || next == TournamentState.DELETED;
-
-            // De Activo puede pasar a en progreso o eliminado
+            case DRAFT       -> next == TournamentState.ACTIVE      || next == TournamentState.DELETED;
             case ACTIVE      -> next == TournamentState.IN_PROGRESS || next == TournamentState.DELETED;
-
-            // De En Progreso solo puede ser completado ya no puede ser eliminado
             case IN_PROGRESS -> next == TournamentState.COMPLETED;
-
-            // estos estados no permiten mas cambios
             case DELETED, COMPLETED -> false;
         };
 
         if (!isAllowed) {
-            throw new IllegalStateException("Error de flujo: No se puede pasar de " + current + " a " + next);
+            throw new TournamentException("state",
+                    String.format(TournamentException.INVALID_STATE_TRANSITION, current, next));
         }
     }
 }

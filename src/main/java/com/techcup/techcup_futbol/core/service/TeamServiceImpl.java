@@ -2,6 +2,8 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.Team;
+import com.techcup.techcup_futbol.core.validator.TeamValidator;
+import com.techcup.techcup_futbol.exception.TeamException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,177 +12,173 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TeamServiceImpl implements TeamService {
 
     private static final Logger log = LoggerFactory.getLogger(TeamServiceImpl.class);
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final List<Team> teams = new ArrayList<>();
 
-    // CREATE
+    // ── CREATE
+
     @Override
     public Team createTeam(Team team) {
-        String timestamp = LocalDateTime.now().format(formatter);
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Creando equipo: {}", ts, team.getTeamName());
 
-        log.info("[{}] Iniciando creación de equipo", timestamp);
-        log.info("Nombre del equipo: {}", team.getTeamName());
-        log.info("Colores del uniforme: {}", team.getUniformColors());
-        log.info("URL del escudo: {}", team.getShieldUrl());
-
-        if (team.getCaptain() != null) {
-            log.info("Capitán asignado: {} (ID: {})",
-                    team.getCaptain().getFullname(),
-                    team.getCaptain().getId());
-        } else {
-            log.warn("No hay capitán asignado");
-        }
-
-        // Validar nombre único
-        if (teams.stream().anyMatch(t -> t.getTeamName().equals(team.getTeamName()))) {
-            log.error("Ya existe un equipo con el nombre: {}", team.getTeamName());
-            throw new IllegalArgumentException("El nombre del equipo ya existe");
-        }
+        TeamValidator.validateTeamName(team.getTeamName(), teams);
+        TeamValidator.validateCaptain(team);
 
         teams.add(team);
-
-        log.info("Equipo creado exitosamente");
-        log.info("ID asignado: {}", team.getId());
-        log.info("Total de equipos en el sistema: {}", teams.size());
+        log.info("Equipo creado — ID: {} | Capitán: {} | Total equipos: {}",
+                team.getId(),
+                team.getCaptain().getFullname(),
+                teams.size());
 
         return team;
     }
 
-    // INVITE PLAYER
+    // ── INVITE PLAYER
+
     @Override
     public void invitePlayer(String teamId, Player player) {
-        String timestamp = LocalDateTime.now().format(formatter);
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Invitando jugador '{}' al equipo ID: {}",
+                ts, player.getFullname(), teamId);
 
-        log.info("[{}] Invitando jugador a equipo", timestamp);
-        log.info("ID del equipo: {}", teamId);
-        log.info("Jugador a invitar: {} (ID: {})", player.getFullname(), player.getId());
-        log.info("Email del jugador: {}", player.getEmail());
-        log.info("Posición: {}", player.getPosition());
-        log.info("Dorsal: {}", player.getDorsalNumber());
+        // FIX: usa obtenerPorId que lanza excepción — ya no retorna null
+        Team team = obtenerPorId(teamId);
 
-        Team team = getTeamById(teamId);
-        if (team != null) {
-            // Validar si el jugador ya tiene equipo
-            if (player.isHaveTeam()) {
-                log.warn("⚠ El jugador {} ya tiene equipo asignado", player.getFullname());
-            }
+        TeamValidator.validatePlayerAddition(team, player);
 
-            if (team.getPlayers() == null) {
-                team.setPlayers(new ArrayList<>());
-            }
-
-            int jugadoresAntes = team.getPlayers().size();
-            team.getPlayers().add(player);
-            int jugadoresDespues = team.getPlayers().size();
-
-            log.info("✓ Jugador agregado exitosamente al equipo");
-            log.info("Jugadores en el equipo ANTES: {}", jugadoresAntes);
-            log.info("Jugadores en el equipo DESPUÉS: {}", jugadoresDespues);
-
-            // Validación de tamaño de equipo
-            if (jugadoresDespues > 12) {
-                log.error("✗ Advertencia: Equipo excede el máximo de 12 jugadores");
-            }
-        } else {
-            log.error("✗ FALLO: No se encontró equipo con ID: {}", teamId);
+        if (team.getPlayers() == null) {
+            team.setPlayers(new ArrayList<>());
         }
 
+        team.getPlayers().add(player);
+        player.setHaveTeam(true);   // setter explícito, no toggle
+
+        log.info("Jugador '{}' agregado al equipo '{}' — Total jugadores: {}",
+                player.getFullname(), team.getTeamName(), team.getPlayers().size());
     }
 
-    // READ - LISTAR TODOS
+    // ── REMOVE PLAYER
+
+    @Override
+    public void removePlayer(String teamId, String playerId) {
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Removiendo jugador ID: '{}' del equipo ID: '{}'",
+                ts, playerId, teamId);
+
+        Team team = obtenerPorId(teamId);
+
+        if (team.getPlayers() == null || team.getPlayers().isEmpty()) {
+            throw new TeamException("players",
+                    String.format(TeamException.PLAYERS_LIST_EMPTY, team.getTeamName()));
+        }
+
+        Player jugador = team.getPlayers().stream()
+                .filter(p -> p.getId().equals(playerId))
+                .findFirst()
+                .orElseThrow(() -> new TeamException("player",
+                        String.format(TeamException.PLAYER_NOT_IN_TEAM,
+                                playerId, team.getTeamName())));
+
+        team.getPlayers().remove(jugador);
+        jugador.setHaveTeam(false);
+
+        log.info("Jugador '{}' removido del equipo '{}' — Jugadores restantes: {}",
+                jugador.getFullname(), team.getTeamName(), team.getPlayers().size());
+    }
+
+
+
+    @Override
+    public void validateTeamForTournament(Team team) {
+        log.info("Validando equipo '{}' para inscripción en torneo.", team.getTeamName());
+        TeamValidator.validate(team, teams);
+        log.info("Equipo '{}' validado correctamente.", team.getTeamName());
+    }
+
+    // ── READ — LISTAR TODOS
+
     @Override
     public List<Team> getAllTeams() {
-        String timestamp = LocalDateTime.now().format(formatter);
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Listando todos los equipos — total: {}", ts, teams.size());
 
-        log.info("[{}] Listando todos los equipos del sistema", timestamp);
-        log.info("Total de equipos encontrados: {}", teams.size());
-
-        if (!teams.isEmpty()) {
-            log.debug("Detalles de los equipos:");
-            teams.forEach(team -> {
-                int numJugadores = team.getPlayers() != null ? team.getPlayers().size() : 0;
-                String captainName = team.getCaptain() != null ? team.getCaptain().getFullname() : "N/A";
-                log.debug("  - {} (ID: {}, Jugadores: {}, Capitán: {})",
-                        team.getTeamName(), team.getId(), numJugadores, captainName);
-            });
+        if (teams.isEmpty()) {
+            log.info("No hay equipos registrados en el sistema.");
         } else {
-            log.info(" No hay equipos registrados en el sistema");
+            teams.forEach(t -> {
+                int n = t.getPlayers() != null ? t.getPlayers().size() : 0;
+                String cap = t.getCaptain() != null ? t.getCaptain().getFullname() : "N/A";
+                log.debug("  → {} (ID: {}, Jugadores: {}, Capitán: {})",
+                        t.getTeamName(), t.getId(), n, cap);
+            });
         }
-
-        return teams;
+        return new ArrayList<>(teams);
     }
 
-    // READ - BUSCAR POR ID
-    @Override
-    public Team getTeamById(String id) {
-        String timestamp = LocalDateTime.now().format(formatter);
+    // ── READ
 
-        log.info("[{}] Buscando equipo con ID: {}", timestamp, id);
 
-        Team team = teams.stream()
+    public Optional<Team> buscarPorId(String id) {
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Buscando equipo con ID: {}", ts, id);
+
+        Optional<Team> resultado = teams.stream()
                 .filter(t -> t.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
 
-        if (team != null) {
-            log.info("Nombre del equipo: {}", team.getTeamName());
-            log.info("Colores: {}", team.getUniformColors());
-            log.info("Escudo: {}", team.getShieldUrl());
-
-            if (team.getCaptain() != null) {
-                log.info("Capitán: {} (ID: {})",
-                        team.getCaptain().getFullname(),
-                        team.getCaptain().getId());
-            }
-
-            int numJugadores = team.getPlayers() != null ? team.getPlayers().size() : 0;
-            log.info("Número de jugadores: {}", numJugadores);
-
-            if (team.getPlayers() != null && !team.getPlayers().isEmpty()) {
-                log.debug("Lista de jugadores:");
-                team.getPlayers().forEach(p ->
-                        log.debug("  - {} (Posición: {}, Dorsal: {})",
-                                p.getFullname(), p.getPosition(), p.getDorsalNumber())
-                );
-            }
+        if (resultado.isPresent()) {
+            Team t = resultado.get();
+            int n = t.getPlayers() != null ? t.getPlayers().size() : 0;
+            String cap = t.getCaptain() != null ? t.getCaptain().getFullname() : "N/A";
+            log.info("Equipo encontrado — Nombre: {} | Jugadores: {} | Capitán: {}",
+                    t.getTeamName(), n, cap);
         } else {
             log.warn("No existe equipo con ID: {}", id);
         }
 
-        return team;
+        return resultado;
     }
 
-    // DELETE
+    // ── READ
+
+
+    @Override
+    public Team obtenerPorId(String id) {
+        return buscarPorId(id).orElseThrow(() ->
+                new TeamException("id",
+                        String.format(TeamException.TEAM_NOT_FOUND, id))
+        );
+    }
+
+    // ── DELETE
+
+
     @Override
     public void deleteTeam(String id) {
-        String timestamp = LocalDateTime.now().format(formatter);
+        String ts = LocalDateTime.now().format(formatter);
+        log.info("[{}] Eliminando equipo con ID: {}", ts, id);
 
-        log.info("[{}] Intentando eliminar equipo", timestamp);
-        log.info("ID del equipo: {}", id);
+        Team equipo = obtenerPorId(id);
 
-        Team equipoEncontrado = teams.stream()
-                .filter(t -> t.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-
-        if (equipoEncontrado != null) {
-            log.info("Equipo encontrado: {}", equipoEncontrado.getTeamName());
-            int jugadores = equipoEncontrado.getPlayers() != null ?
-                    equipoEncontrado.getPlayers().size() : 0;
-            log.info("Jugadores a desvincularse: {}", jugadores);
-
-            teams.removeIf(t -> t.getId().equals(id));
-            log.info(" Equipo eliminado exitosamente");
-        } else {
-            log.warn(" No se puede eliminar - Equipo no encontrado");
+        if (equipo.getPlayers() != null) {
+            equipo.getPlayers().forEach(p -> {
+                p.setHaveTeam(false);
+                log.debug("Jugador '{}' desvinculado del equipo.", p.getFullname());
+            });
+            log.info("Jugadores desvinculados: {}", equipo.getPlayers().size());
         }
 
-        log.info("Total de equipos después de eliminar: {}", teams.size());
+        teams.removeIf(t -> t.getId().equals(id));
+        log.info("Equipo '{}' eliminado. Total equipos restantes: {}",
+                equipo.getTeamName(), teams.size());
     }
 }
