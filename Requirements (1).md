@@ -558,105 +558,54 @@
 | **Anexos** | **Prototipos:** Mockup de Tabla de Clasificación Dinámica. <br> **Abreviaturas:** PJ (Jugados), PG (Ganados), PE (Empatados), PP (Perdidos), GF (Goles Favor), GC (Goles Contra), DG (Diferencia), PTS (Puntos). <br><br> **Caso de Uso:** <br> <img width="875" height="352" alt="image" src="https://github.com/user-attachments/assets/deeb6f6e-b731-4fc0-a7be-e1dbb383b29d" />|
 | **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; depuración de actores en flujo y lógica de desempate técnica.</li></ul> |
 
-### RF11: Llaves Eliminatorias
+### RF11: Llaves Eliminatorias (Brackets)
 
 | Campo                     | Detalle |
 |:--------------------------|:--------|
 | **Código**                | RF11 |
 | **Nombre**                | Llaves Eliminatorias |
-| **Descripción**           | El sistema debe generar automáticamente el cuadro de eliminación directa del torneo, incluyendo la creación de los partidos iniciales de manera aleatoria y la progresión por fases: cuartos de final, semifinal y final. El bracket se actualiza conforme se registren los resultados, avanzando automáticamente a los ganadores. |
-| **Cómo se ejecutará**     | Mediante un módulo del torneo donde el organizador activa la generación del bracket y el sistema construye las llaves; luego el sistema avanza automáticamente los equipos ganadores. |
+| **Descripción**           | El sistema debe gestionar el cuadro de eliminación directa del torneo, permitiendo la generación aleatoria de los encuentros iniciales y la progresión automática de los equipos ganadores a través de las fases de cuartos, semifinal y final conforme se cierran las actas. |
+| **Cómo se ejecutará**     | Mediante el panel de gestión del torneo, donde el Organizador activa el sorteo inicial y supervisa el avance de la fase eliminatoria. |
 | **Actor principal**       | Organizador |
-| **Precondiciones**        | 1) El usuario debe estar autenticado con rol de Organizador. <br> 2) Debe existir un torneo en estado Activo o En Progreso. <br> 3) Deben existir los equipos clasificados para eliminación directa. <br> 4) Debe estar definida la cantidad de equipos que ingresan a llaves. |
-| **Reglas de Negocio**     | 1) Los partidos iniciales se generan de manera aleatoria. <br> 2) El sistema genera y mantiene las fases: cuartos de final, semifinal y final. <br> 3) El ganador de un partido avanza automáticamente a la ### RF10: Tabla de Posiciones
-
-| Campo                     | Detalle |
-|:--------------------------|:--------|
-| **Código**                | RF10 |
-| **Nombre**                | Tabla de Posiciones |
-| **Descripción**           | El sistema debe procesar y mostrar la clasificación de los equipos basándose en los resultados validados. Incluye el cálculo de partidos jugados (PJ), ganados (PG), empatados (PE), perdidos (PP), goles a favor (GF), goles en contra (GC), diferencia de gol (DG) y puntos totales (PTS). |
-| **Cómo se ejecutará**     | A través de un módulo de visualización dinámica de datos, accesible para cualquier usuario vinculado al torneo desde la interfaz pública o privada. |
-| **Actor principal**       | Usuario Autenticado |
-| **Precondiciones**        | 1) El torneo debe estar registrado y contar con equipos inscritos. <br> 2) El usuario debe haber iniciado sesión para acceder a las estadísticas detalladas. |
+| **Precondiciones**        | 1) El usuario debe estar autenticado como Organizador. <br> 2) Los equipos clasificados a la fase final deben estar definidos. <br> 3) El torneo debe estar en estado "Activo". |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Torneo ID | Identificador del torneo | UUID | Se obtiene del contexto de navegación actual | Sí |
-| Filtro de Fase | Etapa del torneo | Selección | Permite segmentar la tabla por grupos o fases | No |
+| Lista de Clasificados | Equipos que entran a llaves | Lista (UUID) | Debe ser potencia de 2 (4, 8, 16...) | Sí |
+| Tipo de Sorteo | Método de emparejamiento | Selección | Aleatorio o por Posición (1º vs 8º, etc.) | Sí |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Ranking General | Lista ordenada | Tabla/Componente | Orden descendente por PTS y criterios de desempate | Sí |
-| Estadísticas de Equipo | Ficha técnica | Objeto JSON | Desglose de PJ, PG, PE, PP, GF, GC, DG, PTS | Sí |
+| Bracket Generado | Estructura visual de llaves | Objeto JSON | Muestra cruces y rutas hacia la final | Sí |
+| Calendario de Llaves | Partidos de eliminación | Lista de Objetos | Fecha, hora y cancha para cada cruce | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Usuario | Navega hacia la sección de "Estadísticas" o "Tabla de Posiciones" del torneo seleccionado. | — |
-| 2 | Usuario | Selecciona la fase o el grupo específico que desea consultar para filtrar los datos. | — |
-| 3 | Usuario | Visualiza el ranking actualizado con los cálculos de rendimiento de cada equipo. | E1: Sin datos |
-| 4 | Usuario | Consulta el detalle expandido de un equipo para verificar su historial de goles y diferencia. | — |
+| 1 | Organizador | Accede a la configuración de "Fase Final" del torneo. | — |
+| 2 | Organizador | Selecciona los equipos clasificados y define el método de sorteo para los cruces. | E1: Equipos impares |
+| 3 | Organizador | Confirma la generación de las llaves iniciales (Cuartos o Semifinales). | — |
+| 4 | Organizador | Visualiza el cuadro completo y procede a asignar fechas y canchas a los nuevos encuentros. | — |
+| 5 | Organizador | Supervisa el avance automático de los equipos ganadores hacia la siguiente fase tras cada cierre de acta (RF08). | E2: Empate técnico |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Usuario | Accede a la tabla antes de que existan partidos finalizados y observa a los equipos con valores en cero. | — |
-| A1 | Usuario | Recibe la actualización de los valores en pantalla tras el cierre de un acta de arbitraje (RF08). | — |
-| A2 | Usuario | Utiliza el buscador para localizar la posición y estadísticas de un equipo específico rápidamente. | — |
+| E1 | Organizador | El número de equipos no permite una llave simétrica. Debe ajustar la cantidad de clasificados. | Regresa al paso 2 |
+| E2 | Organizador | Un partido de llave termina en empate. El usuario debe registrar el ganador por tanda de penales en el acta. | — |
+| A1 | Organizador | Realiza un re-sorteo de las llaves antes de que se dispute el primer encuentro de la fase. | — |
 
 | Sección | Detalle |
 | :--- | :--- |
-| **Reglas de Negocio** | <ul><li>1) **Puntuación:** Victoria (3 pts), Empate (1 pt), Derrota (0 pts).</li><li>2) **Desempate:** En caso de igualdad en puntos, el orden es: 1º Diferencia de Gol, 2º Goles a Favor, 3º Duelo Directo.</li><li>3) **Fórmula de Integridad:** Se debe cumplir siempre que $PJ = PG + PE + PP$.</li><li>4) **Actualización:** El sistema emplea el patrón **Observer** para recalcular los datos inmediatamente después de que un árbitro confirma el acta (RF08).</li></ul> |
-| **Anexos** | **Prototipos:** Mockup de Tabla de Clasificación Dinámica. <br> **Abreviaturas:** PJ (Jugados), PG (Ganados), PE (Empatados), PP (Perdidos), GF (Goles Favor), GC (Goles Contra), DG (Diferencia), PTS (Puntos). <br><br> **Caso de Uso:** <br> ![Diagrama de Caso de Uso](https://github.com/user-attachments/assets/2c6a483f-16f0-4a38-bd5c-e780dd2dc764) |
-| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; depuración de actores en flujo y lógica de desempate técnica.</li></ul> |siguiente ronda. <br> 4) Una vez publicada la llave, los emparejamientos no cambian salvo acción administrativa controlada. <br> 5) No se puede regenerar el bracket si ya existen resultados registrados. |
-| **Anexos**                | **Prototipos:** Mockup de vista de bracket y panel de generación. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Santiago Cajamarca <br> **Aprobado por:** Juan Esteban Rodríguez <br> **Fecha:** 04/03/2026 <br> **Descripción y Justificación de cambios:** Se formalizaron tablas de datos y flujos. |
-
-**DATOS DE ENTRADA:**
-
-| Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
-|:-------|:------------|:--------------|:--------------------|:------------|
-| Torneo | Torneo para el cual se generan las llaves | Selección (ID) | Solo torneos en estado Activo o En Progreso | Sí |
-| Equipos clasificados | Cantidad de equipos que entran a eliminación | Numérico (entero) | Debe ser potencia de 2 (4, 8, 16) | Sí |
-| Método de emparejamiento | Cómo se emparejan los equipos en ronda inicial | Selección | Aleatorio (por defecto) | Sí |
-
-**DATOS DE SALIDA:**
-
-| Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
-|:-------|:------------|:--------------|:--------------------|:------------|
-| Bracket generado | Cuadro de eliminación con todas las fases | Objeto JSON | Incluye partidos por fase con equipos asignados | Sí |
-| Partidos creados | Lista de partidos generados por fase | Lista de objetos | Cada partido tiene equipos, fase y estado | Sí |
-| Avance automático | Actualización del bracket al registrar resultados | Evento | El ganador se asigna automáticamente a la siguiente llave | Sí |
-
-**FLUJO BÁSICO:**
-
-| Paso | Actor | Descripción | Excepciones |
-|:-----|:------|:------------|:------------|
-| 1 | Organizador | Accede al torneo y entra al módulo "Llaves eliminatorias" | — |
-| 2 | Organizador | Confirma la cantidad de equipos y el método de emparejamiento | — |
-| 3 | Sistema | Valida que la cantidad de equipos sea compatible con eliminación directa (potencia de 2) | E1: Cantidad incompatible |
-| 4 | Sistema | Genera de forma aleatoria los partidos iniciales y crea el bracket completo | — |
-| 5 | Sistema | Publica el bracket para consulta de todos los usuarios | — |
-| 6 | Sistema | Conforme se registren resultados, asigna ganadores a la siguiente llave automáticamente | — |
-
-**FLUJO ALTERNO:**
-
-| Paso | Actor | Descripción | Excepciones |
-|:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "La cantidad de equipos debe ser una potencia de 2 (4, 8, 16)" | Regresa al paso 2 |
-| A1 | Sistema | Si un partido termina en empate y no hay regla de desempate configurada, bloquea el avance y solicita al organizador definir el criterio o registrar el ganador manualmente | — |
-| A2 | Organizador | Si intenta regenerar llaves después de haber resultados registrados | E2 |
-| E2 | Sistema | Muestra mensaje: "No se puede regenerar el bracket porque ya existen resultados registrados" | — |
-
-**Notas y comentarios:** El avance automático de ganadores se gestiona mediante el patrón **Observer** (LlavesEliminatoriasListener).
-
----
+| **Reglas de Negocio** | <ul><li>1) **Automatización:** El avance de un equipo a la siguiente llave es gestionado por el sistema tras el cierre del acta, siendo irreversible sin intervención administrativa.</li><li>2) **Estructura:** El bracket debe soportar potencias de dos para evitar cruces vacíos (4, 8 o 16 equipos).</li><li>3) **Criterio de Desempate:** En llaves eliminatorias no existe el empate; el acta debe incluir obligatoriamente un ganador (vía penales si es necesario).</li></ul> |
+| **Anexos** | **Prototipos:** Visualizador de Brackets (Tipo UEFA). <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> ) <img width="731" height="177" alt="image" src="https://github.com/user-attachments/assets/0611ea25-97ad-4254-b5a9-2c4ede5aa5de" />|
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; ajuste de flujo para centrar la acción en el Organizador y lógica de avance.</li></ul> |
 
 ### RF12: Estadísticas
 
