@@ -303,65 +303,61 @@
 | **Anexos** | **Prototipos:** Mockup de Carga de Pagos y Panel de Validación. <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> <img width="698" height="332" alt="image" src="https://github.com/user-attachments/assets/b57a92fd-4917-43f3-9c12-b2c9bf4fefd9" />|
 | **Historial de Revisión** | <ul><li>**Elaborado por:** Vanessa Torres</li><li>**Aprobado por:** David Cajamarca</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción tras pérdida de datos; ajuste de flujo de validación y estados de inscripción.</li></ul> |
 
-### RF06: Configurar Torneo
+### RF06: Configuración del Torneo
 
 | Campo                     | Detalle |
 |:--------------------------|:--------|
 | **Código**                | RF06 |
 | **Nombre**                | Configurar Torneo |
-| **Descripción**           | El sistema debe permitir al organizador, una vez creado el torneo, definir los parámetros operativos, normativos y logísticos necesarios para su ejecución: reglamento, fechas importantes, cierre de inscripciones, horarios de partidos, canchas disponibles y sanciones aplicables. |
-| **Cómo se ejecutará**     | Mediante un panel de configuración avanzada disponible exclusivamente para el rol de Organizador, con secciones independientes por cada tipo de configuración. |
+| **Descripción**           | El sistema debe permitir al organizador definir los parámetros operativos, normativos y logísticos necesarios para la ejecución del torneo: reglamento, fechas clave, cierre de inscripciones, franjas horarias, canchas disponibles y régimen de sanciones. |
+| **Cómo se ejecutará**     | Mediante un panel de configuración avanzada exclusivo para el rol de Organizador, con secciones independientes para cada parámetro logístico. |
 | **Actor principal**       | Organizador |
-| **Precondiciones**        | 1) El torneo debe haber sido registrado previamente (RF01). <br> 2) El torneo debe estar en estado **Borrador** o **Activo** (no se permite configurar torneos En Progreso o Finalizados). <br> 3) El usuario debe contar con permisos de Organizador. |
-| **Reglas de Negocio**     | 1) No se pueden programar partidos en horarios o canchas que no hayan sido definidos en este módulo. <br> 2) El reglamento debe ser accesible para todos los participantes en todo momento. <br> 3) La fecha de cierre de inscripciones debe ser anterior a la fecha de inicio del torneo. <br> 4) Las sanciones definidas aquí serán la base para el registro de incidencias en los partidos. <br> 5) No se puede modificar la configuración de canchas si ya hay partidos programados en ellas. |
-| **Anexos**                | **Prototipos:** Mockup de Panel de Configuración de Torneo. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Vanessa Torres <br> **Aprobado por:** David Cajamarca <br> **Fecha:** 03/03/2026 <br> **Descripción y Justificación de cambios:** Se agregó restricción de estado para configuración y la protección de canchas con partidos programados. |
+| **Precondiciones**        | 1) El torneo debe haber sido registrado previamente (RF01). <br> 2) El torneo debe estar en estado **Borrador** o **Activo**. <br> 3) El usuario debe estar autenticado con permisos de Organizador. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Reglamento | Documento o texto con las reglas del torneo | Texto/Documento | Debe ser legible y accesible para todos los participantes | Sí |
-| Fechas importantes | Fechas clave del torneo (inicio fase grupos, eliminatorias, etc.) | Lista de fechas | Deben estar dentro del rango fecha_inicio - fecha_fin del torneo | Sí |
-| Cierre de inscripciones | Fecha y hora límite para inscribir equipos | Fecha/Hora | Debe ser anterior a la fecha de inicio del torneo | Sí |
-| Horarios de partidos | Franjas horarias disponibles para programar partidos | Lista de horarios | Deben ser horarios coherentes (no solapados) | Sí |
-| Canchas | Canchas disponibles para el torneo | Lista de texto | Cada cancha debe tener nombre y ubicación | Sí |
-| Sanciones | Reglas de sanciones aplicables (tarjetas, suspensiones) | Texto | Deben incluir criterio de acumulación de tarjetas | Sí |
+| Reglamento | Normativa del torneo | Texto/Documento | Debe ser accesible para todos los participantes | Sí |
+| Fechas importantes | Cronograma de fases | Lista de fechas | Deben estar dentro del rango del torneo | Sí |
+| Cierre de inscripciones | Límite para equipos | Fecha/Hora | Debe ser estrictamente anterior al inicio del torneo | Sí |
+| Horarios de partidos | Franjas disponibles | Lista de horarios | No se permiten solapamientos en la definición | Sí |
+| Canchas | Espacios físicos | Lista de texto | Nombre y ubicación por cada escenario | Sí |
+| Sanciones | Régimen disciplinario | Texto | Incluye criterios por tarjetas y suspensiones | Sí |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Confirmación | Notificación de configuración guardada | Texto | Se muestra al organizador tras guardar | Sí |
-| Parámetros publicados | Configuración visible para participantes | Objeto JSON | Reglamento, fechas y canchas accesibles públicamente | Sí |
+| Confirmación | Notificación de éxito | Texto | Confirmación tras el guardado de parámetros | Sí |
+| Parámetros publicados | Configuración visible | Objeto JSON | Información pública para consulta de jugadores | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Organizador | Accede al torneo previamente creado y selecciona "Configurar torneo" | — |
-| 2 | Organizador | Ingresa el reglamento del torneo | — |
-| 3 | Organizador | Define las fechas importantes y el cierre de inscripciones | E1: Cierre posterior al inicio |
-| 4 | Organizador | Define los horarios disponibles para partidos | E2: Horarios solapados |
-| 5 | Organizador | Registra las canchas disponibles | — |
-| 6 | Organizador | Define las reglas de sanciones | — |
-| 7 | Sistema | Almacena la configuración y la asocia al torneo | — |
-| 8 | Sistema | Publica los parámetros para consulta de los participantes | — |
+| 1 | Organizador | Accede al torneo en estado Borrador y selecciona la opción "Configurar torneo". | — |
+| 2 | Organizador | Carga el reglamento y define las fechas clave, incluyendo el cierre de inscripciones. | E1: Fecha inválida |
+| 3 | Organizador | Establece los horarios permitidos para los encuentros y registra las canchas disponibles. | E2: Solapamiento |
+| 4 | Organizador | Define las reglas de sanciones y guarda la configuración general del evento. | — |
+| 5 | Organizador | Visualiza la confirmación de guardado y los parámetros quedan disponibles para el público. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "La fecha de cierre de inscripciones debe ser anterior a la fecha de inicio del torneo" | Regresa al paso 3 |
-| E2 | Sistema | Muestra mensaje: "Los horarios definidos se solapan entre sí" | Regresa al paso 4 |
-| A1 | Organizador | Si intenta configurar un torneo en estado "En Progreso" o "Finalizado" | E3 |
-| E3 | Sistema | Muestra mensaje: "Solo se pueden configurar torneos en estado Borrador o Activo" | Regresa al panel principal |
-| A2 | Organizador | Si intenta modificar una cancha que ya tiene partidos programados | E4 |
-| E4 | Sistema | Muestra mensaje: "No se puede modificar esta cancha porque tiene partidos programados" | Regresa al paso 5 |
+| E1 | Organizador | El usuario intenta fijar el cierre de inscripciones después del inicio del torneo. Muestra mensaje de error de coherencia de fechas. | Regresa al paso 2 |
+| E2 | Organizador | El usuario define franjas horarias que se cruzan entre sí. Muestra mensaje: "Los horarios definidos se solapan entre sí". | Regresa al paso 3 |
+| A1 | Organizador | El usuario intenta configurar un torneo ya iniciado o finalizado. | E3 |
+| E3 | Organizador | El sistema bloquea la edición y muestra mensaje: "Solo se pueden configurar torneos en estado Borrador o Activo". | Regresa al panel |
+| A2 | Organizador | El usuario intenta modificar una cancha que ya tiene encuentros asignados en el fixture. | E4 |
+| E4 | Organizador | El sistema impide el cambio y muestra mensaje: "No se puede modificar esta cancha porque tiene partidos programados". | Regresa al paso 3 |
 
-**Notas y comentarios:** La configuración del torneo es requisito previo para poder activar el torneo (transición Borrador → Activo en RF01).
-
----
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) Integridad: No se pueden programar partidos en horarios o escenarios no definidos en este módulo.</li><li>2) Visibilidad: El reglamento y las sanciones deben ser consultables en todo momento por los capitanes.</li><li>3) Restricción: La modificación de canchas se bloquea una vez generado el fixture (RF07).</li><li>4) Dependencia: La configuración completa es requisito para la transición del torneo de **Borrador** a **Activo**.</li><li>5) El sistema valida la coherencia cronológica de todas las fechas ingresadas.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Panel de Configuración de Torneo. <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> <img width="692" height="222" alt="image" src="https://github.com/user-attachments/assets/4d423f16-253f-477b-b6ad-498cc2960ff4" />) |
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Vanessa Torres</li><li>**Aprobado por:** David Cajamarca</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; adición de restricciones de estado del torneo y validación de canchas programadas.</li></ul> |
 
 ### RF07: Alineaciones
 
@@ -369,114 +365,101 @@
 |:--------------------------|:--------|
 | **Código**                | RF07 |
 | **Nombre**                | Alineaciones |
-| **Descripción**           | El sistema debe permitir al capitán organizar la alineación del equipo antes de cada partido, seleccionando titulares y reservas, eligiendo una formación táctica y ubicando a los jugadores visualmente en la cancha. Además, tanto capitanes como jugadores podrán consultar la alineación del equipo rival una vez publicada. |
-| **Cómo se ejecutará**     | Mediante un módulo por partido donde el capitán elige formación, selecciona titulares y reservas, y dispone a los titulares en un esquema visual de cancha. El sistema publica la alineación para consulta. |
+| **Descripción**           | El sistema debe permitir al capitán organizar la estructura táctica del equipo antes de cada encuentro, definiendo titulares y reservas mediante un esquema visual de la cancha. Asimismo, permite la consulta de la alineación del equipo rival una vez que ambas partes hayan publicado su configuración. |
+| **Cómo se ejecutará**     | A través de un módulo interactivo de "Pizarra Táctica" por partido, donde el capitán selecciona la formación y posiciona a los jugadores mediante una interfaz de arrastrar y soltar (drag & drop). |
 | **Actor principal**       | Capitán |
-| **Precondiciones**        | 1) El capitán debe estar autenticado. <br> 2) El equipo debe existir y tener una cantidad válida de jugadores. <br> 3) Debe existir un partido programado para el equipo. |
-| **Reglas de Negocio**     | 1) Durante cada partido participarán **mínimo 7 jugadores** por equipo. <br> 2) Antes de cada partido, el capitán define quiénes participarán; los demás quedan como reservas. <br> 3) Capitanes y jugadores pueden **consultar la alineación del equipo rival**. <br> 4) **No se permiten cambios de jugadores entre equipos**; se juega el torneo con la nómina inicial. |
-| **Anexos**                | **Prototipos:** Mockup de módulo de alineación con cancha visual. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Santiago Cajamarca <br> **Aprobado por:** Juan Esteban Rodríguez <br> **Fecha:** 04/03/2026 <br> **Descripción y Justificación de cambios:** Se formalizaron las tablas de datos y flujos según formato corregido. |
+| **Precondiciones**        | 1) El capitán debe estar autenticado. <br> 2) El equipo debe estar legalmente inscrito en el torneo (RF05). <br> 3) Debe existir un partido programado en el fixture para el equipo. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Partido | Partido para el cual se define la alineación | Selección (ID) | Solo partidos programados del equipo del capitán | Sí |
-| Formación | Formación táctica del equipo | Selección | Opciones predefinidas: 2-3-1, 3-2-1, 3-3, 2-4, etc. | Sí |
-| Titulares | Lista de jugadores titulares | Lista de IDs | Exactamente 7 jugadores de la nómina del equipo | Sí |
-| Reservas | Lista de jugadores suplentes | Lista de IDs | Los jugadores restantes de la nómina que no son titulares | Sí |
-| Posiciones en cancha | Ubicación visual de cada titular en la cancha | Lista de coordenadas | Cada titular debe tener una posición asignada | Sí |
+| Partido ID | Referencia al encuentro | UUID | Debe ser un partido programado del equipo | Sí |
+| Formación | Esquema táctico | Selección (Enum) | Opciones: 2-3-1, 3-2-1, 3-3, 2-4, etc. | Sí |
+| Titulares | Jugadores en campo | Lista de IDs | Exactamente 7 jugadores de la nómina | Sí |
+| Reservas | Jugadores en banca | Lista de IDs | Jugadores restantes de la nómina inscrita | Sí |
+| Posiciones visuales | Coordenadas en cancha | Mapa de puntos | Ubicación (x, y) de cada titular en el esquema | Sí |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Alineación guardada | Confirmación de alineación creada | Objeto JSON | Incluye titulares, reservas, formación y posiciones | Sí |
-| Vista de cancha | Representación visual de la alineación | Imagen/Componente | Muestra jugadores posicionados según formación | Sí |
-| Alineación rival | Alineación del equipo contrario (si publicada) | Objeto JSON | Disponible solo después de que ambos capitanes publiquen | Sí |
+| Alineación confirmada | Resumen del equipo | Objeto JSON | Incluye roles, titulares y formación guardada | Sí |
+| Vista de cancha | Renderización visual | Componente UI | Representación gráfica de los jugadores en campo | Sí |
+| Alineación rival | Datos del oponente | Objeto JSON | Visible solo tras la publicación de ambos capitanes | No |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Capitán | Accede al partido y abre el módulo de alineación | — |
-| 2 | Capitán | Selecciona una formación táctica | — |
-| 3 | Capitán | Selecciona 7 titulares de la nómina del equipo | E1: Menos o más de 7 titulares |
-| 4 | Sistema | Asigna automáticamente los jugadores restantes como reservas | — |
-| 5 | Capitán | Ubica visualmente a los titulares en la cancha según la formación | — |
-| 6 | Capitán | Confirma y publica la alineación | — |
-| 7 | Sistema | Guarda y publica la alineación para consulta | — |
+| 1 | Capitán | Accede al partido programado y abre el módulo de "Alineación". | — |
+| 2 | Capitán | Selecciona la formación táctica deseada para el encuentro. | — |
+| 3 | Capitán | Selecciona exactamente 7 titulares de su nómina actual. | E1: Cantidad inválida |
+| 4 | Capitán | Ubica visualmente a cada titular en la posición correspondiente dentro de la cancha digital. | — |
+| 5 | Capitán | Confirma y publica la alineación oficial del encuentro. | — |
+| 6 | Capitán | Visualiza la confirmación de guardado y el reporte de jugadores en reserva. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "Debe seleccionar exactamente 7 titulares" | Regresa al paso 3 |
-| A1 | Capitán/Jugador | Si desea consultar la alineación del rival, accede a la vista del partido | E2 |
-| E2 | Sistema | Si el rival aún no ha publicado su alineación: "La alineación del rival aún no está disponible" | — |
+| E1 | Capitán | El usuario intenta guardar con más o menos de 7 jugadores. Muestra mensaje: "Debe seleccionar exactamente 7 titulares para iniciar". | Regresa al paso 3 |
+| A1 | Capitán/Jugador | El usuario accede a la vista del partido para espiar la táctica del oponente. | E2 |
+| E2 | Capitán/Jugador | El rival no ha publicado su formación. Muestra mensaje: "La alineación del rival aún no está disponible". | — |
+| A2 | Capitán | El usuario desea realizar cambios en la alineación antes del inicio del partido. | Permite edición si el partido no ha iniciado |
 
-**Notas y comentarios:** La visualización en cancha requiere un componente interactivo en el frontend con drag & drop.
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) Participación: Cada equipo debe presentar obligatoriamente 7 jugadores para que el partido sea válido.</li><li>2) Automatización: El sistema asigna como reservas a todos los inscritos que no fueron marcados como titulares.</li><li>3) Transparencia: La alineación rival solo es visible cuando el capitán propio ya ha publicado la suya (evita espionaje previo).</li><li>4) Restricción de Nómina: No se pueden incluir jugadores que no pertenezcan a la lista original de 12 inscritos.</li><li>5) El sistema utiliza un componente interactivo para gestionar las coordenadas de posición en el frontend.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de módulo de alineación con cancha visual e interactiva. <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> <img width="682" height="193" alt="image" src="https://github.com/user-attachments/assets/764872ff-bcb9-4a3a-8637-e32df16ec5f1" />) |
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; estandarización de flujos y reglas de visualización de alineación rival.</li></ul> |
 
----
 
-### RF08: Registro de Partidos
+### RF08: Registro de Resultados e Incidencias (Acta del Partido)
 
 | Campo                     | Detalle |
 |:--------------------------|:--------|
 | **Código**                | RF08 |
-| **Nombre**                | Registro de Partidos |
-| **Descripción**           | El sistema debe permitir al organizador registrar la información completa de cada partido disputado: marcador final, jugadores goleadores, tarjetas amarillas y tarjetas rojas. El registro de un resultado dispara la actualización automática de tabla de posiciones y estadísticas. |
-| **Cómo se ejecutará**     | Mediante un formulario de registro de resultados accesible desde el panel del organizador, asociado a cada partido programado. |
-| **Actor principal**       | Organizador |
-| **Precondiciones**        | 1) El usuario debe estar autenticado con rol de Organizador. <br> 2) Debe existir un partido programado con ambos equipos asignados. <br> 3) El torneo debe estar en estado "En Progreso". |
-| **Reglas de Negocio**     | 1) La suma de goles registrados por jugador de cada equipo debe coincidir con el marcador del equipo. <br> 2) Un jugador que recibe tarjeta roja no puede recibir más tarjetas en el mismo partido. <br> 3) Solo se pueden registrar goles y tarjetas de jugadores que estén en la alineación del partido (titulares). <br> 4) Un resultado registrado no puede modificarse sin aprobación del administrador. |
-| **Anexos**                | **Prototipos:** Mockup de Registro de Resultados. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Santiago Cajamarca <br> **Aprobado por:** Juan Esteban Rodríguez <br> **Fecha:** 04/03/2026 <br> **Descripción y Justificación de cambios:** Se formalizaron tablas y se agregó la regla de coherencia de goles con marcador. |
+| **Nombre**                | Registro de Resultados |
+| **Descripción**           | El sistema debe permitir al árbitro registrar el acta digital del encuentro: marcador final, autores de los goles, minutos de las anotaciones y amonestaciones/expulsiones ocurridas en el campo. |
+| **Cómo se ejecutará**     | A través de un formulario digital de "Cierre de Partido" habilitado para el usuario con rol de Árbitro una vez finalizado el tiempo reglamentario. |
+| **Actor principal**       | Árbitro |
+| **Precondiciones**        | 1) El usuario debe estar autenticado como Árbitro. <br> 2) El partido debe figurar en estado "Programado" o "En Juego". <br> 3) Las alineaciones de ambos equipos deben estar confirmadas en el sistema (RF07). |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Partido | Partido al que corresponde el resultado | Selección (ID) | Solo partidos programados sin resultado previo | Sí |
-| Goles equipo local | Cantidad de goles del equipo local | Numérico (entero) | Debe ser ≥ 0 | Sí |
-| Goles equipo visitante | Cantidad de goles del equipo visitante | Numérico (entero) | Debe ser ≥ 0 | Sí |
-| Goleadores | Lista de jugadores que anotaron gol | Lista de objetos | Cada entrada: jugador (ID), minuto, equipo. La suma debe coincidir con el marcador | Sí |
-| Tarjetas amarillas | Lista de tarjetas amarillas mostradas | Lista de objetos | Cada entrada: jugador (ID), minuto. Solo jugadores en alineación | No |
-| Tarjetas rojas | Lista de tarjetas rojas mostradas | Lista de objetos | Cada entrada: jugador (ID), minuto. Solo jugadores en alineación | No |
-
-**DATOS DE SALIDA:**
-
-| Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
-|:-------|:------------|:--------------|:--------------------|:------------|
-| Resultado registrado | Confirmación del resultado guardado | Objeto JSON | Incluye marcador, goleadores y tarjetas | Sí |
-| Tabla actualizada | Tabla de posiciones recalculada | Objeto JSON | Se actualiza automáticamente tras el registro | Sí |
-| Estadísticas actualizadas | Goleadores y tarjetas actualizados | Objeto JSON | Se actualiza automáticamente | Sí |
+| Marcador Final | Goles Local vs Visitante | Numérico | Deben ser valores enteros ≥ 0 | Sí |
+| Goleadores | Autores y minutos | Lista de objetos | Deben pertenecer a la alineación activa del partido | Sí |
+| Amonestaciones | Tarjetas Amarillas | Lista de objetos | Máximo 2 por jugador; la segunda implica expulsión | No |
+| Expulsiones | Tarjetas Rojas | Lista de objetos | Registro de minuto y motivo de la falta | No |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Organizador | Accede al partido programado y selecciona "Registrar resultado" | — |
-| 2 | Organizador | Ingresa el marcador final (goles local y visitante) | — |
-| 3 | Organizador | Registra los goleadores indicando jugador, minuto y equipo | E1: Goles no coinciden con marcador |
-| 4 | Organizador | Registra las tarjetas amarillas y rojas (opcional) | E2: Jugador no está en alineación |
-| 5 | Sistema | Valida la coherencia de toda la información registrada | E3: Datos inconsistentes |
-| 6 | Sistema | Guarda el resultado y publica el evento "ResultadoRegistrado" | — |
-| 7 | Sistema | Recalcula automáticamente tabla de posiciones y estadísticas | — |
+| 1 | Árbitro | Selecciona el partido asignado desde su panel de control personal. | — |
+| 2 | Árbitro | Ingresa el marcador global (goles anotados por cada bando). | — |
+| 3 | Árbitro | Registra individualmente a los goleadores y el minuto exacto de cada tanto. | E1: Inconsistencia |
+| 4 | Árbitro | Reporta las tarjetas amarillas y rojas aplicadas a los jugadores durante el encuentro. | E2: Jugador no válido |
+| 5 | Árbitro | Confirma el acta final, bloqueando el partido para futuras ediciones ordinarias. | E3: Datos incompletos |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "La cantidad de goles registrados no coincide con el marcador del equipo [nombre]" | Regresa al paso 3 |
-| E2 | Sistema | Muestra mensaje: "El jugador [nombre] no está en la alineación de este partido" | Regresa al paso 4 |
-| E3 | Sistema | Muestra mensaje detallado de la inconsistencia encontrada | Regresa al paso correspondiente |
-| A1 | Organizador | Si necesita corregir un resultado ya registrado, debe solicitar aprobación al administrador | E4 |
-| E4 | Sistema | Si el organizador no tiene permiso de administrador: "Solo un administrador puede modificar resultados ya registrados" | — |
+| E1 | Árbitro | Los goles individuales no coinciden con el marcador global ingresado. El sistema solicita corregir las cifras. | Regresa al paso 2 |
+| E2 | Árbitro | Intenta asignar una incidencia a un jugador que no participó (no estaba en alineación). | Regresa al paso 4 |
+| A1 | Organizador | Si se requiere una corrección excepcional tras el cierre, el Organizador debe intervenir. | E4 |
+| E4 | Organizador | El usuario sin permisos de administrador intenta editar un acta cerrada. | Bloqueo de acción |
 
-**Notas y comentarios:** Se aplica el patrón **Observer** — al registrar un resultado, el sistema publica un evento que es escuchado por TablaPosicionesListener, EstadisticasGoleadoresListener, LlavesEliminatoriasListener y SancionesListener.
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) **Autoridad:** El Árbitro es el único responsable de la veracidad de los datos en el acta de juego.</li><li>2) **Coherencia:** El acta no se considera válida si el sumatorio de goles por jugador difiere del marcador final.</li><li>3) **Impacto:** El cierre del acta dispara automáticamente el recálculo de la tabla de posiciones y el ranking de goleadores.</li><li>4) **Patrón Observer:** El registro del resultado es el evento que actualiza los módulos de estadísticas y sanciones.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Registro de Resultados. <br> **Abreviaturas:** GF (Goles a Favor), GC (Goles en Contra). <br><br> **Caso de Uso:** <br> <img width="782" height="311" alt="image" src="https://github.com/user-attachments/assets/c19568a9-00d4-4363-b66e-2fad21fa77f3" />|
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; cambio de actor principal a Árbitro y ajuste de validaciones de acta.</li></ul> |
 
----
 
 ### RF09: Consulta de partidos
 
