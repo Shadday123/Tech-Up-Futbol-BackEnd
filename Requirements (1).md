@@ -259,54 +259,49 @@
 |:--------------------------|:--------|
 | **Código**                | RF05 |
 | **Nombre**                | Inscripción y pagos |
-| **Descripción**           | El sistema debe permitir al capitán de cada equipo cargar el comprobante de pago realizado externamente (por Nequi o efectivo) para que el organizador valide la inscripción oficial del equipo al torneo. El pago no se procesa dentro de la plataforma; el sistema solo gestiona el flujo de verificación documental con estados controlados. |
-| **Cómo se ejecutará**     | A través de un módulo de carga de archivos para el capitán y una bandeja de validación para el organizador, con un flujo de estados: Pendiente → En Revisión → Aprobado/Rechazado. |
+| **Descripción**           | El sistema debe permitir al capitán cargar el comprobante de pago realizado externamente (Nequi o efectivo) para que el organizador valide la inscripción oficial. La plataforma no procesa transacciones financieras; solo gestiona el flujo documental de verificación mediante estados controlados (Pendiente, En Revisión, Aprobado, Rechazado). |
+| **Cómo se ejecutará**     | Mediante un módulo de carga de archivos para el capitán y una bandeja de gestión de validaciones para el organizador del torneo. |
 | **Actor principal**       | Capitán / Organizador |
-| **Precondiciones**        | 1) El equipo debe estar creado y contar con el mínimo de 7 jugadores. <br> 2) El equipo debe haber pasado todas las validaciones de composición (RF03). <br> 3) El pago debe haberse realizado previamente por Nequi o efectivo al coordinador del evento. |
-| **Reglas de Negocio**     | 1) El pago no se realiza dentro de la plataforma; solo se gestiona el comprobante. <br> 2) Solo los equipos con estado de pago "Aprobado" pueden participar en el torneo. <br> 3) El pago es responsabilidad exclusiva del capitán del equipo. <br> 4) Las transiciones de estado del pago son: Pendiente → En Revisión → Aprobado o Rechazado. <br> 5) Un pago rechazado permite al capitán subir un nuevo comprobante, reiniciando el flujo a Pendiente. |
-| **Anexos**                | **Prototipos:** Mockup de Módulo de Carga de Pagos y Panel de Validación. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Vanessa Torres <br> **Aprobado por:** David Cajamarca <br> **Fecha:** 03/03/2026 <br> **Descripción y Justificación de cambios:** Se detalló el flujo de estados del pago y se agregó la posibilidad de resubir comprobante tras rechazo. |
+| **Precondiciones**        | 1) El equipo debe cumplir con el mínimo de 7 jugadores y las reglas de composición (RF03). <br> 2) El pago debe haberse realizado previamente por canales externos al sistema. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Comprobante de pago | Imagen o PDF del comprobante | Archivo (imagen/PDF) | Formatos: JPG, PNG, PDF. Tamaño máximo: 5MB | Sí |
-| ID del equipo | Equipo al que corresponde el pago | Texto (UUID) | Debe corresponder al equipo del capitán autenticado | Sí |
+| Comprobante de pago | Soporte digital del pago | Archivo (Imagen/PDF)| Formatos: JPG, PNG, PDF. Máximo: 5MB | Sí |
+| ID del equipo | Identificador del equipo | Texto (UUID) | Debe corresponder al equipo del capitán | Sí |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Estado del pago | Estado actual del comprobante | Texto (enum) | Pendiente, En Revisión, Aprobado, Rechazado | Sí |
-| Notificación | Mensaje al capitán sobre el estado | Texto | Diferente según transición de estado | Sí |
-| Estado del equipo | Estado de inscripción del equipo | Texto (enum) | Cambia a "Inscrito" solo cuando pago = Aprobado | Sí |
+| Estado del pago | Fase de la validación | Texto (enum) | Pendiente, En Revisión, Aprobado, Rechazado | Sí |
+| Notificación de estado | Aviso al usuario | Texto | Mensaje dinámico según la transición de estado | Sí |
+| Estado del equipo | Estatus de participación | Texto (enum) | Cambia a "Inscrito" tras la aprobación del pago | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Capitán | Realiza el pago externamente (Nequi o efectivo al coordinador) | — |
-| 2 | Capitán | Accede al módulo de inscripción y sube el comprobante | — |
-| 3 | Sistema | Valida el formato y tamaño del archivo | E1: Formato o tamaño inválido |
-| 4 | Sistema | Registra el comprobante y cambia el estado a "Pendiente" | — |
-| 5 | Sistema | Notifica al organizador que hay un nuevo comprobante por revisar | — |
-| 6 | Organizador | Accede a la bandeja de validación y revisa el comprobante | — |
-| 7 | Organizador | Marca el pago como "Aprobado" | — |
-| 8 | Sistema | Actualiza el estado del equipo a "Inscrito" y notifica al capitán | — |
+| 1 | Capitán | Realiza el pago externo y accede al módulo de inscripción para subir el soporte digital. | E1: Archivo inválido |
+| 2 | Capitán | Carga el archivo y visualiza el cambio de estado a "Pendiente" en su panel de gestión. | — |
+| 3 | Organizador | Accede a la bandeja de validación, revisa el comprobante y marca el pago como "Aprobado". | A1: Comprobante rechazado |
+| 4 | Capitán | Recibe la notificación de aprobación y visualiza que su equipo ahora figura como "Inscrito". | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "El archivo debe ser JPG, PNG o PDF y no exceder 5MB" | Regresa al paso 2 |
-| A1 | Organizador | Si el comprobante es ilegible o incorrecto, marca el pago como "Rechazado" | — |
-| A2 | Sistema | Notifica al capitán: "Su comprobante fue rechazado. Por favor suba un nuevo soporte" | — |
-| A3 | Capitán | Sube un nuevo comprobante y el flujo reinicia desde el paso 3 | — |
+| E1 | Capitán | El usuario intenta subir un archivo con formato o tamaño no permitido. Muestra mensaje: "El archivo debe ser JPG, PNG o PDF y no exceder 5MB". | Regresa al paso 1 |
+| A1 | Organizador | El organizador detecta que el soporte es ilegible o incorrecto y marca el pago como "Rechazado". | — |
+| A2 | Capitán | El usuario recibe la notificación: "Su comprobante fue rechazado. Por favor suba un nuevo soporte" y procede a cargar uno nuevo. | Reinicia el flujo |
+| A3 | Capitán | Si el pago es aprobado, el sistema bloquea la edición de la nómina básica para garantizar integridad. | — |
 
-**Notas y comentarios:** Se aplica el patrón **State** para gestionar las transiciones de estado del pago (análogo al ciclo de vida del torneo).
-
----
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) Verificación: Solo los equipos con pago **Aprobado** pueden ser sorteados en el fixture.</li><li>2) Responsabilidad: El capitán es el único autorizado para gestionar el soporte de pago.</li><li>3) Flujo: Las transiciones permitidas son: Pendiente → En Revisión → Aprobado/Rechazado.</li><li>4) Reincidencia: Un pago rechazado habilita nuevamente la carga de archivos al capitán.</li><li>5) El sistema aplica el patrón **State** para controlar el ciclo de vida del pago.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Carga de Pagos y Panel de Validación. <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> <img width="698" height="332" alt="image" src="https://github.com/user-attachments/assets/b57a92fd-4917-43f3-9c12-b2c9bf4fefd9" />|
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Vanessa Torres</li><li>**Aprobado por:** David Cajamarca</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción tras pérdida de datos; ajuste de flujo de validación y estados de inscripción.</li></ul> |
 
 ### RF06: Configurar Torneo
 
