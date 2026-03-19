@@ -196,62 +196,62 @@
 | Sección | Detalle |
 | :--- | :--- |
 | **Reglas de Negocio** | <ul><li>1) Nómina: Mínimo 7 y máximo 12 jugadores fijos durante todo el torneo.</li><li>2) Composición: >50% de los miembros deben ser de Ing. Sistemas, IA, Ciberseguridad o Estadística.</li><li>3) Exclusividad: Un jugador no puede estar en dos equipos al mismo tiempo.</li><li>4) Programas permitidos: Pregrados base y Maestrías en Gestión de Información, Informática o Ciencia de Datos.</li><li>5) El sistema utiliza el patrón **Strategy** para validar las reglas de inscripción de forma independiente.</li></ul> |
-| **Anexos** | **Prototipos:** Mockup de Gestión de Equipos y Nómina. <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> ![Diagrama de Caso de Uso](https://github.com/user-attachments/assets/2c6a483f-16f0-4a38-bd5c-e780dd2dc764) |
+| **Anexos** | **Prototipos:** Mockup de Gestión de Equipos y Nómina. <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> <img width="717" height="303" alt="image" src="https://github.com/user-attachments/assets/8e04f9f0-9ac0-4259-944e-2bce47869574" />|
 | **Historial de Revisión** | <ul><li>**Elaborado por:** Vanessa Torres</li><li>**Aprobado por:** David Cajamarca</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento por pérdida de datos; unificación de criterios de programas académicos y ajuste de flujos.</li></ul> |
+
+
 ### RF04: Búsqueda de Jugadores
 
 | Campo                     | Detalle |
 |:--------------------------|:--------|
 | **Código**                | RF04 |
 | **Nombre**                | Búsqueda de Jugadores |
-| **Descripción**           | El sistema debe permitir a los capitanes localizar jugadores disponibles mediante diversos filtros de búsqueda combinables para evaluar e invitar candidatos a sus equipos. Los resultados mostrarán un perfil resumido de cada jugador. |
-| **Cómo se ejecutará**     | A través de un buscador con filtros dinámicos en el panel de gestión del capitán, con resultados paginados. |
+| **Descripción**           | El sistema debe permitir a los capitanes localizar jugadores disponibles mediante diversos filtros de búsqueda combinables (posición, semestre, edad, género) para evaluar e invitar candidatos a sus equipos. Los resultados mostrarán un perfil resumido con la información deportiva clave de cada jugador. |
+| **Cómo se ejecutará**     | A través de un buscador con filtros dinámicos en el panel de gestión del capitán, con visualización de resultados paginados. |
 | **Actor principal**       | Capitán |
-| **Precondiciones**        | 1) El capitán debe estar autenticado. <br> 2) Deben existir jugadores registrados con perfiles deportivos activos en el sistema. |
-| **Reglas de Negocio**     | 1) Solo se muestran jugadores con estado "Disponible" y que no pertenezcan a ningún equipo. <br> 2) El filtro de semestre solo aplica para usuarios con perfil de Estudiante. <br> 3) La búsqueda por identificación debe ser exacta para proteger la privacidad. <br> 4) Los demás filtros permiten coincidencia parcial o por rango. |
-| **Anexos**                | **Prototipos:** Mockup de Buscador de Jugadores y Filtros. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Vanessa Torres <br> **Aprobado por:** David Cajamarca <br> **Fecha:** 03/03/2026 <br> **Descripción y Justificación de cambios:** Se detalló el comportamiento de cada filtro y la paginación de resultados. |
+| **Precondiciones**        | 1) El capitán debe estar autenticado en la plataforma. <br> 2) Deben existir jugadores registrados con perfiles deportivos marcados como "Disponibles". |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Posición | Posición de juego del jugador | Selección | Portero, Defensa, Volante, Delantero. Permite selección múltiple | No |
-| Semestre | Semestre actual del estudiante | Numérico (entero) | Solo aplica si el jugador es tipo Estudiante. Rango 1-10 | No |
-| Edad | Edad del jugador | Numérico (entero) | Permite rango (edad mínima - edad máxima) | No |
+| Posición | Posición de juego | Selección | Portero, Defensa, Volante, Delantero. (Múltiple) | No |
+| Semestre | Semestre académico | Numérico (entero) | Solo aplica para perfiles "Estudiante" (1-10) | No |
+| Edad | Edad del jugador | Numérico (entero) | Permite definir un rango (mínima - máxima) | No |
 | Género | Género del jugador | Selección | Masculino, Femenino, Otro | No |
-| Nombre | Nombre del jugador | Texto | Búsqueda parcial (contiene). Mínimo 2 caracteres | No |
-| Identificación | Documento de identidad | Numérico | Búsqueda exacta para proteger privacidad | No |
+| Nombre | Nombre del jugador | Texto | Búsqueda parcial. Mínimo 2 caracteres | No |
+| Identificación | Documento de identidad | Numérico | Búsqueda exacta por motivos de privacidad | No |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Lista de jugadores | Resultados de la búsqueda | Lista de objetos | Paginada, máximo 20 por página | Sí |
-| Perfil resumido | Datos visibles de cada jugador | Objeto JSON | Nombre, posiciones, dorsal, foto, tipo de usuario | Sí |
-| Total de resultados | Cantidad total de coincidencias | Numérico | Para la paginación | Sí |
+| Lista de jugadores | Resultados obtenidos | Lista de objetos | Paginación de máximo 20 registros por vista | Sí |
+| Perfil resumido | Datos clave del jugador | Objeto JSON | Nombre, posiciones, dorsal, foto y tipo | Sí |
+| Total de resultados | Conteo de coincidencias | Numérico | Utilizado para la gestión de la paginación | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Capitán | Accede al módulo de búsqueda de jugadores | — |
-| 2 | Capitán | Selecciona o ingresa uno o más criterios de búsqueda (filtros) | — |
-| 3 | Sistema | Consulta los jugadores disponibles aplicando los filtros combinados | — |
-| 4 | Sistema | Retorna la lista paginada de jugadores con perfil resumido | E1: Sin resultados |
-| 5 | Capitán | Selecciona un jugador para ver su perfil completo o enviar invitación | — |
+| 1 | Capitán | Accede al módulo de búsqueda de jugadores desde su panel de gestión. | — |
+| 2 | Capitán | Selecciona o ingresa los criterios de búsqueda deseados para filtrar los candidatos. | — |
+| 3 | Capitán | Visualiza la lista de jugadores que cumplen con los filtros y están marcados como "Disponibles". | E1: Sin resultados |
+| 4 | Capitán | Selecciona un jugador de la lista para ver su perfil completo o proceder con el envío de una invitación. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "No se encontraron jugadores con los criterios ingresados" | Regresa al paso 2 |
-| A1 | Capitán | Si no ingresa ningún filtro, el sistema muestra todos los jugadores disponibles paginados | — |
-| A2 | Capitán | Si selecciona filtro de semestre pero el resultado incluye no-estudiantes, el sistema los excluye automáticamente | — |
+| E1 | Capitán | El usuario ingresa criterios que no coinciden con ningún jugador disponible. Muestra el mensaje: "No se encontraron jugadores con los criterios ingresados". | Regresa al paso 2 |
+| A1 | Capitán | El usuario no ingresa ningún filtro; el sistema despliega la totalidad de jugadores disponibles de forma paginada. | — |
+| A2 | Capitán | El usuario aplica el filtro de semestre; el sistema excluye automáticamente a Graduados, Profesores o Familiares de los resultados. | — |
 
-**Notas y comentarios:** Se implementa el patrón **Specification** en el backend para combinar filtros dinámicos de forma desacoplada.
-
----
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) Visibilidad: Solo se muestran jugadores con estado **Disponible** y sin equipo vinculado.</li><li>2) Privacidad: La búsqueda por documento de identidad requiere el número exacto.</li><li>3) Filtrado: El filtro de semestre es exclusivo para el tipo de usuario **Estudiante**.</li><li>4) Paginación: La interfaz debe limitar la carga de datos para optimizar el rendimiento.</li><li>5) El sistema implementa el patrón **Specification** para manejar la lógica de filtros dinámicos.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Buscador de Jugadores y Filtros. <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> <img width="697" height="351" alt="image" src="https://github.com/user-attachments/assets/b55cf61a-7305-4890-9467-df4c10af3bee" />) |
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Vanessa Torres</li><li>**Aprobado por:** David Cajamarca</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; ajuste de flujos alternos y especificación de lógica de filtrado por tipo de usuario.</li></ul> |
 
 ### RF05: Inscripción y pagos
 
