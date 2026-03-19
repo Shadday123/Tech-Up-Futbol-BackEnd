@@ -607,163 +607,162 @@
 | **Anexos** | **Prototipos:** Visualizador de Brackets (Tipo UEFA). <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> ) <img width="731" height="177" alt="image" src="https://github.com/user-attachments/assets/0611ea25-97ad-4254-b5a9-2c4ede5aa5de" />|
 | **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; ajuste de flujo para centrar la acción en el Organizador y lógica de avance.</li></ul> |
 
-### RF12: Estadísticas
+### RF12: Estadísticas del Torneo
 
 | Campo                     | Detalle |
 |:--------------------------|:--------|
 | **Código**                | RF12 |
 | **Nombre**                | Estadísticas |
-| **Descripción**           | El sistema debe permitir consultar estadísticas del torneo calculadas automáticamente a partir de los partidos registrados: máximos goleadores (ranking por goles), historial completo de partidos (con filtros) y resultados desglosados por equipo. |
-| **Cómo se ejecutará**     | Mediante un módulo de "Estadísticas" accesible desde el torneo, con secciones diferenciadas para cada tipo de consulta. |
-| **Actor principal**       | Usuario autenticado (cualquier rol) |
-| **Precondiciones**        | 1) Debe existir un torneo creado y visible. <br> 2) Para mostrar datos reales deben existir partidos con resultados registrados. |
-| **Reglas de Negocio**     | 1) Las estadísticas se calculan automáticamente a partir de la información de los partidos. <br> 2) "Máximos goleadores" se ordena de mayor a menor por cantidad de goles; en caso de empate, por menos partidos jugados. <br> 3) El historial de partidos permite filtrar por equipo y rango de fechas. <br> 4) Los resultados por equipo reflejan únicamente partidos del torneo seleccionado. |
-| **Anexos**                | **Prototipos:** Mockup de módulo de estadísticas. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Santiago Cajamarca <br> **Aprobado por:** Juan Esteban Rodríguez <br> **Fecha:** 04/03/2026 <br> **Descripción y Justificación de cambios:** Se formalizaron las tablas y se agregó criterio de desempate en goleadores. |
+| **Descripción**           | El sistema debe procesar y exponer las métricas de rendimiento del torneo: ranking de máximos goleadores (Pichichi), historial de encuentros disputados con filtros avanzados y desglose de resultados por equipo. |
+| **Cómo se ejecutará**     | Mediante un módulo analítico con pestañas de navegación para Goleadores, Historial y Rendimiento por Equipo. |
+| **Actor principal**       | Usuario Autenticado |
+| **Precondiciones**        | 1) El torneo debe estar registrado y ser visible. <br> 2) Deben existir actas de partidos cerradas (RF08) para generar datos reales. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Torneo | Torneo del cual se consultan estadísticas | Selección (ID) | Solo torneos existentes | Sí |
-| Tipo de estadística | Sección a consultar | Selección | Máximos goleadores / Historial de partidos / Resultados por equipo | Sí |
-| Equipo (filtro) | Equipo para filtrar resultados | Selección (ID) | Solo equipos inscritos en el torneo. Aplica para historial y resultados | No |
-| Rango de fechas (filtro) | Periodo de tiempo para filtrar | Fecha (rango) | Aplica para historial de partidos | No |
+| Torneo ID | Identificador del torneo | UUID | Se obtiene del contexto de navegación | Sí |
+| Tipo de Consulta | Sección estadística | Selección | Goleadores / Historial / Resultados | Sí |
+| Filtro de Equipo | Selector de club | Selección | Solo equipos inscritos en el torneo | No |
+| Rango Temporal | Filtro de fechas | Fecha (Inicio/Fin) | Para búsqueda en el historial de partidos | No |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Máximos goleadores | Ranking de jugadores por goles anotados | Lista de objetos | Cada entrada: jugador, equipo, goles. Ordenado desc. por goles | Condicional |
-| Historial de partidos | Lista de partidos jugados | Lista de objetos | Cada entrada: fecha, hora, equipos, marcador. Filtrable | Condicional |
-| Resultados por equipo | Detalle de rendimiento de un equipo | Objeto JSON | PJ, PG, PE, PP, GF, GC, goleadores del equipo | Condicional |
+| Tabla de Goleadores | Ranking individual | Lista de objetos | Orden desc: Goles. Desempate: Menos PJ | Sí |
+| Historial de Partidos | Bitácora de encuentros | Lista de objetos | Fecha, equipos, marcador y detalles | Sí |
+| Ficha de Rendimiento | Métricas por equipo | Objeto JSON | Goles a favor, contra y efectividad | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Usuario | Ingresa al torneo y selecciona "Estadísticas" | — |
-| 2 | Usuario | Selecciona el tipo de estadística a consultar | — |
-| 3 | Usuario | Aplica filtros opcionales (equipo, fechas) | — |
-| 4 | Sistema | Consulta los resultados registrados y calcula la estadística solicitada | — |
-| 5 | Sistema | Muestra la información en la vista correspondiente | E1: Sin datos |
+| 1 | Usuario | Accede a la sección de "Estadísticas" desde el menú principal del torneo. | — |
+| 2 | Usuario | Selecciona la categoría de interés (Goleadores, Historial o Rendimiento). | — |
+| 3 | Usuario | Aplica filtros por equipo o rango de fechas para refinar la información en pantalla. | E1: Sin registros |
+| 4 | Usuario | Visualiza los resultados procesados y el ranking actualizado en tiempo real. | — |
+| 5 | Usuario | Consulta el detalle de un jugador o partido específico de la lista generada. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Si no existen partidos con resultados, muestra las secciones vacías con mensaje: "Aún no hay datos disponibles" | — |
-| A1 | Usuario | Si filtra por un equipo sin partidos jugados, el sistema muestra: "Este equipo aún no ha disputado partidos" | — |
+| E1 | Usuario | Accede al módulo antes de que se registren goles o partidos y visualiza el mensaje: "Aún no hay datos disponibles". | — |
+| A1 | Usuario | Filtra por un equipo que aún no debuta y recibe la notificación: "Este equipo aún no ha disputado partidos". | Regresa al paso 3 |
+| A2 | Usuario | Percibe la actualización automática de las tablas tras la confirmación de una nueva acta (RF08). | — |
 
-**Notas y comentarios:** Las estadísticas se actualizan reactivamente mediante el patrón **Observer** (EstadisticasGoleadoresListener).
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) **Criterio Pichichi:** El ranking de goleadores se ordena por número de tantos. En empate, el primer lugar es para quien tenga menos partidos jugados.</li><li>2) **Integridad:** Solo se contabilizan goles registrados en actas firmadas por el árbitro.</li><li>3) **Reactividad:** El sistema emplea el patrón **Observer** para recalcular los rankings inmediatamente después de cada evento de gol (RF08).</li><li>4) **Alcance:** Las estadísticas mostradas pertenecen exclusivamente al torneo seleccionado en el contexto.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Tablero de Estadísticas (Dashboard). <br> **Abreviaturas:** PJ (Partidos Jugados), GF (Goles Favor). <br><br> **Caso de Uso:** <br><img width="792" height="346" alt="image" src="https://github.com/user-attachments/assets/28d4ac26-a093-4d17-87c8-23be35e9e10c" />|
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; estandarización de criterios de desempate y depuración de flujos.</li></ul> |
 
----
-
-### RF13: Autenticación y Login
+### RF13: Autenticación y Control de Acceso (Login)
 
 | Campo                     | Detalle |
 |:--------------------------|:--------|
 | **Código**                | RF13 |
 | **Nombre**                | Autenticación y Login |
-| **Descripción**           | El sistema debe permitir a los usuarios iniciar sesión utilizando su correo electrónico registrado (institucional o Gmail) y contraseña. El sistema debe gestionar sesiones mediante tokens JWT y permitir el cierre de sesión seguro. |
-| **Cómo se ejecutará**     | Mediante una pantalla de login que valida credenciales contra el backend y retorna un token JWT para las peticiones subsiguientes. |
-| **Actor principal**       | Cualquier usuario registrado |
-| **Precondiciones**        | 1) El usuario debe haberse registrado previamente (RF02). |
-| **Reglas de Negocio**     | 1) Las credenciales se validan contra los datos registrados en el sistema. <br> 2) El token JWT tiene un tiempo de expiración configurable. <br> 3) Todas las rutas protegidas del sistema requieren un token válido. <br> 4) La contraseña debe almacenarse encriptada (hash). |
-| **Anexos**                | **Prototipos:** Mockup de pantalla de Login. <br> **Abreviaturas:** JWT (JSON Web Token) |
-| **Historial de revisión** | **Elaborado por:** Santiago Cajamarca <br> **Aprobado por:** --- <br> **Fecha:** 09/03/2026 <br> **Descripción y Justificación de cambios:** Nuevo requerimiento creado a partir de la separación de RNF01 como funcionalidad del sistema. |
+| **Descripción**           | El sistema debe permitir el inicio de sesión seguro mediante credenciales registradas (correo y contraseña), gestionando la persistencia de la sesión a través de tokens JWT y permitiendo la navegación protegida según el rol asignado. |
+| **Cómo se ejecutará**     | A través de una interfaz de inicio de sesión que valida los datos contra el servicio de seguridad y almacena el token de acceso en el cliente. |
+| **Actor principal**       | Usuario Registrado |
+| **Precondiciones**        | 1) El usuario debe contar con una cuenta activa en la plataforma (RF02). <br> 2) Las credenciales deben estar previamente almacenadas y encriptadas en la base de datos. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Correo electrónico | Correo registrado del usuario | Email (texto) | Debe existir en el sistema | Sí |
-| Contraseña | Clave de acceso del usuario | Texto (password) | Se valida contra el hash almacenado | Sí |
+| Correo Electrónico | Identificador del usuario | Email | Debe tener formato válido y existir en el sistema | Sí |
+| Contraseña | Clave de acceso secreta | Password | Se compara mediante algoritmos de hashing (BCrypt) | Sí |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Token JWT | Token de autenticación para la sesión | Texto | Contiene ID del usuario, roles y fecha de expiración | Sí |
-| Datos del usuario | Información básica del usuario autenticado | Objeto JSON | Nombre, correo, roles asignados | Sí |
+| Token JWT | Credencial de sesión | String | Contiene claims de identidad, roles y expiración | Sí |
+| Perfil de Usuario | Información de sesión | Objeto JSON | Nombre, rol (Organizador, Árbitro, etc.) y avatar | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Usuario | Accede a la pantalla de login e ingresa correo y contraseña | — |
-| 2 | Sistema | Valida que el correo exista en el sistema | E1: Correo no registrado |
-| 3 | Sistema | Valida que la contraseña coincida con el hash almacenado | E2: Contraseña incorrecta |
-| 4 | Sistema | Genera token JWT con los datos y roles del usuario | — |
-| 5 | Sistema | Retorna el token y los datos básicos del usuario | — |
+| 1 | Usuario | Ingresa sus credenciales (email y contraseña) en el formulario de acceso. | — |
+| 2 | Usuario | Envía la solicitud de autenticación para validar su identidad. | E1, E2 |
+| 3 | Usuario | Recibe la confirmación de acceso y el token de seguridad correspondiente. | — |
+| 4 | Usuario | Visualiza su panel principal (Dashboard) personalizado según su rol asignado. | — |
+| 5 | Usuario | Selecciona la opción "Cerrar Sesión" para finalizar la navegación segura. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "El correo electrónico no se encuentra registrado" | Regresa al paso 1 |
-| E2 | Sistema | Muestra mensaje: "La contraseña ingresada es incorrecta" | Regresa al paso 1 |
-| A1 | Usuario | Si desea cerrar sesión, el sistema invalida el token y redirige al login | — |
+| E1 | Usuario | Introduce un correo no registrado. Visualiza el mensaje: "Credenciales inválidas o usuario no encontrado". | Regresa al paso 1 |
+| E2 | Usuario | Introduce una contraseña incorrecta. Visualiza el mensaje: "La combinación de correo y contraseña es errónea". | Regresa al paso 1 |
+| A1 | Usuario | Intenta acceder a una ruta protegida sin token. Visualiza redirección automática al login. | — |
 
-**Notas y comentarios:** Se implementa con Spring Security y JWT en el backend.
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) **Seguridad:** Las contraseñas nunca se almacenan en texto plano; se utiliza encriptación unidireccional (Hash).</li><li>2) **Persistencia:** El token JWT tiene un tiempo de vida limitado (ej. 24h) tras el cual el usuario debe re-autenticarse.</li><li>3) **Autorización:** El acceso a los módulos (RF03 al RF12) está restringido estrictamente por los roles presentes en el token.</li><li>4) **Arquitectura:** Se implementa utilizando el filtro de seguridad de **Spring Security** para interceptar peticiones no autorizadas.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de pantalla de Login Institucional. <br> **Abreviaturas:** JWT (JSON Web Token), BCrypt (Algoritmo de Hash). <br><br> **Caso de Uso:** <br> <img width="838" height="362" alt="image" src="https://github.com/user-attachments/assets/c2bef842-c600-4e00-a6fb-3d503b026b59" />|
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Formalización de seguridad; migración de lógica de RNF a RF y definición de flujos de token.</li></ul> |
 
----
-
-### RF14: Control de roles y permisos
+### RF14: Control de Roles y Permisos (RBAC)
 
 | Campo                     | Detalle |
 |:--------------------------|:--------|
 | **Código**                | RF14 |
-| **Nombre**                | Control de roles y permisos |
-| **Descripción**           | El sistema debe gestionar un esquema de roles y permisos que controle el acceso a las funcionalidades según el tipo de usuario. Cada usuario tiene uno o más roles que determinan qué módulos y acciones puede ejecutar dentro de la plataforma. |
-| **Cómo se ejecutará**     | Mediante un sistema de autorización basado en roles (RBAC) integrado en el backend, con un panel de administración para gestionar asignaciones. |
+| **Nombre**                | Control de Roles y Permisos |
+| **Descripción**           | El sistema debe gestionar un esquema de Seguridad Basada en Roles (RBAC) para controlar el acceso a las funcionalidades. Cada usuario puede poseer uno o múltiples roles que definen sus privilegios de lectura, escritura o administración dentro de la plataforma. |
+| **Cómo se ejecutará**     | Mediante un panel de administración de usuarios donde se asignan perfiles de acceso que son validados por el backend en cada petición al API. |
 | **Actor principal**       | Administrador |
-| **Precondiciones**        | 1) El usuario debe estar autenticado (RF13). <br> 2) El administrador debe tener el rol de Administrador asignado. |
-| **Reglas de Negocio**     | 1) Los roles del sistema son: Estudiante, Graduado, Profesor, Personal Administrativo, Familiar, Capitán, Organizador, Árbitro, Administrador. <br> 2) Un usuario puede tener múltiples roles (ejemplo: Estudiante + Capitán). <br> 3) El rol de Capitán se asigna automáticamente al crear un equipo. <br> 4) Solo el Administrador puede asignar/revocar roles manualmente. <br> 5) Cada endpoint del API debe validar que el usuario tenga el rol requerido. |
-| **Anexos**                | **Prototipos:** Mockup de Panel de Administración de Roles. <br> **Abreviaturas:** RBAC (Role-Based Access Control) |
-| **Historial de revisión** | **Elaborado por:** Santiago Cajamarca <br> **Aprobado por:** --- <br> **Fecha:** 09/03/2026 <br> **Descripción y Justificación de cambios:** Nuevo requerimiento creado a partir de la separación de RNF02 como funcionalidad del sistema. |
+| **Precondiciones**        | 1) El Administrador debe estar autenticado (RF13). <br> 2) El usuario a gestionar debe existir en la base de datos (RF02). |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Usuario | Usuario al cual asignar o revocar un rol | Selección (ID) | Debe existir en el sistema | Sí |
-| Rol | Rol a asignar o revocar | Selección (enum) | Debe ser uno de los roles válidos del sistema | Sí |
-| Acción | Tipo de operación | Selección | Asignar / Revocar | Sí |
+| ID de Usuario | Identificador único | UUID | Debe corresponder a un registro activo | Sí |
+| Catálogo de Roles | Perfiles disponibles | Selección (Enum) | Estudiante, Profesor, Árbitro, Organizador, etc. | Sí |
+| Acción de Mando | Operación a realizar | Selección | Asignar o Revocar permisos | Sí |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Confirmación | Notificación de operación exitosa | Texto | Indica qué rol se asignó/revocó y a quién | Sí |
-| Roles actualizados | Lista de roles actuales del usuario | Lista de textos | Refleja los roles después de la operación | Sí |
+| Confirmación | Notificación de éxito | Texto | Detalle del cambio realizado y usuario afectado | Sí |
+| Lista de Permisos | Roles actuales | Lista de Strings | Refleja el estado final del usuario tras el cambio | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Administrador | Accede al panel de administración de roles | — |
-| 2 | Administrador | Busca al usuario por nombre o correo | E1: Usuario no encontrado |
-| 3 | Administrador | Selecciona el rol y la acción (asignar/revocar) | — |
-| 4 | Sistema | Valida que la operación sea coherente (no revocar un rol que no tiene) | E2: Operación inválida |
-| 5 | Sistema | Ejecuta la operación y actualiza los roles del usuario | — |
-| 6 | Sistema | Muestra confirmación con los roles actualizados | — |
+| 1 | Administrador | Accede al módulo de "Gestión de Usuarios y Roles". | — |
+| 2 | Administrador | Localiza al usuario específico mediante su nombre o correo institucional. | E1: No encontrado |
+| 3 | Administrador | Selecciona el rol deseado y define si se debe otorgar o quitar del perfil. | — |
+| 4 | Administrador | Confirma la operación para actualizar los privilegios en la base de datos. | E2: Inconsistencia |
+| 5 | Administrador | Visualiza el resumen de roles actualizados del usuario gestionado. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "No se encontró un usuario con los datos ingresados" | Regresa al paso 2 |
-| E2 | Sistema | Muestra mensaje: "El usuario no tiene el rol [nombre] para poder revocarlo" | Regresa al paso 3 |
-| A1 | Sistema | Si un usuario crea un equipo (RF03), el rol Capitán se asigna automáticamente sin intervención del administrador | — |
+| E1 | Administrador | Introduce datos de un usuario inexistente. Visualiza mensaje: "No se encontró coincidencia". | Regresa al paso 2 |
+| E2 | Administrador | Intenta revocar un rol que el usuario no posee actualmente. Visualiza alerta de error. | Regresa al paso 3 |
+| A1 | Usuario | Al completar el registro de un equipo (RF03), adquiere automáticamente el rol de "Capitán". | — |
+| A2 | Usuario | Intenta acceder a un módulo restringido y visualiza el mensaje: "Acceso denegado: permisos insuficientes". | — |
 
-**Notas y comentarios:** Se implementa con @PreAuthorize de Spring Security en cada controlador del backend.
-
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) **Multiroles:** Un mismo usuario puede desempeñar varios papeles (ej. Profesor y Organizador) simultáneamente.</li><li>2) **Jerarquía:** Solo usuarios con el rol "Administrador" pueden alterar la estructura de permisos de otros.</li><li>3) **Automatización:** Ciertos roles son transitorios y se asignan por eventos del sistema (como la creación de equipos).</li><li>4) **Validación:** El backend utiliza la anotación `@PreAuthorize` para interceptar y validar el token JWT antes de cada acción.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Gestión de Usuarios y Roles. <br> **Abreviaturas:** RBAC (Role-Based Access Control). <br><br> **Caso de Uso:** <br><img width="818" height="345" alt="image" src="https://github.com/user-attachments/assets/1f354a82-440b-4103-9541-e196d65fe78a" />|
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Separación de lógica de seguridad; definición de roles institucionales y flujos de asignación.</li></ul> |
 ---
-
-## 3. Detalle de Requerimientos No Funcionales
+### Requerimientos No Funcionales (RNF)
 
 | Código | Nombre | Descripción | Criterio de Aceptación |
-| RNF01 | Rendimiento | El sistema debe responder a las consultas en menos de 3 segundos bajo condiciones normales de uso (hasta 100 usuarios concurrentes). | El 95% de las peticiones responden en menos de 3 segundos. |
-| RNF02 | Usabilidad | La plataforma debe ser intuitiva para estudiantes universitarios sin necesidad de capacitación previa, con navegación clara y mensajes de error comprensibles. | Un usuario nuevo puede completar el flujo de registro y creación de perfil en menos de 5 minutos. |
-| RNF03 | Mantenibilidad | El sistema debe implementar patrones de diseño (Strategy, State, Factory Method, Observer) que faciliten la extensión y modificación del código sin afectar funcionalidades existentes. | Se pueden agregar nuevas reglas de validación, estados o tipos de usuario sin modificar clases existentes. |
+| :--- | :--- | :--- | :--- |
+| **RNF01** | **Rendimiento** | El sistema debe responder a las consultas en menos de 3 segundos bajo condiciones normales de uso (hasta 100 usuarios concurrentes). | El 95% de las peticiones responden en menos de 3 segundos. |
+| **RNF02** | **Usabilidad** | La plataforma debe ser intuitiva para estudiantes universitarios sin necesidad de capacitación previa, con navegación clara y mensajes de error comprensibles. | Un usuario nuevo puede completar el flujo de registro y creación de perfil en menos de 5 minutos. |
+| **RNF03** | **Mantenibilidad** | El sistema debe implementar patrones de diseño (**Strategy, State, Factory Method, Observer**) que faciliten la extensión y modificación del código sin afectar funcionalidades existentes. | Se pueden agregar nuevas reglas de validación, estados o tipos de usuario sin modificar clases existentes. |
