@@ -19,11 +19,6 @@
 * RF14: Control de roles y permisos
 
 ### Requerimientos No Funcionales (RNF)
-* RNF01: Registro de acciones (auditoría)
-* RNF02: Backend en Spring Boot por capas (controladores, adaptadores, lógica y datos)
-* RNF03: Manejo de API REST con Spring Boot
-* RNF04: Frontend en React con TypeScript (aplicación web)
-* RNF05: Base de datos PostgreSQL
 * RNF06: Rendimiento — El sistema debe responder a las consultas en menos de 3 segundos bajo condiciones normales de uso
 * RNF07: Usabilidad — La plataforma debe ser intuitiva para estudiantes sin necesidad de capacitación previa
 * RNF08: Mantenibilidad — El sistema debe implementar patrones de diseño que faciliten la extensión y modificación del código
@@ -42,14 +37,12 @@
 | **Cómo se ejecutará**     | A través de un formulario administrativo donde se definen los parámetros globales del evento y un panel de gestión que permite cambiar el estado del torneo según las transiciones permitidas. |
 | **Actor principal**       | Organizador |
 | **Precondiciones**        | 1) El usuario debe estar autenticado con rol de Organizador. <br> 2) No debe existir otro torneo activo o en progreso para el mismo periodo de fechas. |
-| **Reglas de Negocio**     | 1) El torneo se crea siempre en estado **Borrador**. <br> 2) Las transiciones de estado permitidas son: Borrador → Activo, Activo → En Progreso, En Progreso → Finalizado. <br> 3) No se permite ninguna transición inversa ni saltar estados (por ejemplo, de Borrador a Finalizado). <br> 4) La fecha final debe ser posterior a la fecha inicial. <br> 5) La cantidad de equipos debe ser un número par mayor o igual a 4. <br> 6) Un torneo Finalizado no admite ninguna modificación. |
-| **Anexos**                | **Prototipos:** Mockup de Gestión Administrativa. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Vanessa Torres <br> **Aprobado por:** David Cajamarca <br> **Fecha:** 03/03/2026 <br> **Descripción y Justificación de cambios:** Se expandieron las reglas de negocio para incluir transiciones de estado válidas y validaciones de fechas según feedback del profesor. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
+| Nombre del Torneo | Nombre con el cual aparecera el torneo en la pagina| String | No debe extir un torneo con el mismo nombre que se encuentre activo o en progreso|Sí|
 | Fecha inicial | Fecha de inicio del torneo | Fecha (date) | Debe ser igual o posterior a la fecha actual | Sí |
 | Fecha final | Fecha de finalización del torneo | Fecha (date) | Debe ser estrictamente posterior a la fecha inicial | Sí |
 | Cantidad de equipos | Número máximo de equipos participantes | Numérico (entero) | Debe ser un número par ≥ 4 | Sí |
@@ -68,29 +61,30 @@
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
 | 1 | Organizador | Accede al módulo de torneos y selecciona "Crear torneo" | — |
-| 2 | Organizador | Ingresa fecha inicial, fecha final, cantidad de equipos y costo por equipo | — |
-| 3 | Sistema | Valida que la fecha final sea posterior a la fecha inicial | E1: Fecha final ≤ fecha inicial |
-| 4 | Sistema | Valida que la cantidad de equipos sea un número par ≥ 4 | E2: Cantidad inválida |
-| 5 | Sistema | Valida que no exista otro torneo activo/en progreso en el mismo periodo | E3: Torneo solapado |
-| 6 | Sistema | Crea el torneo en estado "Borrador" y retorna confirmación con ID | — |
+| 2 | Organizador | Ingresa fecha inicial, fecha final, cantidad de equipos y costo por equipo. | — |
+| 3 | Organizador| Recibe la confimacion de la creación del torneo en pantalla, con el Id de torneo. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "La fecha final debe ser posterior a la fecha inicial" y no permite el guardado | Regresa al paso 2 |
-| E2 | Sistema | Muestra mensaje: "La cantidad de equipos debe ser un número par mayor o igual a 4" | Regresa al paso 2 |
-| E3 | Sistema | Muestra mensaje: "Ya existe un torneo activo o en progreso para el periodo indicado" | Regresa al paso 2 |
-| A1 | Organizador | Si desea activar el torneo, selecciona "Activar" desde el panel de gestión | E4: Torneo sin configuración completa |
-| A2 | Organizador | Si desea iniciar el torneo activo, selecciona "Iniciar torneo" | E5: No hay equipos inscritos aprobados |
-| A3 | Organizador | Si desea finalizar el torneo, selecciona "Finalizar torneo" | E6: Hay partidos sin resultado registrado |
-| E4 | Sistema | Muestra mensaje: "Complete la configuración del torneo antes de activarlo (RF06)" | Regresa al panel de gestión |
-| E5 | Sistema | Muestra mensaje: "No se puede iniciar un torneo sin equipos inscritos" | Regresa al panel de gestión |
-| E6 | Sistema | Muestra mensaje: "Existen partidos pendientes de resultado" | Regresa al panel de gestión |
+| E1 | Organizador | El usuario al hacer el registro de la fecha puso la fecha final igual o anterior a la incial. Muestra el mensaje: "La fecha final debe ser posterior a la fecha inicial" y no permite el guardado | Regresa al paso 2 |
+| E2 | Organizador| El usuario al ingresar los datos pone una cantidad de equipos menor a 4. Muestra el mensaje: "La cantidad de equipos debe ser un número par mayor o igual a 4" | Regresa al paso 2 |
+| E3 | Organizador| El usuario ingresa un nombre de torneo que ya existe. Muestra el mensaje: "Ya existe un torneo activo o en progreso para el periodo indicado" | Regresa al paso 2 |
+| A1 | Organizador |El usuario pone el torneo como borrar y si desea desde las configuraciones del torneo, selecciona "Activar Torneo" desde el panel de gestión o en el estado del torneo selescciona "Activo | No le puuede dar activo si ya fue completado o eliminado |
+| A3 | Organizador | El organizador desea finalizar el torneo va a las configuraciones del torneo y selecciona "Finalizar torneo" | E6: Hay partidos sin resultado registrado |
+| E4 | organizador | El organizador desea activar el torneo pero no ha finalizado todos los coampos obligatorios. Muestra el  mensaje: "Debe completar la configuración del torneo antes de activarlo (RF06)" | Regresa al panel de gestión |
+| E5 | Organizador | El usuario seleecciona iniciar torneo sin equipos inscritos .Muestra mensaje: "No se puede iniciar un torneo sin equipos inscritos" | Regresa al panel de gestión |
+| E6 | Organizador |El organizador selecciona finalizar o eliminar torneo. Muestra el mensaje: "Existen partidos pendientes de resultado" | Regresa al panel de gestión |
 
-**Notas y comentarios:** Se aplica el patrón de diseño **State** para gestionar las transiciones de estado del torneo.
 
----
+
+
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) El torneo se crea siempre en estado **Borrador** o en **Activo** si el administrador lo define. También puede pasar a *In Progress*, *Completed* o *Deleted*.</li><li>2) Transiciones permitidas: **Borrador → Activo → En Progreso → Finalizado**.</li><li>3) No se permiten transiciones inversas ni saltar estados.</li><li>4) La fecha final debe ser estrictamente posterior a la inicial.</li><li>5) Cantidad de equipos: número par $\ge 4$.</li><li>6) Un torneo **Finalizado** es de solo lectura.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Gestión Administrativa. <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> ![Diagrama de Caso de Uso](https://github.com/user-attachments/assets/2c6a483f-16f0-4a38-bd5c-e780dd2dc764) |
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Vanessa Torres</li><li>**Aprobado por:** David Cajamarca</li><li>**Fecha:** 03/03/2026</li><li>**Cambios:** Se expandieron las reglas de negocio para incluir transiciones de estado y validaciones de fechas según feedback docente.</li></ul> |
 
 ### RF02: Registro de Jugadores
 
@@ -809,12 +803,6 @@
 ## 3. Detalle de Requerimientos No Funcionales
 
 | Código | Nombre | Descripción | Criterio de Aceptación |
-|:-------|:-------|:------------|:----------------------|
-| RNF01 | Registro de acciones (auditoría) | El sistema debe registrar automáticamente las acciones relevantes realizadas por los usuarios, incluyendo: usuario, fecha/hora, acción ejecutada y recurso afectado. | Toda acción de creación, modificación o eliminación queda registrada con trazabilidad completa. |
-| RNF02 | Backend en Spring Boot por capas | El backend debe estar construido con Spring Boot siguiendo una arquitectura por capas: controladores, adaptadores, lógica de negocio y capa de datos. | El proyecto compila y ejecuta correctamente con separación clara de paquetes por capa. |
-| RNF03 | Manejo de API REST | La comunicación entre frontend y backend se realiza mediante API REST con Spring Boot, siguiendo convenciones de nomenclatura y códigos HTTP estándar. | Todos los endpoints siguen la convención REST y retornan códigos HTTP apropiados (200, 201, 400, 401, 403, 404, 500). |
-| RNF04 | Frontend en React con TypeScript | La aplicación web debe construirse con React y TypeScript, proporcionando una interfaz responsiva y tipada. | La aplicación funciona correctamente en navegadores modernos y está escrita en TypeScript. |
-| RNF05 | Base de datos PostgreSQL | La persistencia de datos se realiza mediante PostgreSQL como motor de base de datos relacional. | Las entidades se mapean correctamente y las operaciones CRUD funcionan contra PostgreSQL. |
-| RNF06 | Rendimiento | El sistema debe responder a las consultas en menos de 3 segundos bajo condiciones normales de uso (hasta 100 usuarios concurrentes). | El 95% de las peticiones responden en menos de 3 segundos. |
-| RNF07 | Usabilidad | La plataforma debe ser intuitiva para estudiantes universitarios sin necesidad de capacitación previa, con navegación clara y mensajes de error comprensibles. | Un usuario nuevo puede completar el flujo de registro y creación de perfil en menos de 5 minutos. |
-| RNF08 | Mantenibilidad | El sistema debe implementar patrones de diseño (Strategy, State, Factory Method, Observer) que faciliten la extensión y modificación del código sin afectar funcionalidades existentes. | Se pueden agregar nuevas reglas de validación, estados o tipos de usuario sin modificar clases existentes. |
+| RNF01 | Rendimiento | El sistema debe responder a las consultas en menos de 3 segundos bajo condiciones normales de uso (hasta 100 usuarios concurrentes). | El 95% de las peticiones responden en menos de 3 segundos. |
+| RNF02 | Usabilidad | La plataforma debe ser intuitiva para estudiantes universitarios sin necesidad de capacitación previa, con navegación clara y mensajes de error comprensibles. | Un usuario nuevo puede completar el flujo de registro y creación de perfil en menos de 5 minutos. |
+| RNF03 | Mantenibilidad | El sistema debe implementar patrones de diseño (Strategy, State, Factory Method, Observer) que faciliten la extensión y modificación del código sin afectar funcionalidades existentes. | Se pueden agregar nuevas reglas de validación, estados o tipos de usuario sin modificar clases existentes. |
