@@ -1,6 +1,5 @@
 package com.techcup.techcup_futbol.exception;
 
-
 public class TournamentException extends RuntimeException {
 
     public static final String REQUEST_NULL =
@@ -12,13 +11,15 @@ public class TournamentException extends RuntimeException {
     public static final String DATES_NULL =
             "Las fechas de inicio y fin son obligatorias.";
     public static final String END_DATE_NOT_AFTER_START =
-            "La fecha de finalización debe ser estrictamente posterior a la de inicio. Inicio: %s | Fin: %s";
+            "La fecha de finalización debe ser estrictamente posterior a la de inicio. "
+                    + "Inicio: %s | Fin: %s";
 
     public static final String REGISTRATION_FEE_NEGATIVE =
             "La cuota de inscripción no puede ser negativa. Valor recibido: %.2f";
-
     public static final String MAX_TEAMS_TOO_LOW =
-            "El torneo debe permitir al menos 2 equipos. Valor recibido: %d";
+            "El torneo debe tener al menos 4 equipos. Valor recibido: %d";
+    public static final String MAX_TEAMS_NOT_EVEN =
+            "La cantidad de equipos debe ser un número par. Valor recibido: %d";
 
     public static final String INVALID_STATE_NAME =
             "Estado inválido: '%s'. Valores permitidos: %s";
@@ -27,7 +28,6 @@ public class TournamentException extends RuntimeException {
 
     public static final String TOURNAMENT_NOT_FOUND =
             "No se encontró el torneo con ID: %s";
-
 
     private final String field;
 
@@ -46,7 +46,5 @@ public class TournamentException extends RuntimeException {
         this.field = null;
     }
 
-    public String getField() {
-        return field;
-    }
+    public String getField() { return field; }
 }

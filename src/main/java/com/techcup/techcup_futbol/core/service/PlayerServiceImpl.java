@@ -14,25 +14,28 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
-    private static final DateTimeFormatter formatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    // ── CREATE
+    // CREATE
 
     @Override
     public void registrar(Player jugador, String correo) {
-        String ts = LocalDateTime.now().format(formatter);
+        String ts = LocalDateTime.now().format(FMT);
+
+        // FIX: auto-generar UUID si el ID no viene del controlador
+        if (jugador.getId() == null || jugador.getId().isBlank()) {
+            jugador.setId(UUID.randomUUID().toString());
+            log.debug("[{}] ID auto-generado: {}", ts, jugador.getId());
+        }
+
         log.info("[{}] Iniciando registro — jugador: {} | email: {}",
                 ts, jugador.getFullname(), correo);
-
-        if (jugador.getId() == null || jugador.getId().isBlank()) {
-            throw new PlayerException("id", PlayerException.PLAYER_ID_NULL);
-        }
 
         PlayerValidator.validate(jugador, correo);
 
@@ -49,30 +52,26 @@ public class PlayerServiceImpl implements PlayerService {
                 jugador.getId(), correo, DataStore.jugadores.size());
     }
 
-    // ── UPDATE
+    // UPDATE
 
     @Override
     public void actualizarPerfil(Player jugador, String foto) {
-        String ts = LocalDateTime.now().format(formatter);
+        String ts = LocalDateTime.now().format(FMT);
         log.info("[{}] Actualizando foto del jugador ID: {}", ts, jugador.getId());
         Player persistido = obtenerPorId(jugador.getId());
-
         log.debug("URL anterior: {} | URL nueva: {}", persistido.getPhotoUrl(), foto);
         persistido.setPhotoUrl(foto);
         log.info("Foto actualizada para jugador: {}", persistido.getFullname());
     }
 
-    // ── UPDATE
-
     @Override
     public void cambiarDisponibilidad(Player jugador, boolean disponible) {
-        String ts = LocalDateTime.now().format(formatter);
-        log.info("[{}] Cambiando disponibilidad — jugador: {} | disponible solicitado: {}",
+        String ts = LocalDateTime.now().format(FMT);
+        log.info("[{}] Cambiando disponibilidad — jugador: {} | solicitado: {}",
                 ts, jugador.getFullname(), disponible);
 
         Player persistido = obtenerPorId(jugador.getId());
-
-        boolean estadoActual = !persistido.isHaveTeam();
+        boolean estadoActual = !persistido.isHaveTeam(); // haveTeam=false → disponible=true
 
         if (estadoActual == disponible) {
             String msg = disponible
@@ -86,67 +85,44 @@ public class PlayerServiceImpl implements PlayerService {
                 persistido.getFullname(), disponible);
     }
 
-    // ── READ — LISTAR TODOS ───────────────────────────────────────────────────
+    // READ
 
     @Override
     public List<Player> listarJugadores() {
-        String ts = LocalDateTime.now().format(formatter);
-        log.info("[{}] Listando todos los jugadores del sistema", ts);
-
+        log.info("[{}] Listando todos los jugadores del sistema", LocalDateTime.now().format(FMT));
         List<Player> jugadores = new ArrayList<>(DataStore.jugadores.values());
-
         if (jugadores.isEmpty()) {
             log.warn("No hay jugadores registrados en el sistema.");
         } else {
             log.info("Total de jugadores encontrados: {}", jugadores.size());
-            jugadores.stream().limit(5).forEach(j ->
-                    log.debug("  → {} (ID: {}, Email: {})",
-                            j.getFullname(), j.getId(), j.getEmail())
-            );
         }
-
         return jugadores;
     }
 
-    // ── READ — BUSCAR POR ID
-
     @Override
     public Optional<Player> buscarPorId(String id) {
-        String ts = LocalDateTime.now().format(formatter);
-        log.info("[{}] Buscando jugador con ID: {}", ts, id);
-
+        log.info("[{}] Buscando jugador con ID: {}", LocalDateTime.now().format(FMT), id);
         Optional<Player> resultado = Optional.ofNullable(DataStore.jugadores.get(id));
-
         if (resultado.isPresent()) {
-            Player j = resultado.get();
-            log.info("Jugador encontrado — Nombre: {} | Email: {} | Dorsal: {} | Tiene equipo: {}",
-                    j.getFullname(), j.getEmail(), j.getDorsalNumber(), j.isHaveTeam());
+            log.info("Jugador encontrado — Nombre: {}", resultado.get().getFullname());
         } else {
             log.warn("No se encontró jugador con ID: {}", id);
         }
-
         return resultado;
     }
-
-    // ── READ
 
     @Override
     public Player obtenerPorId(String id) {
         return buscarPorId(id).orElseThrow(() ->
-                new PlayerException("id",
-                        String.format(PlayerException.PLAYER_NOT_FOUND, id))
-        );
+                new PlayerException("id", String.format(PlayerException.PLAYER_NOT_FOUND, id)));
     }
 
     // DELETE
 
     @Override
     public void eliminarJugador(String id) {
-        String ts = LocalDateTime.now().format(formatter);
-        log.info("[{}] Eliminando jugador con ID: {}", ts, id);
-
+        log.info("[{}] Eliminando jugador con ID: {}", LocalDateTime.now().format(FMT), id);
         Player jugador = obtenerPorId(id);
-
         log.info("Eliminando jugador: {} | Email: {}", jugador.getFullname(), jugador.getEmail());
         DataStore.jugadores.remove(id);
         log.info("Jugador eliminado. Total restante: {}", DataStore.jugadores.size());

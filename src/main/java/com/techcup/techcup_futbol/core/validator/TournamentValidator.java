@@ -5,7 +5,6 @@ import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.exception.TournamentException;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
 public class TournamentValidator {
 
@@ -20,7 +19,6 @@ public class TournamentValidator {
         validateRegistrationFee(request.registrationFee());
         validateMaxTeams(request.maxTeams());
     }
-
 
     public static void validateName(String name) {
         if (name == null || name.isBlank()) {
@@ -45,11 +43,14 @@ public class TournamentValidator {
                     String.format(TournamentException.REGISTRATION_FEE_NEGATIVE, fee));
         }
     }
-
     public static void validateMaxTeams(int maxTeams) {
-        if (maxTeams < 2) {
+        if (maxTeams < 4) {
             throw new TournamentException("maxTeams",
                     String.format(TournamentException.MAX_TEAMS_TOO_LOW, maxTeams));
+        }
+        if (maxTeams % 2 != 0) {
+            throw new TournamentException("maxTeams",
+                    String.format(TournamentException.MAX_TEAMS_NOT_EVEN, maxTeams));
         }
     }
 

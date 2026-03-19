@@ -22,10 +22,14 @@ public class TournamentConfigServiceImpl implements TournamentConfigService {
     private static final Logger log = LoggerFactory.getLogger(TournamentConfigServiceImpl.class);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
+
     private final Map<String, TournamentConfig> configs = new HashMap<>();
 
+    // ── CREATE / UPDATE
+
     @Override
-    public TournamentConfigResponse createOrUpdate(String tournamentId, CreateTournamentConfigRequest request) {
+    public TournamentConfigResponse createOrUpdate(String tournamentId,
+                                                   CreateTournamentConfigRequest request) {
         log.info("Configurando torneo ID: {}", tournamentId);
 
         Tournament tournament = DataStore.torneos.get(tournamentId);
@@ -41,9 +45,10 @@ public class TournamentConfigServiceImpl implements TournamentConfigService {
         }
 
         if (request.registrationDeadline() != null
-                && request.registrationDeadline().isAfter(tournament.getStartDate())) {
+                && !request.registrationDeadline().isBefore(tournament.getStartDate())) {
             throw new TournamentException("registrationDeadline",
-                    "La fecha de cierre de inscripciones debe ser anterior a la fecha de inicio del torneo.");
+                    "La fecha de cierre de inscripciones debe ser estrictamente anterior "
+                            + "a la fecha de inicio del torneo.");
         }
 
         TournamentConfig config = configs.getOrDefault(tournamentId, new TournamentConfig());
@@ -57,7 +62,8 @@ public class TournamentConfigServiceImpl implements TournamentConfigService {
 
         if (request.importantDates() != null) {
             config.setImportantDates(request.importantDates().stream()
-                    .map(d -> d.description() + "|" + (d.date() != null ? d.date().format(FMT) : ""))
+                    .map(d -> d.description() + "|"
+                            + (d.date() != null ? d.date().format(FMT) : ""))
                     .toList());
         }
         if (request.matchSchedules() != null) {
@@ -76,36 +82,43 @@ public class TournamentConfigServiceImpl implements TournamentConfigService {
         return toResponse(config, tournamentId);
     }
 
+    // ── READ
+
     @Override
     public TournamentConfigResponse findByTournamentId(String tournamentId) {
         TournamentConfig config = configs.get(tournamentId);
         if (config == null) {
-            throw new TournamentException("id",
-                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, tournamentId));
+            throw new TournamentException("config",
+                    String.format(CONFIG_NOT_FOUND, tournamentId));
         }
         return toResponse(config, tournamentId);
     }
 
+    // ── HELPER
+
     private TournamentConfigResponse toResponse(TournamentConfig c, String tournamentId) {
         List<ImportantDateDTO> dates = c.getImportantDates() == null ? List.of()
                 : c.getImportantDates().stream().map(s -> {
-                    String[] parts = s.split("\\|", 2);
-                    return new ImportantDateDTO(parts[0],
-                            parts.length > 1 && !parts[1].isBlank()
-                                    ? java.time.LocalDateTime.parse(parts[1], FMT) : null);
-                }).toList();
+            String[] parts = s.split("\\|", 2);
+            return new ImportantDateDTO(parts[0],
+                    parts.length > 1 && !parts[1].isBlank()
+                            ? java.time.LocalDateTime.parse(parts[1], FMT) : null);
+        }).toList();
 
         List<MatchScheduleDTO> schedules = c.getMatchSchedules() == null ? List.of()
                 : c.getMatchSchedules().stream().map(s -> {
-                    String[] p = s.split("\\|", 3);
-                    return new MatchScheduleDTO(p[0], p.length > 1 ? p[1] : "", p.length > 2 ? p[2] : "");
-                }).toList();
+            String[] p = s.split("\\|", 3);
+            return new MatchScheduleDTO(
+                    p[0],
+                    p.length > 1 ? p[1] : "",
+                    p.length > 2 ? p[2] : "");
+        }).toList();
 
         List<FieldDTO> fields = c.getFields() == null ? List.of()
                 : c.getFields().stream().map(s -> {
-                    String[] p = s.split("\\|", 2);
-                    return new FieldDTO(p[0], p.length > 1 ? p[1] : "");
-                }).toList();
+            String[] p = s.split("\\|", 2);
+            return new FieldDTO(p[0], p.length > 1 ? p[1] : "");
+        }).toList();
 
         return new TournamentConfigResponse(
                 c.getId(), tournamentId,

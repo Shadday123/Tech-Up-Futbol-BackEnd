@@ -16,22 +16,32 @@ public class BracketServiceImpl implements BracketService {
     private static final Logger log = LoggerFactory.getLogger(BracketServiceImpl.class);
 
     private final Map<String, List<TournamentBrackets>> tournamentBrackets = new HashMap<>();
-    private final Map<String, Match> bracketMatches = new LinkedHashMap<>();
-    private final Map<String, MatchStatus> bracketMatchStatus = new HashMap<>();
-    private final Map<String, Team> matchWinners = new HashMap<>();
+    private final Map<String, Match>                    bracketMatches     = new LinkedHashMap<>();
+    private final Map<String, MatchStatus>              bracketMatchStatus  = new HashMap<>();
+    private final Map<String, Team>                     matchWinners       = new HashMap<>();
 
+    /*
+     * FIX: se inyecta MatchService (interfaz), no MatchServiceImpl (clase concreta).
+     * @Lazy rompe el ciclo: BracketService → MatchService → LineupService → MatchService.
+     */
     @Autowired
-    private MatchServiceImpl matchService;
+    @org.springframework.context.annotation.Lazy
+    private MatchService matchService;
+
+    // ── GENERATE ─────────────────────────────────────────────────────────────
 
     @Override
     public BracketResponse generate(String tournamentId, GenerateBracketRequest request) {
-        log.info("Generando llaves para torneo ID: {} con {} equipos", tournamentId, request.teamsCount());
+        log.info("Generando llaves para torneo ID: {} con {} equipos",
+                tournamentId, request.teamsCount());
 
         Tournament tournament = DataStore.torneos.get(tournamentId);
         if (tournament == null) {
             throw new BracketException("tournamentId",
                     String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId));
         }
+
+        // Si ya existen llaves con resultados, no se puede regenerar
         if (tournamentBrackets.containsKey(tournamentId)) {
             boolean hasResults = bracketMatches.values().stream()
                     .anyMatch(m -> bracketMatchStatus.get(m.getId()) == MatchStatus.FINISHED);
@@ -54,7 +64,7 @@ public class BracketServiceImpl implements BracketService {
         }
 
         Collections.shuffle(teams.subList(0, count), new java.security.SecureRandom());
-        List<Team> selected = teams.subList(0, count);
+        List<Team> selected = new ArrayList<>(teams.subList(0, count));
 
         List<TournamentBrackets> phases = new ArrayList<>();
         PhaseEnum phase = resolveInitialPhase(count);
@@ -65,7 +75,10 @@ public class BracketServiceImpl implements BracketService {
             roundMatches.add(m);
             bracketMatches.put(m.getId(), m);
             bracketMatchStatus.put(m.getId(), MatchStatus.SCHEDULED);
-            matchService.getMatches().put(m.getId(), m);
+            // Registrar también en MatchService para que se pueda cargar resultado
+            if (matchService instanceof MatchServiceImpl ms) {
+                ms.getMatches().put(m.getId(), m);
+            }
         }
 
         TournamentBrackets bracket = new TournamentBrackets();
@@ -79,6 +92,8 @@ public class BracketServiceImpl implements BracketService {
         log.info("Llaves generadas: {} partidos en fase {}", roundMatches.size(), phase);
         return toResponse(tournamentId, tournament, phases);
     }
+
+    // ── FIND ──────────────────────────────────────────────────────────────────
 
     @Override
     public BracketResponse findByTournamentId(String tournamentId) {
@@ -95,6 +110,17 @@ public class BracketServiceImpl implements BracketService {
         return toResponse(tournamentId, tournament, phases);
     }
 
+    // ── ADVANCE WINNER ────────────────────────────────────────────────────────
+
+    /**
+     * FIX 1: antes se usaba scoreLocal >= scoreVisitor para determinar el ganador.
+     * Si ambos marcadores son 0 (partido no jugado), el equipo local avanzaba
+     * automáticamente sin resultado real. Ahora se verifica que el resultado
+     * haya sido registrado antes de permitir el avance.
+     *
+     * FIX 2: si el partido terminó en empate se lanza una excepción descriptiva
+     * en lugar de hacer avanzar al local silenciosamente.
+     */
     @Override
     public BracketResponse advanceWinner(String tournamentId, String matchId) {
         log.info("Avanzando ganador del partido ID: {}", matchId);
@@ -111,8 +137,20 @@ public class BracketServiceImpl implements BracketService {
                     String.format(BracketException.MATCH_NOT_FOUND, matchId));
         }
 
-        Team winner = match.getScoreLocal() >= match.getScoreVisitor()
-                ? match.getLocalTeam() : match.getVisitorTeam();
+        // FIX 1: verificar que el resultado fue registrado en MatchService
+        if (!matchService.isResultRegistered(matchId)) {
+            throw new BracketException("matchId", BracketException.RESULT_NOT_REGISTERED);
+        }
+
+        // FIX 2: manejar empate — no se puede avanzar sin un ganador claro
+        if (match.getScoreLocal() == match.getScoreVisitor()) {
+            throw new BracketException("match", BracketException.DRAW_NO_WINNER);
+        }
+
+        Team winner = match.getScoreLocal() > match.getScoreVisitor()
+                ? match.getLocalTeam()
+                : match.getVisitorTeam();
+
         matchWinners.put(matchId, winner);
         bracketMatchStatus.put(matchId, MatchStatus.FINISHED);
 
@@ -135,7 +173,9 @@ public class BracketServiceImpl implements BracketService {
                 nextMatches.add(nm);
                 bracketMatches.put(nm.getId(), nm);
                 bracketMatchStatus.put(nm.getId(), MatchStatus.SCHEDULED);
-                matchService.getMatches().put(nm.getId(), nm);
+                if (matchService instanceof MatchServiceImpl ms) {
+                    ms.getMatches().put(nm.getId(), nm);
+                }
             }
 
             TournamentBrackets nextBracket = new TournamentBrackets();
@@ -149,6 +189,8 @@ public class BracketServiceImpl implements BracketService {
 
         return toResponse(tournamentId, tournament, phases);
     }
+
+    // HELPERS
 
     private Match buildMatch(Team local, Team visitor) {
         Match m = new Match();
@@ -181,23 +223,24 @@ public class BracketServiceImpl implements BracketService {
     }
 
     private BracketResponse toResponse(String tournamentId, Tournament tournament,
-                                        List<TournamentBrackets> phases) {
+                                       List<TournamentBrackets> phases) {
         List<PhaseDTO> phaseDTOs = phases.stream().map(b -> {
             List<BracketMatchDTO> matchDTOs = b.getMatches() == null ? List.of()
                     : b.getMatches().stream().map(m -> {
-                        Team w = matchWinners.get(m.getId());
-                        MatchStatus st = bracketMatchStatus.getOrDefault(m.getId(), MatchStatus.SCHEDULED);
-                        return new BracketMatchDTO(
-                                m.getId(),
-                                m.getLocalTeam().getId(), m.getLocalTeam().getTeamName(),
-                                m.getVisitorTeam().getId(), m.getVisitorTeam().getTeamName(),
-                                st == MatchStatus.FINISHED ? m.getScoreLocal() : null,
-                                st == MatchStatus.FINISHED ? m.getScoreVisitor() : null,
-                                w != null ? w.getId() : null,
-                                w != null ? w.getTeamName() : null,
-                                st.name()
-                        );
-                    }).toList();
+                Team w  = matchWinners.get(m.getId());
+                MatchStatus st = bracketMatchStatus.getOrDefault(
+                        m.getId(), MatchStatus.SCHEDULED);
+                return new BracketMatchDTO(
+                        m.getId(),
+                        m.getLocalTeam().getId(),   m.getLocalTeam().getTeamName(),
+                        m.getVisitorTeam().getId(), m.getVisitorTeam().getTeamName(),
+                        st == MatchStatus.FINISHED ? m.getScoreLocal()   : null,
+                        st == MatchStatus.FINISHED ? m.getScoreVisitor() : null,
+                        w != null ? w.getId()        : null,
+                        w != null ? w.getTeamName()  : null,
+                        st.name()
+                );
+            }).toList();
             return new PhaseDTO(b.getPhase().name(), matchDTOs);
         }).toList();
 

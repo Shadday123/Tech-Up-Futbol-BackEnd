@@ -1,8 +1,12 @@
 package com.techcup.techcup_futbol.Controller;
 
+import com.techcup.techcup_futbol.Controller.dto.PlayerDTO;
+import com.techcup.techcup_futbol.Controller.dto.PlayerResponse;
+import com.techcup.techcup_futbol.Controller.mapper.PlayerMapper;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.service.PlayerService;
 import com.techcup.techcup_futbol.exception.PlayerException;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,7 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/players")
@@ -24,42 +29,62 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
+
     @PostMapping("/registro")
-    public ResponseEntity<String> registrar(@RequestBody Player jugador, @RequestParam String correo) {
-        log.info("POST /api/players/registro — jugador: {} | email: {}", jugador.getFullname(), correo);
-        playerService.registrar(jugador, correo);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Jugador registrado exitosamente");
+    public ResponseEntity<PlayerResponse> registrar(@Valid @RequestBody PlayerDTO dto) {
+        // FIX: auto-generar ID si el cliente no lo proporciona
+        if (dto.getId() == null || dto.getId().isBlank()) {
+            dto.setId(UUID.randomUUID().toString());
+        }
+
+        log.info("POST /api/players/registro — jugador: {} | email: {} | tipo: {}",
+                dto.getFullname(), dto.getEmail(), dto.getPlayerType());
+
+        Player jugador = PlayerMapper.toModel(dto);
+        playerService.registrar(jugador, dto.getEmail());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(PlayerMapper.mapToResponse(jugador));
     }
 
     @PutMapping("/{id}/perfil")
-    public ResponseEntity<Void> actualizarPerfil(@PathVariable String id, @RequestBody String foto) {
+    public ResponseEntity<PlayerResponse> actualizarPerfil(
+            @PathVariable String id,
+            @RequestBody java.util.Map<String, String> body) {
+
         log.info("PUT /api/players/{}/perfil", id);
+        String foto = body.get("photoUrl");
         Player jugador = playerService.obtenerPorId(id);
         playerService.actualizarPerfil(jugador, foto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(PlayerMapper.mapToResponse(jugador));
     }
 
     @PutMapping("/{id}/disponibilidad")
-    public ResponseEntity<Void> cambiarDisponibilidad(
+    public ResponseEntity<PlayerResponse> cambiarDisponibilidad(
             @PathVariable String id,
             @RequestParam boolean disponible) {
+
         log.info("PUT /api/players/{}/disponibilidad — disponible: {}", id, disponible);
         Player jugador = playerService.obtenerPorId(id);
         playerService.cambiarDisponibilidad(jugador, disponible);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(PlayerMapper.mapToResponse(jugador));
     }
 
     @GetMapping
-    public ResponseEntity<List<Player>> listar() {
+    public ResponseEntity<List<PlayerResponse>> listar() {
         log.info("GET /api/players");
-        return ResponseEntity.ok(playerService.listarJugadores());
+        List<PlayerResponse> respuesta = playerService.listarJugadores()
+                .stream()
+                .map(PlayerMapper::mapToResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(respuesta);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Player> buscarPorId(@PathVariable String id) {
+    public ResponseEntity<PlayerResponse> buscarPorId(@PathVariable String id) {
         log.info("GET /api/players/{}", id);
-        Optional<Player> resultado = playerService.buscarPorId(id);
-        return resultado.map(ResponseEntity::ok)
+        return playerService.buscarPorId(id)
+                .map(p -> ResponseEntity.ok(PlayerMapper.mapToResponse(p)))
                 .orElse(ResponseEntity.notFound().build());
     }
 

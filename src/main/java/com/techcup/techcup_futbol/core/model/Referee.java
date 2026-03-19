@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class Referee {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -21,15 +21,14 @@ public class Referee {
     private String fullname;
     private String email;
 
-    // Un árbitro tiene muchos partidos asignados
-    @OneToMany(mappedBy = "referee")
-    private List<Match> assignedMatches;
+    @Transient
+    private List<Match> assignedMatches = new ArrayList<>();
 
     public Match getMatchDetails(String matchId) {
-        return this.assignedMatches.stream()
+        if (assignedMatches == null) return null;
+        return assignedMatches.stream()
                 .filter(m -> m.getId().equals(matchId))
                 .findFirst()
                 .orElse(null);
     }
-
 }

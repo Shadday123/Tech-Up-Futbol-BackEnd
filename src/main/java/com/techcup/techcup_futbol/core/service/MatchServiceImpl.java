@@ -3,9 +3,11 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.exception.MatchException;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,15 +17,20 @@ public class MatchServiceImpl implements MatchService {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceImpl.class);
 
-    private final Map<String, Match> matches = new HashMap<>();
-    private final Map<String, List<MatchEvent>> matchEvents = new HashMap<>();
-    private final Map<String, MatchStatus> matchStatusMap = new HashMap<>();
+    @Getter
+    private final Map<String, Match>           matches         = new HashMap<>();
+    private final Map<String, List<MatchEvent>> matchEvents    = new HashMap<>();
+    private final Map<String, MatchStatus>     matchStatusMap  = new HashMap<>();
+
 
     @Autowired
-    private LineupServiceImpl lineupService;
+    @Lazy
+    private LineupService lineupService;
 
     @Autowired
-    private StandingsServiceImpl standingsService;
+    private StandingsService standingsService;
+
+    // CREATE
 
     @Override
     public MatchResponse create(CreateMatchRequest request) {
@@ -54,12 +61,17 @@ public class MatchServiceImpl implements MatchService {
         matchStatusMap.put(match.getId(), MatchStatus.SCHEDULED);
         matchEvents.put(match.getId(), new ArrayList<>());
 
-        lineupService.registerMatch(match);
+        // Notificar a LineupService para que reconozca el partido
+        if (lineupService instanceof LineupServiceImpl ls) {
+            ls.registerMatch(match);
+        }
 
         log.info("Partido creado ID: {} — {} vs {}", match.getId(),
                 local.getTeamName(), visitor.getTeamName());
         return toResponse(match);
     }
+
+    // ── REGISTER RESULT
 
     @Override
     public MatchResponse registerResult(String matchId, RegisterResultRequest request) {
@@ -87,12 +99,14 @@ public class MatchServiceImpl implements MatchService {
             if (localGoals != request.scoreLocal()) {
                 throw new MatchException("events",
                         String.format(MatchException.GOALS_MISMATCH,
-                                match.getLocalTeam().getTeamName(), localGoals, request.scoreLocal()));
+                                match.getLocalTeam().getTeamName(),
+                                localGoals, request.scoreLocal()));
             }
             if (visitorGoals != request.scoreVisitor()) {
                 throw new MatchException("events",
                         String.format(MatchException.GOALS_MISMATCH,
-                                match.getVisitorTeam().getTeamName(), visitorGoals, request.scoreVisitor()));
+                                match.getVisitorTeam().getTeamName(),
+                                visitorGoals, request.scoreVisitor()));
             }
 
             List<MatchEvent> events = new ArrayList<>();
@@ -122,6 +136,7 @@ public class MatchServiceImpl implements MatchService {
         match.setScoreVisitor(request.scoreVisitor());
         matchStatusMap.put(matchId, MatchStatus.FINISHED);
 
+        // Notificar a StandingsService para recalcular tabla
         standingsService.updateFromMatch(match);
 
         log.info("Resultado registrado — {} {} : {} {}",
@@ -129,6 +144,8 @@ public class MatchServiceImpl implements MatchService {
                 match.getScoreVisitor(), match.getVisitorTeam().getTeamName());
         return toResponse(match);
     }
+
+    // READ
 
     @Override
     public MatchResponse findById(String matchId) {
@@ -154,7 +171,10 @@ public class MatchServiceImpl implements MatchService {
                 .toList();
     }
 
-    public Map<String, Match> getMatches() { return matches; }
+    @Override
+    public boolean isResultRegistered(String matchId) {
+        return MatchStatus.FINISHED.equals(matchStatusMap.get(matchId));
+    }
 
     private boolean isPlayerInTeam(String playerId, Team team) {
         if (team.getPlayers() == null) return false;
@@ -173,7 +193,7 @@ public class MatchServiceImpl implements MatchService {
 
         return new MatchResponse(
                 m.getId(),
-                m.getLocalTeam().getId(), m.getLocalTeam().getTeamName(),
+                m.getLocalTeam().getId(),  m.getLocalTeam().getTeamName(),
                 m.getVisitorTeam().getId(), m.getVisitorTeam().getTeamName(),
                 m.getDateTime(),
                 m.getScoreLocal(), m.getScoreVisitor(),
