@@ -14,5 +14,9 @@ springdoc:
 logging:
   level:
     root: INFO
-    org.springframework: DEBUG
-    org.hibernate: ERROR
+    com.techcup.techcup_futbol: DEBUG
+    org.springframework: INFO
+    org.hibernate: WARN
+
+file:
+  name: logs/techcup.log
