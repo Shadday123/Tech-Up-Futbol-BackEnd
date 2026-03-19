@@ -461,53 +461,54 @@
 | **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; cambio de actor principal a Árbitro y ajuste de validaciones de acta.</li></ul> |
 
 
-### RF09: Consulta de partidos
+### RF09: Consulta de Partidos Asignados
 
 | Campo                     | Detalle |
 |:--------------------------|:--------|
 | **Código**                | RF09 |
-| **Nombre**                | Consulta de partidos |
-| **Descripción**           | El sistema debe permitir al árbitro consultar la información de los partidos que le han sido asignados: fecha, hora, cancha y equipos que disputarán el encuentro, para poder prepararse adecuadamente. |
-| **Cómo se ejecutará**     | Mediante un panel exclusivo para el árbitro que muestra sus partidos asignados con toda la información logística. |
+| **Nombre**                | Consulta de Partidos |
+| **Descripción**           | El sistema debe permitir al árbitro visualizar la agenda de los encuentros que le han sido asignados, proporcionando detalles logísticos como fecha, hora, ubicación (cancha) y equipos participantes para su debida preparación. |
+| **Cómo se ejecutará**     | A través de una vista de "Agenda Personal" o "Mis Partidos" dentro del panel del Árbitro, con opciones de filtrado cronológico. |
 | **Actor principal**       | Árbitro |
-| **Precondiciones**        | 1) El árbitro debe estar autenticado con rol de Árbitro. <br> 2) Deben existir partidos programados con árbitro asignado. |
-| **Reglas de Negocio**     | 1) El árbitro solo puede ver los partidos que le han sido asignados. <br> 2) La información del partido debe incluir al menos: fecha/hora, cancha y ambos equipos. <br> 3) El árbitro no puede modificar la información del partido. |
-| **Anexos**                | **Prototipos:** Mockup de Panel del Árbitro. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Santiago Cajamarca <br> **Aprobado por:** Juan Esteban Rodríguez <br> **Fecha:** 04/03/2026 <br> **Descripción y Justificación de cambios:** Se formalizaron las tablas de datos y flujos. |
+| **Precondiciones**        | 1) El usuario debe estar autenticado con el rol de Árbitro. <br> 2) El organizador debe haber realizado previamente la asignación de árbitros a los encuentros programados. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| ID del árbitro | Identificador del árbitro autenticado | Texto (UUID) | Se obtiene automáticamente de la sesión del usuario | Sí |
-| Filtro de fecha | Rango de fechas para filtrar partidos | Fecha (rango) | Opcional, para ver partidos de un periodo específico | No |
+| ID del Árbitro | Identificador único | UUID | Obtenido automáticamente mediante el token de sesión | Sí |
+| Rango de Fechas | Filtro temporal | Fecha (Inicio/Fin)| Permite segmentar la búsqueda de encuentros | No |
+| Estado del Partido| Filtro por situación | Selección (Enum) | Opciones: Programado, En Juego, Finalizado | No |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Lista de partidos | Partidos asignados al árbitro | Lista de objetos | Solo partidos asignados al árbitro autenticado | Sí |
-| Detalle por partido | Información logística de cada partido | Objeto JSON | Fecha, hora, cancha, equipo local, equipo visitante | Sí |
+| Listado de Agenda | Colección de partidos | Lista de Objetos | Solo registros vinculados al ID del árbitro | Sí |
+| Ficha Logística | Detalle del encuentro | Objeto JSON | Incluye: Cancha, hora exacta y nombres de equipos | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Árbitro | Accede al panel de "Mis partidos" | — |
-| 2 | Sistema | Consulta los partidos asignados al árbitro autenticado | — |
-| 3 | Sistema | Muestra la lista de partidos con fecha, hora, cancha y equipos | E1: Sin partidos asignados |
-| 4 | Árbitro | Selecciona un partido para ver su detalle completo | — |
+| 1 | Árbitro | Accede al módulo de "Mis Partidos Asignados" desde el menú principal. | — |
+| 2 | Árbitro | Visualiza la lista de encuentros pendientes ordenados por proximidad temporal. | E1: Sin asignaciones |
+| 3 | Árbitro | Aplica filtros por fecha o estado si desea localizar un encuentro específico. | A1: Sin resultados |
+| 4 | Árbitro | Selecciona un partido de la lista para desplegar la información logística completa. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "No tiene partidos asignados en este momento" | — |
-| A1 | Árbitro | Si aplica filtro de fecha y no hay partidos en el rango: "No hay partidos programados para las fechas seleccionadas" | — |
+| E1 | Árbitro | El usuario entra al módulo pero no tiene partidos vinculados. Muestra mensaje: "No tiene partidos asignados en este momento". | — |
+| A1 | Árbitro | Al aplicar un filtro, no existen registros que coincidan. Muestra mensaje: "No se encontraron partidos para los criterios seleccionados". | Regresa al paso 2 |
 
-**Notas y comentarios:** Es un módulo de solo lectura; el árbitro no puede modificar información.
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) **Privacidad:** Un árbitro no puede consultar la agenda privada de otros árbitros, solo la propia.</li><li>2) **Solo Lectura:** Este módulo no permite la edición de fechas, horas ni escenarios; cualquier cambio debe ser gestionado por el Organizador.</li><li>3) **Disponibilidad:** La información debe estar disponible 24/7 para garantizar que el árbitro conozca su programación.</li><li>4) **Sincronización:** Si el Organizador reprograma un partido (RF06), la vista del Árbitro debe actualizarse en tiempo real.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Panel del Árbitro (Vista Agenda). <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br><img width="792" height="324" alt="image" src="https://github.com/user-attachments/assets/49dd8ba2-9120-4dfa-adff-dce1993d16fa" />|
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; definición de flujos de consulta y reglas de privacidad de agenda.</li></ul> |
 
----
 
 ### RF10: Tabla de Posiciones
 
@@ -515,47 +516,47 @@
 |:--------------------------|:--------|
 | **Código**                | RF10 |
 | **Nombre**                | Tabla de Posiciones |
-| **Descripción**           | El sistema debe calcular y mostrar automáticamente la tabla de posiciones por equipo a partir de los resultados registrados, incluyendo: partidos jugados (PJ), ganados (PG), empatados (PE), perdidos (PP), goles a favor (GF), goles en contra (GC), diferencia de gol (DG) y puntos (PTS). La tabla se recalcula cada vez que se registra o actualiza un resultado. |
-| **Cómo se ejecutará**     | Mediante un módulo de consulta del torneo accesible para cualquier usuario autenticado. |
-| **Actor principal**       | Usuario autenticado (cualquier rol) |
-| **Precondiciones**        | 1) Debe existir un torneo creado y visible. <br> 2) Debe existir al menos un equipo inscrito. |
-| **Reglas de Negocio**     | 1) La tabla se calcula automáticamente a partir de los partidos con resultado registrado. <br> 2) **PJ = PG + PE + PP**. <br> 3) **DG = GF - GC**. <br> 4) Victoria = 3 puntos, Empate = 1 punto, Derrota = 0 puntos. <br> 5) En caso de empate en puntos, se ordena por: a) diferencia de gol, b) goles a favor, c) resultado del enfrentamiento directo. <br> 6) Si no hay partidos registrados, la tabla muestra todos los equipos con valores en cero. |
-| **Anexos**                | **Prototipos:** Mockup de Tabla de Posiciones. <br> **Abreviaturas:** PJ, PG, PE, PP, GF, GC, DG, PTS |
-| **Historial de revisión** | **Elaborado por:** Santiago Cajamarca <br> **Aprobado por:** Juan Esteban Rodríguez <br> **Fecha:** 04/03/2026 <br> **Descripción y Justificación de cambios:** Se definieron los criterios de desempate y la puntuación. |
+| **Descripción**           | El sistema debe procesar y mostrar la clasificación de los equipos basándose en los resultados validados. Incluye el cálculo de partidos jugados (PJ), ganados (PG), empatados (PE), perdidos (PP), goles a favor (GF), goles en contra (GC), diferencia de gol (DG) y puntos totales (PTS). |
+| **Cómo se ejecutará**     | A través de un módulo de visualización dinámica de datos, accesible para cualquier usuario vinculado al torneo desde la interfaz pública o privada. |
+| **Actor principal**       | Usuario Autenticado |
+| **Precondiciones**        | 1) El torneo debe estar registrado y contar con equipos inscritos. <br> 2) El usuario debe haber iniciado sesión para acceder a las estadísticas detalladas. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Torneo | Torneo del cual se consulta la tabla | Selección (ID) | Solo torneos con al menos un equipo inscrito | Sí |
+| Torneo ID | Identificador del torneo | UUID | Se obtiene del contexto de navegación actual | Sí |
+| Filtro de Fase | Etapa del torneo | Selección | Permite segmentar la tabla por grupos o fases | No |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Tabla de posiciones | Lista ordenada de equipos con estadísticas | Lista de objetos | Cada equipo: nombre, PJ, PG, PE, PP, GF, GC, DG, PTS | Sí |
-| Posición | Número de posición en la tabla | Numérico | Ordenado por PTS, DG, GF, enfrentamiento directo | Sí |
+| Ranking General | Lista ordenada | Tabla/Componente | Orden descendente por PTS y criterios de desempate | Sí |
+| Estadísticas de Equipo | Ficha técnica | Objeto JSON | Desglose de PJ, PG, PE, PP, GF, GC, DG, PTS | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Usuario | Ingresa al torneo y selecciona "Tabla de posiciones" | — |
-| 2 | Sistema | Obtiene todos los equipos inscritos y los resultados registrados | — |
-| 3 | Sistema | Calcula por equipo: PJ, PG, PE, PP, GF, GC, DG y PTS | — |
-| 4 | Sistema | Ordena la tabla aplicando criterios de desempate si es necesario | — |
-| 5 | Sistema | Muestra la tabla actualizada al usuario | — |
+| 1 | Usuario | Navega hacia la sección de "Estadísticas" o "Tabla de Posiciones" del torneo seleccionado. | — |
+| 2 | Usuario | Selecciona la fase o el grupo específico que desea consultar para filtrar los datos. | — |
+| 3 | Usuario | Visualiza el ranking actualizado con los cálculos de rendimiento de cada equipo. | E1: Sin datos |
+| 4 | Usuario | Consulta el detalle expandido de un equipo para verificar su historial de goles y diferencia. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| A1 | Sistema | Si no existen partidos con resultado, muestra la tabla con todos los valores en cero | — |
-| A2 | Sistema | Si un resultado de partido se actualiza, recalcula y actualiza la tabla inmediatamente | — |
+| E1 | Usuario | Accede a la tabla antes de que existan partidos finalizados y observa a los equipos con valores en cero. | — |
+| A1 | Usuario | Recibe la actualización de los valores en pantalla tras el cierre de un acta de arbitraje (RF08). | — |
+| A2 | Usuario | Utiliza el buscador para localizar la posición y estadísticas de un equipo específico rápidamente. | — |
 
-**Notas y comentarios:** La tabla se actualiza reactivamente mediante el patrón **Observer** (TablaPosicionesListener).
-
----
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) **Puntuación:** Victoria (3 pts), Empate (1 pt), Derrota (0 pts).</li><li>2) **Desempate:** En caso de igualdad en puntos, el orden es: 1º Diferencia de Gol, 2º Goles a Favor, 3º Duelo Directo.</li><li>3) **Fórmula de Integridad:** Se debe cumplir siempre que $PJ = PG + PE + PP$.</li><li>4) **Actualización:** El sistema emplea el patrón **Observer** para recalcular los datos inmediatamente después de que un árbitro confirma el acta (RF08).</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Tabla de Clasificación Dinámica. <br> **Abreviaturas:** PJ (Jugados), PG (Ganados), PE (Empatados), PP (Perdidos), GF (Goles Favor), GC (Goles Contra), DG (Diferencia), PTS (Puntos). <br><br> **Caso de Uso:** <br> <img width="875" height="352" alt="image" src="https://github.com/user-attachments/assets/deeb6f6e-b731-4fc0-a7be-e1dbb383b29d" />|
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; depuración de actores en flujo y lógica de desempate técnica.</li></ul> |
 
 ### RF11: Llaves Eliminatorias
 
@@ -567,7 +568,53 @@
 | **Cómo se ejecutará**     | Mediante un módulo del torneo donde el organizador activa la generación del bracket y el sistema construye las llaves; luego el sistema avanza automáticamente los equipos ganadores. |
 | **Actor principal**       | Organizador |
 | **Precondiciones**        | 1) El usuario debe estar autenticado con rol de Organizador. <br> 2) Debe existir un torneo en estado Activo o En Progreso. <br> 3) Deben existir los equipos clasificados para eliminación directa. <br> 4) Debe estar definida la cantidad de equipos que ingresan a llaves. |
-| **Reglas de Negocio**     | 1) Los partidos iniciales se generan de manera aleatoria. <br> 2) El sistema genera y mantiene las fases: cuartos de final, semifinal y final. <br> 3) El ganador de un partido avanza automáticamente a la siguiente ronda. <br> 4) Una vez publicada la llave, los emparejamientos no cambian salvo acción administrativa controlada. <br> 5) No se puede regenerar el bracket si ya existen resultados registrados. |
+| **Reglas de Negocio**     | 1) Los partidos iniciales se generan de manera aleatoria. <br> 2) El sistema genera y mantiene las fases: cuartos de final, semifinal y final. <br> 3) El ganador de un partido avanza automáticamente a la ### RF10: Tabla de Posiciones
+
+| Campo                     | Detalle |
+|:--------------------------|:--------|
+| **Código**                | RF10 |
+| **Nombre**                | Tabla de Posiciones |
+| **Descripción**           | El sistema debe procesar y mostrar la clasificación de los equipos basándose en los resultados validados. Incluye el cálculo de partidos jugados (PJ), ganados (PG), empatados (PE), perdidos (PP), goles a favor (GF), goles en contra (GC), diferencia de gol (DG) y puntos totales (PTS). |
+| **Cómo se ejecutará**     | A través de un módulo de visualización dinámica de datos, accesible para cualquier usuario vinculado al torneo desde la interfaz pública o privada. |
+| **Actor principal**       | Usuario Autenticado |
+| **Precondiciones**        | 1) El torneo debe estar registrado y contar con equipos inscritos. <br> 2) El usuario debe haber iniciado sesión para acceder a las estadísticas detalladas. |
+
+**DATOS DE ENTRADA:**
+
+| Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
+|:-------|:------------|:--------------|:--------------------|:------------|
+| Torneo ID | Identificador del torneo | UUID | Se obtiene del contexto de navegación actual | Sí |
+| Filtro de Fase | Etapa del torneo | Selección | Permite segmentar la tabla por grupos o fases | No |
+
+**DATOS DE SALIDA:**
+
+| Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
+|:-------|:------------|:--------------|:--------------------|:------------|
+| Ranking General | Lista ordenada | Tabla/Componente | Orden descendente por PTS y criterios de desempate | Sí |
+| Estadísticas de Equipo | Ficha técnica | Objeto JSON | Desglose de PJ, PG, PE, PP, GF, GC, DG, PTS | Sí |
+
+**FLUJO BÁSICO:**
+
+| Paso | Actor | Descripción | Excepciones |
+|:-----|:------|:------------|:------------|
+| 1 | Usuario | Navega hacia la sección de "Estadísticas" o "Tabla de Posiciones" del torneo seleccionado. | — |
+| 2 | Usuario | Selecciona la fase o el grupo específico que desea consultar para filtrar los datos. | — |
+| 3 | Usuario | Visualiza el ranking actualizado con los cálculos de rendimiento de cada equipo. | E1: Sin datos |
+| 4 | Usuario | Consulta el detalle expandido de un equipo para verificar su historial de goles y diferencia. | — |
+
+**FLUJO ALTERNO:**
+
+| Paso | Actor | Descripción | Excepciones |
+|:-----|:------|:------------|:------------|
+| E1 | Usuario | Accede a la tabla antes de que existan partidos finalizados y observa a los equipos con valores en cero. | — |
+| A1 | Usuario | Recibe la actualización de los valores en pantalla tras el cierre de un acta de arbitraje (RF08). | — |
+| A2 | Usuario | Utiliza el buscador para localizar la posición y estadísticas de un equipo específico rápidamente. | — |
+
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) **Puntuación:** Victoria (3 pts), Empate (1 pt), Derrota (0 pts).</li><li>2) **Desempate:** En caso de igualdad en puntos, el orden es: 1º Diferencia de Gol, 2º Goles a Favor, 3º Duelo Directo.</li><li>3) **Fórmula de Integridad:** Se debe cumplir siempre que $PJ = PG + PE + PP$.</li><li>4) **Actualización:** El sistema emplea el patrón **Observer** para recalcular los datos inmediatamente después de que un árbitro confirma el acta (RF08).</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Tabla de Clasificación Dinámica. <br> **Abreviaturas:** PJ (Jugados), PG (Ganados), PE (Empatados), PP (Perdidos), GF (Goles Favor), GC (Goles Contra), DG (Diferencia), PTS (Puntos). <br><br> **Caso de Uso:** <br> ![Diagrama de Caso de Uso](https://github.com/user-attachments/assets/2c6a483f-16f0-4a38-bd5c-e780dd2dc764) |
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Santiago Cajamarca</li><li>**Aprobado por:** Juan Esteban Rodríguez</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento; depuración de actores en flujo y lógica de desempate técnica.</li></ul> |siguiente ronda. <br> 4) Una vez publicada la llave, los emparejamientos no cambian salvo acción administrativa controlada. <br> 5) No se puede regenerar el bracket si ya existen resultados registrados. |
 | **Anexos**                | **Prototipos:** Mockup de vista de bracket y panel de generación. <br> **Abreviaturas:** N/A |
 | **Historial de revisión** | **Elaborado por:** Santiago Cajamarca <br> **Aprobado por:** Juan Esteban Rodríguez <br> **Fecha:** 04/03/2026 <br> **Descripción y Justificación de cambios:** Se formalizaron tablas de datos y flujos. |
 
