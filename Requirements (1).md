@@ -92,64 +92,57 @@
 |:--------------------------|:--------|
 | **Código**                | RF02 |
 | **Nombre**                | Registro de Jugadores |
-| **Descripción**           | El sistema debe permitir a los participantes registrarse en la plataforma utilizando su correo institucional (estudiantes, graduados, profesores, personal administrativo) o correo personal de Gmail (familiares). Una vez registrado, el participante podrá crear y completar su perfil deportivo indicando posiciones de juego, número dorsal y foto. Además, podrá marcarse como disponible para que los capitanes lo contacten, y podrá recibir, aceptar o rechazar invitaciones para unirse a un equipo. |
-| **Cómo se ejecutará**     | Mediante un módulo de registro inicial (con validación de correo según tipo de usuario) y un módulo de edición de perfil deportivo accesible desde el panel del jugador. |
+| **Descripción**           | El sistema debe permitir a los participantes registrarse proporcionando su información básica y cuenta de correo (@escuelaing.edu.co para institucionales o @gmail.com para familiares). Una vez registrado, el usuario podrá completar su perfil deportivo (posiciones, dorsal, foto) y gestionar su disponibilidad para ser contactado por capitanes o responder a invitaciones de equipos. |
+| **Cómo se ejecutará**     | A través de un formulario de registro con validación de dominio de correo y un panel de perfil deportivo donde el jugador define sus preferencias de juego y estado de disponibilidad. |
 | **Actor principal**       | Estudiante, Graduado, Profesor, Personal Administrativo, Familiar |
-| **Precondiciones**        | 1) El participante debe contar con un correo electrónico válido del dominio correspondiente a su tipo de usuario. <br> 2) El correo electrónico no debe estar previamente registrado en el sistema. |
-| **Reglas de Negocio**     | 1) Estudiantes, graduados, profesores y personal administrativo deben registrarse con correo institucional (@escuelaing.edu.co). <br> 2) Los familiares deben registrarse exclusivamente con correo Gmail (@gmail.com). <br> 3) El número dorsal debe ser único dentro de un mismo equipo (la unicidad se valida al unirse a un equipo). <br> 4) Solo los jugadores con estado "Disponible" aparecerán en las búsquedas de los capitanes. <br> 5) Un jugador no puede aceptar una invitación si ya pertenece a un equipo. |
-| **Anexos**                | **Prototipos:** Mockup de Registro y Perfil Deportivo. <br> **Abreviaturas:** ECI (Escuela Colombiana de Ingeniería) |
-| **Historial de revisión** | **Elaborado por:** Vanessa Torres <br> **Aprobado por:** David Cajamarca <br> **Fecha:** 03/03/2026 <br> **Descripción y Justificación de cambios:** Se separó claramente el registro de la gestión de perfil. Se agregaron validaciones de correo duplicado y dorsal único. Se corrigió errata "prodrá" por "podrá". |
+| **Precondiciones**        | 1) El participante debe contar con un correo válido según su tipo de usuario. <br> 2) El correo electrónico no debe estar previamente registrado en el sistema. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Correo electrónico | Correo del participante para registro | Email (texto) | Debe ser @escuelaing.edu.co (institucional) o @gmail.com (familiares) | Sí |
-| Contraseña | Clave de acceso del usuario | Texto (password) | Mínimo 8 caracteres, al menos una mayúscula y un número | Sí |
-| Nombre completo | Nombre y apellidos del participante | Texto | Mínimo 3 caracteres | Sí |
-| Tipo de usuario | Clasificación del participante | Selección (enum) | Estudiante, Graduado, Profesor, Personal Administrativo, Familiar | Sí |
-| Posiciones de juego | Posiciones preferidas del jugador | Selección múltiple | Portero, Defensa, Volante, Delantero | Sí |
-| Número dorsal | Número de camiseta preferido | Numérico (entero) | Rango de 1 a 99 | Sí |
-| Foto de perfil | Imagen del jugador | Imagen (archivo) | Formatos: JPG, PNG. Tamaño máximo: 2MB | No |
-| Disponibilidad | Indica si el jugador está buscando equipo | Booleano | Por defecto: false | No |
-| Semestre | Semestre actual del estudiante | Numérico (entero) | Solo aplica si tipo de usuario = Estudiante. Rango 1-10 | Condicional |
+| Correo electrónico | Correo para el registro | Email (texto) | Debe ser @escuelaing.edu.co o @gmail.com (familiares) | Sí |
+| Contraseña | Clave de acceso | Texto (password) | Mínimo 8 caracteres, una mayúscula y un número | Sí |
+| Nombre completo | Nombre y apellidos | Texto | Mínimo 3 caracteres | Sí |
+| Tipo de usuario | Clasificación del usuario | Selección (enum) | Estudiante, Graduado, Profesor, Administrativo, Familiar | Sí |
+| Posiciones de juego | Posiciones preferidas | Selección múltiple | Portero, Defensa, Volante, Delantero | Sí |
+| Número dorsal | Número de camiseta | Numérico (entero) | Rango de 1 a 99 | Sí |
+| Foto de perfil | Imagen del jugador | Imagen (archivo) | Formatos: JPG, PNG. Máximo: 2MB | No |
+| Disponibilidad | Estado para búsquedas | Booleano | Por defecto: false | No |
+| Semestre | Semestre del estudiante | Numérico (entero) | Solo para estudiantes (Rango 1-10) | Condicional |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| ID del jugador | Identificador único del jugador | Texto (UUID) | Generado automáticamente | Sí |
-| Perfil deportivo | Datos del perfil creado | Objeto JSON | Incluye posiciones, dorsal, foto y disponibilidad | Sí |
-| Mensaje de confirmación | Notificación de registro exitoso | Texto | Diferente según si fue solo registro o también perfil completo | Sí |
+| ID del jugador | Identificador único | Texto (UUID) | Generado automáticamente por el sistema | Sí |
+| Perfil deportivo | Datos del perfil | Objeto JSON | Información técnica del jugador grabada | Sí |
+| Mensaje de confirmación | Notificación de éxito | Texto | Se muestra al finalizar el registro o edición | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Usuario | Accede al módulo de registro y selecciona su tipo de usuario | — |
-| 2 | Usuario | Ingresa correo electrónico, contraseña y nombre completo | — |
-| 3 | Sistema | Valida que el dominio del correo corresponda al tipo de usuario seleccionado | E1: Dominio de correo no válido para el tipo |
-| 4 | Sistema | Verifica que el correo no esté previamente registrado | E2: Correo ya registrado |
-| 5 | Sistema | Crea la cuenta del usuario y redirige al módulo de perfil deportivo | — |
-| 6 | Usuario | Completa su perfil deportivo: posiciones, dorsal, foto (opcional) | — |
-| 7 | Sistema | Valida los datos del perfil (dorsal en rango, posiciones válidas) | E3: Datos de perfil inválidos |
-| 8 | Sistema | Guarda el perfil y muestra confirmación | — |
+| 1 | Usuario | Accede al módulo de registro y selecciona su tipo de usuario e ingresa sus datos básicos. | — |
+| 2 | Usuario | Completa su perfil deportivo indicando posiciones, número dorsal y disponibilidad. | — |
+| 3 | Usuario | Recibe la confirmación del registro exitoso en pantalla con su ID único de jugador. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "El dominio del correo no corresponde al tipo de usuario seleccionado" | Regresa al paso 2 |
-| E2 | Sistema | Muestra mensaje: "Este correo ya se encuentra registrado en el sistema" | Regresa al paso 2 |
-| E3 | Sistema | Muestra mensaje detallado del campo inválido (dorsal fuera de rango, posición no válida) | Regresa al paso 6 |
-| A1 | Usuario | Si desea marcarse como disponible, activa el toggle desde su perfil | — |
-| A2 | Sistema | Actualiza estado de disponibilidad y el jugador aparece en búsquedas de capitanes | — |
-| A3 | Usuario | Si recibe invitación de un equipo, puede aceptar o rechazar desde su panel de notificaciones | E4: Ya pertenece a un equipo |
-| E4 | Sistema | Muestra mensaje: "No puedes aceptar la invitación porque ya perteneces a un equipo" | La invitación se descarta |
+| E1 | Usuario | El usuario ingresa un correo cuyo dominio no corresponde al tipo de usuario seleccionado. Muestra el mensaje: "El dominio del correo no corresponde al tipo de usuario seleccionado" | Regresa al paso 1 |
+| E2 | Usuario | El usuario intenta registrar un correo que ya existe. Muestra el mensaje: "Este correo ya se encuentra registrado en el sistema" | Regresa al paso 1 |
+| E3 | Usuario | El usuario ingresa un número dorsal fuera del rango permitido (1-99). Muestra el mensaje: "El número dorsal debe estar entre 1 y 99" | Regresa al paso 2 |
+| A1 | Usuario | El usuario activa el estado de disponibilidad desde su panel de gestión para aparecer en las búsquedas de los capitanes. | No puede activarse si no ha completado campos obligatorios |
+| A2 | Usuario | El usuario recibe una invitación de un equipo y selecciona "Aceptar invitación" desde su panel de notificaciones. | E4: Ya pertenece a un equipo |
+| E4 | Usuario | El usuario intenta aceptar una invitación pero ya está vinculado a otro equipo. Muestra el mensaje: "No puedes aceptar la invitación porque ya perteneces a un equipo" | Regresa al panel de gestión |
 
-**Notas y comentarios:** Se aplica el patrón **Factory Method** para la creación de usuarios según tipo, con validaciones de correo específicas por tipo.
-
----
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) Usuarios institucionales deben usar @escuelaing.edu.co y familiares @gmail.com.</li><li>2) El número dorsal es único por equipo (se valida al unirse formalmente).</li><li>3) Solo jugadores con estado **Disponible** son visibles para reclutamiento.</li><li>4) Un jugador no puede estar vinculado a dos equipos simultáneamente.</li><li>5) El sistema aplica patrón **Factory Method** para la creación de tipos de usuario.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Registro y Perfil. <br> **Abreviaturas:** ECI (Escuela Colombiana de Ingeniería). <br><br> **Caso de Uso:** <img width="380" height="149" alt="image" src="https://github.com/user-attachments/assets/cf59150a-2bf8-4ceb-a429-ae468f0eea46" />
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Vanessa Torres</li><li>**Aprobado por:** David Cajamarca</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento tras pérdida de datos; ajuste de flujo alterno y eliminación de sistema como actor.</li></ul> |
 
 ### RF03: Creación y gestión de equipos
 
@@ -157,60 +150,54 @@
 |:--------------------------|:--------|
 | **Código**                | RF03 |
 | **Nombre**                | Creación y gestión de equipos |
-| **Descripción**           | El sistema debe permitir a un jugador registrado crear un equipo, asumiendo automáticamente el rol de capitán. El capitán podrá asignar nombre, escudo y colores de uniforme al equipo, e invitar jugadores disponibles. El sistema validará todas las reglas de composición del equipo de forma independiente antes de permitir la inscripción al torneo. |
-| **Cómo se ejecutará**     | A través de un formulario de creación de equipo y un panel de gestión de nómina exclusivo para el capitán. |
+| **Descripción**           | El sistema debe permitir a un jugador registrado crear un equipo, asumiendo automáticamente el rol de capitán. El capitán podrá definir la identidad visual (nombre, escudo, colores) e invitar a jugadores disponibles. Se validarán reglas estrictas de composición (mínimo/máximo de jugadores y programas académicos) antes de permitir la inscripción formal al torneo. |
+| **Cómo se ejecutará**     | A través de un formulario de creación de equipo y un panel de gestión de nómina exclusivo para el usuario con rol de capitán. |
 | **Actor principal**       | Capitán |
 | **Precondiciones**        | 1) El usuario debe estar registrado con perfil deportivo completo. <br> 2) El usuario no debe pertenecer a ningún equipo actualmente. |
-| **Reglas de Negocio**     | 1) Un equipo debe tener un **mínimo de 7** y un **máximo de 12** jugadores. <br> 2) **Más de la mitad** de los miembros deben pertenecer a Ingeniería de Sistemas, IA, Ciberseguridad o Estadística. <br> 3) Un jugador **no puede pertenecer a dos equipos** simultáneamente. <br> 4) Todos los miembros deben pertenecer a los programas permitidos (Ing. Sistemas, IA, Ciberseguridad, Estadística, Maestría en Gestión de Información, Informática o Ciencia de Datos). <br> 5) El nombre del equipo debe ser único dentro del torneo. <br> 6) No se permiten cambios de jugadores entre equipos una vez iniciado el torneo; los 12 jugadores iniciales deben terminar el torneo. |
-| **Anexos**                | **Prototipos:** Mockup de Gestión de Equipos y Nómina. <br> **Abreviaturas:** N/A |
-| **Historial de revisión** | **Elaborado por:** Vanessa Torres <br> **Aprobado por:** David Cajamarca <br> **Fecha:** 03/03/2026 <br> **Descripción y Justificación de cambios:** Se agregaron las reglas de programas permitidos completas (incluyendo maestrías) y la restricción de nómina fija. |
 
 **DATOS DE ENTRADA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| Nombre del equipo | Nombre identificador del equipo | Texto | Máximo 50 caracteres. Debe ser único dentro del torneo | Sí |
-| Escudo del equipo | Imagen representativa del equipo | Imagen (archivo) | Formatos: JPG, PNG. Tamaño máximo: 2MB | No |
-| Colores del uniforme | Colores principales y secundarios | Texto | Mínimo un color primario | Sí |
-| Jugadores invitados | Lista de jugadores a invitar al equipo | Lista de IDs | Solo jugadores con estado "Disponible" y sin equipo | Sí |
+| Nombre del equipo | Identificador del equipo | Texto | Único dentro del torneo. Máximo 50 caracteres | Sí |
+| Escudo del equipo | Imagen representativa | Imagen (archivo) | Formatos: JPG, PNG. Tamaño máximo: 2MB | No |
+| Colores del uniforme | Colores del equipo | Texto | Mínimo un color primario definido | Sí |
+| Jugadores invitados | Lista de seleccionados | Lista de IDs | Solo jugadores con estado "Disponible" | Sí |
 
 **DATOS DE SALIDA:**
 
 | Nombre | Descripción | Tipo de campo | Reglas / Aplicación | Obligatorio |
 |:-------|:------------|:--------------|:--------------------|:------------|
-| ID del equipo | Identificador único del equipo creado | Texto (UUID) | Generado automáticamente | Sí |
-| Estado del equipo | Estado actual del equipo | Texto (enum) | Inicialmente: "En formación" | Sí |
-| Invitaciones enviadas | Cantidad de invitaciones enviadas exitosamente | Numérico | Solo cuenta invitaciones a jugadores válidos | Sí |
-| Mensaje de confirmación | Notificación de creación exitosa | Texto | Incluye resumen de invitaciones enviadas | Sí |
+| ID del equipo | Identificador único | Texto (UUID) | Generado automáticamente por el sistema | Sí |
+| Estado del equipo | Fase de formación | Texto (enum) | Se retorna inicialmente como "En formación" | Sí |
+| Mensaje de confirmación | Notificación de éxito | Texto | Confirmación de creación y resumen de invitaciones | Sí |
 
 **FLUJO BÁSICO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| 1 | Capitán | Accede al módulo de equipos y selecciona "Crear equipo" | — |
-| 2 | Capitán | Ingresa nombre del equipo, colores de uniforme y carga escudo (opcional) | — |
-| 3 | Sistema | Valida que el nombre del equipo no esté duplicado en el torneo | E1: Nombre duplicado |
-| 4 | Sistema | Crea el equipo en estado "En formación" y asigna al creador como capitán | — |
-| 5 | Capitán | Busca jugadores disponibles y envía invitaciones | — |
-| 6 | Sistema | Verifica que cada jugador invitado esté disponible y no pertenezca a otro equipo | E2: Jugador no disponible o ya en equipo |
-| 7 | Sistema | Envía las invitaciones y notifica al capitán del resultado | — |
+| 1 | Capitán | Accede al módulo de equipos y selecciona la opción "Crear equipo". | — |
+| 2 | Capitán | Ingresa el nombre del equipo, colores de uniforme y carga el escudo (opcional). | E1: Nombre duplicado |
+| 3 | Capitán | Busca jugadores disponibles en la plataforma y envía las invitaciones para conformar la nómina. | E2: Jugador no disponible |
+| 4 | Capitán | Recibe la confirmación de la creación del equipo en estado "En formación" y el reporte de invitaciones enviadas. | — |
 
 **FLUJO ALTERNO:**
 
 | Paso | Actor | Descripción | Excepciones |
 |:-----|:------|:------------|:------------|
-| E1 | Sistema | Muestra mensaje: "Ya existe un equipo con ese nombre en este torneo" | Regresa al paso 2 |
-| E2 | Sistema | Muestra mensaje indicando cuáles jugadores no pudieron ser invitados y la razón | Continúa con las invitaciones válidas |
-| A1 | Capitán | Si desea inscribir el equipo al torneo, selecciona "Inscribir equipo" | E3, E4, E5, E6 |
-| E3 | Sistema | Valida mínimo 7 jugadores. Si no cumple: "El equipo necesita al menos 7 jugadores para inscribirse" | Regresa al panel de gestión |
-| E4 | Sistema | Valida máximo 12 jugadores. Si excede: "El equipo no puede tener más de 12 jugadores" | Regresa al panel de gestión |
-| E5 | Sistema | Valida composición >50% de programas válidos. Si no cumple: "Más de la mitad de los jugadores deben pertenecer a los programas de Ingeniería de Sistemas, IA, Ciberseguridad o Estadística" | Regresa al panel de gestión |
-| E6 | Sistema | Valida pertenencia a programas permitidos. Si no cumple: "Todos los miembros deben pertenecer a los programas autorizados" | Regresa al panel de gestión |
+| E1 | Capitán | El usuario ingresa un nombre de equipo que ya está registrado. Muestra el mensaje: "Ya existe un equipo con ese nombre en este torneo". | Regresa al paso 2 |
+| E2 | Capitán | El usuario intenta invitar a un jugador que ya aceptó otra oferta o cambió su estado. Muestra el mensaje indicando que el jugador ya no está disponible. | Continúa con el resto de la lista |
+| A1 | Capitán | El usuario selecciona "Inscribir equipo" para formalizar su participación en el torneo. | E3, E4, E5, E6 |
+| E3 | Capitán | El equipo cuenta con menos de 7 jugadores. Muestra el mensaje: "El equipo necesita al menos 7 jugadores para inscribirse". | Regresa al panel de gestión |
+| E4 | Capitán | El equipo excede los 12 jugadores permitidos. Muestra el mensaje: "El equipo no puede tener más de 12 jugadores". | Regresa al panel de gestión |
+| E5 | Capitán | Menos del 50% de la nómina pertenece a los programas base (Sistemas, IA, Estadística, Ciber). Muestra mensaje de error de composición. | Regresa al panel de gestión |
+| E6 | Capitán | Algún miembro pertenece a un programa no autorizado por el reglamento. Muestra el mensaje: "Todos los miembros deben pertenecer a los programas autorizados". | Regresa al panel de gestión |
 
-**Notas y comentarios:** Se aplica el patrón **Strategy** para validar cada regla de composición de equipo de forma independiente e intercambiable.
-
----
-
+| Sección | Detalle |
+| :--- | :--- |
+| **Reglas de Negocio** | <ul><li>1) Nómina: Mínimo 7 y máximo 12 jugadores fijos durante todo el torneo.</li><li>2) Composición: >50% de los miembros deben ser de Ing. Sistemas, IA, Ciberseguridad o Estadística.</li><li>3) Exclusividad: Un jugador no puede estar en dos equipos al mismo tiempo.</li><li>4) Programas permitidos: Pregrados base y Maestrías en Gestión de Información, Informática o Ciencia de Datos.</li><li>5) El sistema utiliza el patrón **Strategy** para validar las reglas de inscripción de forma independiente.</li></ul> |
+| **Anexos** | **Prototipos:** Mockup de Gestión de Equipos y Nómina. <br> **Abreviaturas:** N/A <br><br> **Caso de Uso:** <br> ![Diagrama de Caso de Uso](https://github.com/user-attachments/assets/2c6a483f-16f0-4a38-bd5c-e780dd2dc764) |
+| **Historial de Revisión** | <ul><li>**Elaborado por:** Vanessa Torres</li><li>**Aprobado por:** David Cajamarca</li><li>**Fecha:** 19/03/2026</li><li>**Cambios:** Reconstrucción de requerimiento por pérdida de datos; unificación de criterios de programas académicos y ajuste de flujos.</li></ul> |
 ### RF04: Búsqueda de Jugadores
 
 | Campo                     | Detalle |
