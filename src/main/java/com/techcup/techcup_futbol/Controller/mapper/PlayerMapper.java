@@ -9,8 +9,7 @@ public class PlayerMapper {
     private PlayerMapper() {}
 
     /**
-     * Convierte un PlayerDTO en la subclase concreta de Player correspondiente.
-     * FIX: null guard agregado (los tests esperan null ante dto nulo).
+     * Convierte un PlayerDTO en la clase Jurador que se solicita
      */
     public static Player toModel(PlayerDTO dto) {
         if (dto == null) return null;
