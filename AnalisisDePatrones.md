@@ -144,5 +144,19 @@ Los observers se implementan como listeners independientes:
 ![Diagrama de componentes especifico.png](docs/Images/Diagrama%20de%20componentes%20especifico.png)
 
 ## Diagrama de clases
+<img width="2361" height="1248" alt="TechUp-Page-1 drawio" src="https://github.com/user-attachments/assets/7f84d889-9bbe-4892-960d-284474c17c3a" />
 
-![TechUp (1).jpg](docs/Images/TechUp%20%281%29.jpg)
+# Diagrams de secuencia por requerimientos 
+ ## Registro de Torneo
+ 
+![Registro Torneo](https://github.com/user-attachments/assets/9c5ecf18-153d-47ef-9e48-4156683a7894)
+
+## Registro de Jugadores
+![Registro Jugadores](https://github.com/user-attachments/assets/4468651e-3bc0-4433-a62c-98904524a0c5)
+
+## Registro de equipos
+![Registro de Equipos](https://github.com/user-attachments/assets/f37d5626-cd41-41a8-be0a-f137f773e9de)
+
+## Buscar Jugadores 
+![Buscar Jugadores](https://github.com/user-attachments/assets/13e217ba-cc79-4da7-a36d-a37bbff18c91)
+
