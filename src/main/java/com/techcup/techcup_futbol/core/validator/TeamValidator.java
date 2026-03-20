@@ -3,7 +3,7 @@ package com.techcup.techcup_futbol.core.validator;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.core.model.Team;
-import com.techcup.techcup_futbol.exception.TeamException;
+import com.techcup.techcup_futbol.core.exception.TeamException;
 
 import java.util.*;
 

@@ -2,7 +2,6 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.RefereeDTOs.*;
 import com.techcup.techcup_futbol.core.service.RefereeService;
-import com.techcup.techcup_futbol.exception.RefereeException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

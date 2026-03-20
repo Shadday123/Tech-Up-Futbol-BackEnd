@@ -2,7 +2,7 @@ package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.validator.TeamValidator;
-import com.techcup.techcup_futbol.exception.TeamException;
+import com.techcup.techcup_futbol.core.exception.TeamException;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;

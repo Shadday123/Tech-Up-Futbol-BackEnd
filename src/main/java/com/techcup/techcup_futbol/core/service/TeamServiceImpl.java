@@ -4,7 +4,7 @@ import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.validator.TeamValidator;
-import com.techcup.techcup_futbol.exception.TeamException;
+import com.techcup.techcup_futbol.core.exception.TeamException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

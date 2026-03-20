@@ -5,7 +5,6 @@ import com.techcup.techcup_futbol.Controller.dto.PlayerResponse;
 import com.techcup.techcup_futbol.Controller.mapper.PlayerMapper;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.service.PlayerService;
-import com.techcup.techcup_futbol.exception.PlayerException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

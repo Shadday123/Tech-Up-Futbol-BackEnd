@@ -3,7 +3,7 @@ package com.techcup.techcup_futbol;
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
-import com.techcup.techcup_futbol.exception.TournamentException;
+import com.techcup.techcup_futbol.core.exception.TournamentException;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;

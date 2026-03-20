@@ -4,7 +4,6 @@ import com.techcup.techcup_futbol.Controller.dto.StandingsDTOs.StandingsResponse
 import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.service.StandingsService;
-import com.techcup.techcup_futbol.exception.TournamentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

@@ -2,7 +2,7 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
-import com.techcup.techcup_futbol.exception.MatchException;
+import com.techcup.techcup_futbol.core.exception.MatchException;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.exception;
+package com.techcup.techcup_futbol.core.exception;
 
 /**
  * Excepción de dominio para operaciones sobre equipos.

@@ -2,7 +2,6 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.*;
 import com.techcup.techcup_futbol.core.service.LineupService;
-import com.techcup.techcup_futbol.exception.LineupException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

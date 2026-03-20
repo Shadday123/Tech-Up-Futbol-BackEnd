@@ -2,7 +2,6 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
 import com.techcup.techcup_futbol.core.service.MatchService;
-import com.techcup.techcup_futbol.exception.MatchException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

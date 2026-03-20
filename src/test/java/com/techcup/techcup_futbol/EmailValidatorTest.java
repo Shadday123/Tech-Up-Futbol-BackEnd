@@ -1,7 +1,7 @@
 package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.core.validator.EmailValidator;
-import com.techcup.techcup_futbol.exception.PlayerException;
+import com.techcup.techcup_futbol.core.exception.PlayerException;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 

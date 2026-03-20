@@ -2,7 +2,7 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.Controller.dto.StandingsDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
-import com.techcup.techcup_futbol.exception.TournamentException;
+import com.techcup.techcup_futbol.core.exception.TournamentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

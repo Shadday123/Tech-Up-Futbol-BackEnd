@@ -2,7 +2,7 @@ package com.techcup.techcup_futbol.core.validator;
 
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.core.model.TournamentState;
-import com.techcup.techcup_futbol.exception.TournamentException;
+import com.techcup.techcup_futbol.core.exception.TournamentException;
 
 import java.time.LocalDate;
 

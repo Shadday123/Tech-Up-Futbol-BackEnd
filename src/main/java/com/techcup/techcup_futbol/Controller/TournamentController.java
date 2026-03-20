@@ -3,7 +3,6 @@ package com.techcup.techcup_futbol.Controller;
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
 import com.techcup.techcup_futbol.core.service.TournamentService;
-import com.techcup.techcup_futbol.exception.TournamentException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

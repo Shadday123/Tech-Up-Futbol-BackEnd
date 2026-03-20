@@ -2,7 +2,6 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.BracketDTOs.*;
 import com.techcup.techcup_futbol.core.service.BracketService;
-import com.techcup.techcup_futbol.exception.BracketException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

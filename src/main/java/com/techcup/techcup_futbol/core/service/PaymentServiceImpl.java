@@ -6,7 +6,7 @@ import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Payment;
 import com.techcup.techcup_futbol.core.model.PaymentStatus;
 import com.techcup.techcup_futbol.core.model.Team;
-import com.techcup.techcup_futbol.exception.PaymentException;
+import com.techcup.techcup_futbol.core.exception.PaymentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
