@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.Controller.PlayerController;
 import com.techcup.techcup_futbol.Controller.dto.PlayerDTO;
+import com.techcup.techcup_futbol.Controller.dto.PlayerResponse;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.PlayerService;
@@ -68,7 +69,7 @@ class PlayerControllerTest {
         void listarRetorna200() {
             when(playerService.listarJugadores()).thenReturn(List.of(buildStudent(), buildStudent()));
 
-            ResponseEntity<List<?>> response = controller.listar();
+            ResponseEntity<List<PlayerResponse>> response = controller.listar();
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertNotNull(response.getBody());
@@ -193,7 +194,7 @@ class PlayerControllerTest {
         void listarRetornaVacioConOk() {
             when(playerService.listarJugadores()).thenReturn(List.of());
 
-            ResponseEntity<List<?>> response = controller.listar();
+            ResponseEntity<List<PlayerResponse>> response = controller.listar();
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertTrue(response.getBody().isEmpty());
