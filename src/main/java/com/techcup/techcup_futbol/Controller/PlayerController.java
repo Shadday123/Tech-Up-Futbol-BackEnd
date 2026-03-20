@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,10 +30,6 @@ public class PlayerController {
 
     @PostMapping("/registro")
     public ResponseEntity<PlayerResponse> registrar(@Valid @RequestBody PlayerDTO dto) {
-        if (dto.getId() == null || dto.getId().isBlank()) {
-            dto.setId(UUID.randomUUID().toString());
-        }
-
         log.info("POST /api/players/registro — jugador: {} | email: {} | tipo: {}",
                 dto.getFullname(), dto.getEmail(), dto.getPlayerType());
 

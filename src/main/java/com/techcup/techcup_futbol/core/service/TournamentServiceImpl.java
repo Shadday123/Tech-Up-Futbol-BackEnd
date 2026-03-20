@@ -7,6 +7,7 @@ import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,7 @@ public class TournamentServiceImpl implements TournamentService {
 
         TournamentValidator.validate(request);
 
-        int nextNum = DataStore.torneos.keySet().stream()
-                .filter(k -> k.matches("T\\d+"))
-                .mapToInt(k -> Integer.parseInt(k.substring(1)))
-                .max()
-                .orElse(0) + 1;
-        String id = "T" + String.format("%03d", nextNum);
+        String id = IdGenerator.generateId();
 
         Tournament nuevoTorneo = new Tournament();
         nuevoTorneo.setId(id);

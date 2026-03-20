@@ -7,6 +7,7 @@ import com.techcup.techcup_futbol.core.model.Payment;
 import com.techcup.techcup_futbol.core.model.PaymentStatus;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.exception.PaymentException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (payment.getId() == null) {
             payment = new Payment(
-                    java.util.UUID.randomUUID().toString(),
+                    IdGenerator.generateId(),
                     null,
                     team.getPlayers() != null ? team.getPlayers().size() * 50.0 : 0.0,
                     PaymentStatus.PENDING

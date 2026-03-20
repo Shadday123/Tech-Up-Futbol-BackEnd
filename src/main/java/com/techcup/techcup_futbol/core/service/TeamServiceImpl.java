@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import com.techcup.techcup_futbol.util.IdGenerator;
 
 @Service
 public class TeamServiceImpl implements TeamService {
@@ -30,7 +30,7 @@ public class TeamServiceImpl implements TeamService {
         String ts = LocalDateTime.now().format(FMT);
 
         if (team.getId() == null || team.getId().isBlank()) {
-            team.setId(UUID.randomUUID().toString());
+            team.setId(IdGenerator.generateId());
         }
 
         log.info("[{}] Creando equipo: {} | ID: {}", ts, team.getTeamName(), team.getId());

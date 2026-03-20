@@ -3,6 +3,7 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.BracketDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.BracketException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class BracketServiceImpl implements BracketService {
     @org.springframework.context.annotation.Lazy
     private MatchService matchService;
 
-    // ── GENERATE ─────────────────────────────────────────────────────────────
+    // ── GENERATE
 
     @Override
     public BracketResponse generate(String tournamentId, GenerateBracketRequest request) {
@@ -71,14 +72,11 @@ public class BracketServiceImpl implements BracketService {
             roundMatches.add(m);
             bracketMatches.put(m.getId(), m);
             bracketMatchStatus.put(m.getId(), MatchStatus.SCHEDULED);
-            // Registrar también en MatchService para que se pueda cargar resultado
-            if (matchService instanceof MatchServiceImpl ms) {
-                ms.getMatches().put(m.getId(), m);
-            }
+            matchService.registerMatch(m);
         }
 
         TournamentBrackets bracket = new TournamentBrackets();
-        bracket.setId(UUID.randomUUID().toString());
+        bracket.setId(IdGenerator.generateId());
         bracket.setTournament(tournament);
         bracket.setPhase(phase);
         bracket.setMatches(roundMatches);
@@ -89,7 +87,7 @@ public class BracketServiceImpl implements BracketService {
         return toResponse(tournamentId, tournament, phases);
     }
 
-    // ── FIND ──────────────────────────────────────────────────────────────────
+    // ── FIND
 
     @Override
     public BracketResponse findByTournamentId(String tournamentId) {
@@ -106,7 +104,7 @@ public class BracketServiceImpl implements BracketService {
         return toResponse(tournamentId, tournament, phases);
     }
 
-    // ── ADVANCE WINNER ────────────────────────────────────────────────────────
+    // ── ADVANCE WINNER
 
     @Override
     public BracketResponse advanceWinner(String tournamentId, String matchId) {
@@ -124,12 +122,10 @@ public class BracketServiceImpl implements BracketService {
                     String.format(BracketException.MATCH_NOT_FOUND, matchId));
         }
 
-        // FIX 1: verificar que el resultado fue registrado en MatchService
         if (!matchService.isResultRegistered(matchId)) {
             throw new BracketException("matchId", BracketException.RESULT_NOT_REGISTERED);
         }
 
-        // FIX 2: manejar empate — no se puede avanzar sin un ganador claro
         if (match.getScoreLocal() == match.getScoreVisitor()) {
             throw new BracketException("match", BracketException.DRAW_NO_WINNER);
         }
@@ -160,13 +156,11 @@ public class BracketServiceImpl implements BracketService {
                 nextMatches.add(nm);
                 bracketMatches.put(nm.getId(), nm);
                 bracketMatchStatus.put(nm.getId(), MatchStatus.SCHEDULED);
-                if (matchService instanceof MatchServiceImpl ms) {
-                    ms.getMatches().put(nm.getId(), nm);
-                }
+                matchService.registerMatch(nm);
             }
 
             TournamentBrackets nextBracket = new TournamentBrackets();
-            nextBracket.setId(UUID.randomUUID().toString());
+            nextBracket.setId(IdGenerator.generateId());
             nextBracket.setTournament(tournament);
             nextBracket.setPhase(nextPhase);
             nextBracket.setMatches(nextMatches);
@@ -181,7 +175,7 @@ public class BracketServiceImpl implements BracketService {
 
     private Match buildMatch(Team local, Team visitor) {
         Match m = new Match();
-        m.setId(UUID.randomUUID().toString());
+        m.setId(IdGenerator.generateId());
         m.setLocalTeam(local);
         m.setVisitorTeam(visitor);
         return m;

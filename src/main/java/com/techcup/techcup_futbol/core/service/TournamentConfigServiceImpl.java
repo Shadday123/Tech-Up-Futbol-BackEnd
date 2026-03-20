@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import com.techcup.techcup_futbol.util.IdGenerator;
 
 
 @Service
@@ -55,7 +55,7 @@ public class TournamentConfigServiceImpl implements TournamentConfigService {
 
         TournamentConfig config = configs.getOrDefault(tournamentId, new TournamentConfig());
         if (config.getId() == null) {
-            config.setId(UUID.randomUUID().toString());
+            config.setId(IdGenerator.generateId());
         }
         config.setTournament(tournament);
         config.setRules(request.rules());

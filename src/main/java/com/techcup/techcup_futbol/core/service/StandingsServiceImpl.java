@@ -3,6 +3,7 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.StandingsDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class StandingsServiceImpl implements StandingsService {
         tournamentStandings.computeIfAbsent(tournamentId, k -> new LinkedHashMap<>());
         if (!tournamentStandings.get(tournamentId).containsKey(team.getId())) {
             Standings s = new Standings();
-            s.setId(UUID.randomUUID().toString());
+            s.setId(IdGenerator.generateId());
             s.setTeam(team);
             tournamentStandings.get(tournamentId).put(team.getId(), s);
             teamTournamentIndex.put(team.getId(), tournamentId);
@@ -86,7 +87,7 @@ public class StandingsServiceImpl implements StandingsService {
         Standings s = table.get(team.getId());
         if (s == null) {
             s = new Standings();
-            s.setId(UUID.randomUUID().toString());
+            s.setId(IdGenerator.generateId());
             s.setTeam(team);
             table.put(team.getId(), s);
         }

@@ -1,6 +1,7 @@
 package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
+import com.techcup.techcup_futbol.core.model.Match;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface MatchService {
     List<MatchResponse> findByTeamId(String teamId);
 
     boolean isResultRegistered(String matchId);
+
+    void registerMatch(Match match);
 }

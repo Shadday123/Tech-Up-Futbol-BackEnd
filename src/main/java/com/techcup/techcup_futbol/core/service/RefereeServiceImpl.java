@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.techcup.techcup_futbol.util.IdGenerator;
 import java.util.*;
 
 @Service
@@ -34,7 +35,7 @@ public class RefereeServiceImpl implements RefereeService {
         }
 
         Referee referee = new Referee();
-        referee.setId(UUID.randomUUID().toString());
+        referee.setId(IdGenerator.generateId());
         referee.setFullname(request.fullname());
         referee.setEmail(request.email());
         referee.setAssignedMatches(new ArrayList<>());

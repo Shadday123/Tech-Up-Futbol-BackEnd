@@ -5,6 +5,7 @@ import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.validator.EmailValidator;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -28,9 +28,8 @@ public class PlayerServiceImpl implements PlayerService {
     public void registrar(Player jugador, String correo) {
         String ts = LocalDateTime.now().format(FMT);
 
-        // FIX: auto-generar UUID si el ID no viene del controlador
         if (jugador.getId() == null || jugador.getId().isBlank()) {
-            jugador.setId(UUID.randomUUID().toString());
+            jugador.setId(IdGenerator.generateId());
             log.debug("[{}] ID auto-generado: {}", ts, jugador.getId());
         }
 

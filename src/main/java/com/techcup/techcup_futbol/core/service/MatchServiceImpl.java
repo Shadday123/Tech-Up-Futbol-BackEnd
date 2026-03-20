@@ -3,7 +3,7 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
-import lombok.Getter;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ public class MatchServiceImpl implements MatchService {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceImpl.class);
 
-    @Getter
     private final Map<String, Match>           matches         = new HashMap<>();
     private final Map<String, List<MatchEvent>> matchEvents    = new HashMap<>();
     private final Map<String, MatchStatus>     matchStatusMap  = new HashMap<>();
@@ -51,7 +50,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         Match match = new Match();
-        match.setId(UUID.randomUUID().toString());
+        match.setId(IdGenerator.generateId());
         match.setLocalTeam(local);
         match.setVisitorTeam(visitor);
         match.setDateTime(request.dateTime());
@@ -61,10 +60,7 @@ public class MatchServiceImpl implements MatchService {
         matchStatusMap.put(match.getId(), MatchStatus.SCHEDULED);
         matchEvents.put(match.getId(), new ArrayList<>());
 
-        // Notificar a LineupService para que reconozca el partido
-        if (lineupService instanceof LineupServiceImpl ls) {
-            ls.registerMatch(match);
-        }
+        lineupService.registerMatch(match);
 
         log.info("Partido creado ID: {} — {} vs {}", match.getId(),
                 local.getTeamName(), visitor.getTeamName());
@@ -118,7 +114,7 @@ public class MatchServiceImpl implements MatchService {
                             String.format(MatchException.PLAYER_NOT_IN_LINEUP, er.playerId()));
                 }
                 MatchEvent event = new MatchEvent();
-                event.setId(UUID.randomUUID().toString());
+                event.setId(IdGenerator.generateId());
                 event.setType(er.type());
                 event.setMinute(er.minute());
                 event.setPlayer(player);
@@ -174,6 +170,13 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public boolean isResultRegistered(String matchId) {
         return MatchStatus.FINISHED.equals(matchStatusMap.get(matchId));
+    }
+
+    @Override
+    public void registerMatch(Match match) {
+        matches.put(match.getId(), match);
+        matchStatusMap.putIfAbsent(match.getId(), MatchStatus.SCHEDULED);
+        matchEvents.putIfAbsent(match.getId(), new ArrayList<>());
     }
 
     private boolean isPlayerInTeam(String playerId, Team team) {
