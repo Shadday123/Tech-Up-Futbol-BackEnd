@@ -20,10 +20,6 @@ public class BracketServiceImpl implements BracketService {
     private final Map<String, MatchStatus>              bracketMatchStatus  = new HashMap<>();
     private final Map<String, Team>                     matchWinners       = new HashMap<>();
 
-    /*
-     * FIX: se inyecta MatchService (interfaz), no MatchServiceImpl (clase concreta).
-     * @Lazy rompe el ciclo: BracketService → MatchService → LineupService → MatchService.
-     */
     @Autowired
     @org.springframework.context.annotation.Lazy
     private MatchService matchService;
@@ -112,15 +108,6 @@ public class BracketServiceImpl implements BracketService {
 
     // ── ADVANCE WINNER ────────────────────────────────────────────────────────
 
-    /**
-     * FIX 1: antes se usaba scoreLocal >= scoreVisitor para determinar el ganador.
-     * Si ambos marcadores son 0 (partido no jugado), el equipo local avanzaba
-     * automáticamente sin resultado real. Ahora se verifica que el resultado
-     * haya sido registrado antes de permitir el avance.
-     *
-     * FIX 2: si el partido terminó en empate se lanza una excepción descriptiva
-     * en lugar de hacer avanzar al local silenciosamente.
-     */
     @Override
     public BracketResponse advanceWinner(String tournamentId, String matchId) {
         log.info("Avanzando ganador del partido ID: {}", matchId);

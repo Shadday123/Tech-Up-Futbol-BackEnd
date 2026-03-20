@@ -5,6 +5,9 @@ import com.techcup.techcup_futbol.core.model.Team;
 
 public class TeamMapper {
     public static Team DTOtoModel(TeamDTO teamDTO){
+        if (teamDTO == null){
+            return null;
+        }
         Team team = new Team();
 
         team.setId(teamDTO.getId());
@@ -18,6 +21,10 @@ public class TeamMapper {
     }
 
     public static TeamDTO ModeltoDTo(Team team){
+
+        if (team == null){
+            return null;
+        }
         TeamDTO teamDTO = new TeamDTO();
 
         teamDTO.setCaptain(team.getCaptain());

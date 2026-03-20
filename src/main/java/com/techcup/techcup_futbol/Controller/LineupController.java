@@ -44,9 +44,5 @@ public class LineupController {
         return ResponseEntity.ok(lineupService.findRivalLineup(matchId, myTeamId));
     }
 
-    @ExceptionHandler(LineupException.class)
-    public ResponseEntity<String> handleLineupException(LineupException e) {
-        log.error("LineupException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+
 }

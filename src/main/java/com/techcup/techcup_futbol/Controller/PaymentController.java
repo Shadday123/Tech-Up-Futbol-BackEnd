@@ -58,9 +58,4 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.findByTeamId(teamId));
     }
 
-    @ExceptionHandler(PaymentException.class)
-    public ResponseEntity<String> handlePaymentException(PaymentException e) {
-        log.error("PaymentException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 }

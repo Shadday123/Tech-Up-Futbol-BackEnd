@@ -58,7 +58,7 @@ public class PlayerMapper {
         dto.setPosition(player.getPosition());
         dto.setDorsalNumber(player.getDorsalNumber());
         dto.setHaveTeam(player.isHaveTeam());
-        // password NO se copia en la respuesta
+
 
         if (player instanceof StudentPlayer s) {
             dto.setPlayerType("STUDENT");

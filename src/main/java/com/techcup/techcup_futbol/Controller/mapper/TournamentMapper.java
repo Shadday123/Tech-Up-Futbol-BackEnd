@@ -6,6 +6,10 @@ public class TournamentMapper {
 
     public static Tournament toModel(TournamentDTO dto) {
 
+        if (dto == null){
+            return null;
+        }
+
         Tournament tournament = new Tournament();
 
         tournament.setId(dto.getId());
@@ -21,6 +25,10 @@ public class TournamentMapper {
     }
 
     public static TournamentDTO toDTO(Tournament tournament) {
+
+        if (tournament == null){
+            return null;
+        }
 
         TournamentDTO dto = new TournamentDTO();
 

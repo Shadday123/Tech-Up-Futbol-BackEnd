@@ -32,7 +32,6 @@ public class PlayerController {
 
     @PostMapping("/registro")
     public ResponseEntity<PlayerResponse> registrar(@Valid @RequestBody PlayerDTO dto) {
-        // FIX: auto-generar ID si el cliente no lo proporciona
         if (dto.getId() == null || dto.getId().isBlank()) {
             dto.setId(UUID.randomUUID().toString());
         }
@@ -95,9 +94,5 @@ public class PlayerController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(PlayerException.class)
-    public ResponseEntity<String> handlePlayerException(PlayerException e) {
-        log.error("PlayerException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+
 }
