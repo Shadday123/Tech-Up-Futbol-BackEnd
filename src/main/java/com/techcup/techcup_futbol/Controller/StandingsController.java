@@ -23,9 +23,7 @@ public class StandingsController {
         this.standingsService = standingsService;
     }
 
-    /**
-     * RF10 — Consultar tabla de posiciones de un torneo.
-     */
+
     @GetMapping("/tournament/{tournamentId}")
     public ResponseEntity<StandingsResponse> findByTournament(
             @PathVariable String tournamentId) {
