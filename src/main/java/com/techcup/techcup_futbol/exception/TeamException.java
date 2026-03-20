@@ -6,7 +6,7 @@ package com.techcup.techcup_futbol.exception;
  */
 public class TeamException extends RuntimeException {
 
-    private static final String CONFIG_NOT_FOUND =
+    public static final String CONFIG_NOT_FOUND =
             "No existe configuración para el torneo con ID: %s. "
                     + "Use PUT /api/tournaments/{id}/config para crearla.";
     public static final String TEAM_NULL =

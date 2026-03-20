@@ -5,6 +5,7 @@ import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentConfig;
 import com.techcup.techcup_futbol.core.model.TournamentState;
+import com.techcup.techcup_futbol.exception.TeamException;
 import com.techcup.techcup_futbol.exception.TournamentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 
 @Service
 public class TournamentConfigServiceImpl implements TournamentConfigService {
@@ -89,7 +91,7 @@ public class TournamentConfigServiceImpl implements TournamentConfigService {
         TournamentConfig config = configs.get(tournamentId);
         if (config == null) {
             throw new TournamentException("config",
-                    String.format(CONFIG_NOT_FOUND, tournamentId));
+                    String.format(TeamException.CONFIG_NOT_FOUND, tournamentId));
         }
         return toResponse(config, tournamentId);
     }
