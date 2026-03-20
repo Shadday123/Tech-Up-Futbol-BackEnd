@@ -94,9 +94,5 @@ public class PlayerController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(PlayerException.class)
-    public ResponseEntity<String> handlePlayerException(PlayerException e) {
-        log.error("PlayerException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+
 }

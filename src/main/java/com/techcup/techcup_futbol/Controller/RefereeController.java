@@ -50,9 +50,5 @@ public class RefereeController {
         return ResponseEntity.ok(refereeService.findAll());
     }
 
-    @ExceptionHandler(RefereeException.class)
-    public ResponseEntity<String> handleRefereeException(RefereeException e) {
-        log.error("RefereeException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+
 }

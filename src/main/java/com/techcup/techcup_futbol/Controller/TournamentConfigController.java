@@ -36,9 +36,4 @@ public class TournamentConfigController {
         return ResponseEntity.ok(configService.findByTournamentId(tournamentId));
     }
 
-    @ExceptionHandler(TournamentException.class)
-    public ResponseEntity<String> handleTournamentException(TournamentException e) {
-        log.error("TournamentException — {}", e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 }

@@ -46,9 +46,4 @@ public class BracketController {
         return ResponseEntity.ok(bracketService.advanceWinner(tournamentId, matchId));
     }
 
-    @ExceptionHandler(BracketException.class)
-    public ResponseEntity<String> handleBracketException(BracketException e) {
-        log.error("BracketException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 }

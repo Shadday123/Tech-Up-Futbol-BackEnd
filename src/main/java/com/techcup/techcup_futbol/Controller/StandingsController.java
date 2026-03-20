@@ -49,9 +49,5 @@ public class StandingsController {
                 "Equipo '" + team.getTeamName() + "' registrado en tabla de posiciones del torneo.");
     }
 
-    @ExceptionHandler(TournamentException.class)
-    public ResponseEntity<String> handleTournamentException(TournamentException e) {
-        log.error("TournamentException — {}", e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+
 }

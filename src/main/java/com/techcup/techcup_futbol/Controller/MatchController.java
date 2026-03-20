@@ -56,9 +56,4 @@ public class MatchController {
         return ResponseEntity.ok(matchService.findByTeamId(teamId));
     }
 
-    @ExceptionHandler(MatchException.class)
-    public ResponseEntity<String> handleMatchException(MatchException e) {
-        log.error("MatchException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 }

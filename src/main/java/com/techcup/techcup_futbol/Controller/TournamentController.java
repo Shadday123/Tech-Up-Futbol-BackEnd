@@ -101,9 +101,4 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.updateStatus(id, "DELETED"));
     }
 
-    @ExceptionHandler(TournamentException.class)
-    public ResponseEntity<String> handleTournamentException(TournamentException e) {
-        log.error("TournamentException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 }

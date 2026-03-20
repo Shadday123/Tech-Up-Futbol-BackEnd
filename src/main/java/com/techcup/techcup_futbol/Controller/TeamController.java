@@ -133,9 +133,5 @@ public class TeamController {
         );
     }
 
-    @ExceptionHandler(TeamException.class)
-    public ResponseEntity<String> handleTeamException(TeamException e) {
-        log.error("TeamException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+
 }
