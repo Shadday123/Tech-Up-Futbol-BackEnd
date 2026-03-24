@@ -1,0 +1,143 @@
+2026-03-24T16:17:59.451-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : Starting TechcupFutbolApplicationTests using Java 21.0.9 with PID 24420 (started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-24T16:17:59.457-05:00 DEBUG 24420 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-24T16:17:59.459-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : No active profile set, falling back to 1 default profile: "default"
+2026-03-24T16:18:04.349-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : Started TechcupFutbolApplicationTests in 6.264 seconds (process running for 19.691)
+2026-03-24T16:18:04.472-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : PUT /api/tournaments/T001/config
+2026-03-24T16:18:04.480-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : GET /api/tournaments/T001/config
+2026-03-24T16:18:04.487-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : PUT /api/tournaments/T001/config
+2026-03-24T16:18:04.487-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : PUT /api/tournaments/T001/config
+2026-03-24T16:18:04.503-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : PUT /api/tournaments/T001/config
+2026-03-24T16:18:04.507-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : PUT /api/tournaments/NO-EXISTE/config
+2026-03-24T16:18:04.517-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : GET /api/tournaments/T-SIN-CONFIG/config
+2026-03-24T16:18:04.526-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : PUT /api/tournaments/T001/config
+2026-03-24T16:18:04.539-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : GET /api/tournaments/T-CHECK/config
+2026-03-24T16:18:04.551-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : PUT /api/tournaments/T001/config
+2026-03-24T16:18:04.559-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : GET /api/tournaments/T001/config
+2026-03-24T16:18:04.569-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.C.TournamentConfigController       : PUT /api/tournaments/T002/config
+2026-03-24T16:18:04.592-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T021
+2026-03-24T16:18:04.595-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T021
+2026-03-24T16:18:04.595-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T022
+2026-03-24T16:18:04.595-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T022
+2026-03-24T16:18:04.600-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T024
+2026-03-24T16:18:04.603-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T024
+2026-03-24T16:18:04.614-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T023
+2026-03-24T16:18:04.616-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T023
+2026-03-24T16:18:04.620-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T020
+2026-03-24T16:18:04.620-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T020
+2026-03-24T16:18:04.641-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T010
+2026-03-24T16:18:04.647-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T012
+2026-03-24T16:18:04.655-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: NO-EXISTE
+2026-03-24T16:18:04.655-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T011
+2026-03-24T16:18:04.891-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T004
+2026-03-24T16:18:04.892-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T004
+2026-03-24T16:18:04.896-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T002
+2026-03-24T16:18:04.897-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T002
+2026-03-24T16:18:04.900-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T006
+2026-03-24T16:18:04.900-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T006
+2026-03-24T16:18:04.902-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T001
+2026-03-24T16:18:04.904-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T001
+2026-03-24T16:18:04.904-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T005
+2026-03-24T16:18:04.904-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T005
+2026-03-24T16:18:04.909-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T005
+2026-03-24T16:18:04.909-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T005
+2026-03-24T16:18:04.911-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T003
+2026-03-24T16:18:04.911-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T003
+2026-03-24T16:18:04.911-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configurando torneo ID: T003
+2026-03-24T16:18:04.911-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.s.TournamentConfigServiceImpl    : Configuración guardada para torneo ID: T003
+2026-03-24T16:18:05.029-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : POST /api/tournaments — nombre: Torneo Exacto
+2026-03-24T16:18:05.040-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/progress
+2026-03-24T16:18:05.049-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/start
+2026-03-24T16:18:05.058-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/finish
+2026-03-24T16:18:05.062-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/delete
+2026-03-24T16:18:05.071-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : GET /api/tournaments
+2026-03-24T16:18:05.081-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/NO-EXISTE/start
+2026-03-24T16:18:05.090-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : POST /api/tournaments — nombre: 
+2026-03-24T16:18:05.101-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/delete
+2026-03-24T16:18:05.109-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/finish
+2026-03-24T16:18:05.118-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : GET /api/tournaments/T999
+2026-03-24T16:18:05.124-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/progress
+2026-03-24T16:18:05.135-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/start
+2026-03-24T16:18:05.156-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/delete
+2026-03-24T16:18:05.161-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : GET /api/tournaments
+2026-03-24T16:18:05.168-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/finish
+2026-03-24T16:18:05.174-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : POST /api/tournaments — nombre: Torneo HP2
+2026-03-24T16:18:05.181-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : GET /api/tournaments/T001
+2026-03-24T16:18:05.183-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/progress
+2026-03-24T16:18:05.190-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : POST /api/tournaments — nombre: Torneo HP
+2026-03-24T16:18:05.228-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Min Teams'
+2026-03-24T16:18:05.236-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: f9396c6e-9f50-403b-a295-e512ce8b389a | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.242-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Deleted'
+2026-03-24T16:18:05.242-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 34a76b6d-eaeb-4c92-a2d4-5848ea32ba99 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.244-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'DELETED'
+2026-03-24T16:18:05.248-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 1'
+2026-03-24T16:18:05.251-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 09bc0bf5-c32c-4138-87d9-de8f920cceb2 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.251-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 2'
+2026-03-24T16:18:05.251-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: d1d8d77f-d66e-429c-9f95-c0e57a49ee9a | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.251-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 3'
+2026-03-24T16:18:05.251-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 861306eb-6a66-4db2-b226-9cbce76195c3 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.251-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 4'
+2026-03-24T16:18:05.251-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: cfec6b72-f52b-4ba1-b4b1-d3d0c9721ecd | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.251-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 5'
+2026-03-24T16:18:05.251-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 51235ff4-9f1d-4cb8-8b48-cf04e34ad331 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.256-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Impar'
+2026-03-24T16:18:05.258-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Minus'
+2026-03-24T16:18:05.258-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: be7da533-d2d8-4ff1-95a8-8a86e5572470 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.258-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'active'
+2026-03-24T16:18:05.269-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Reflect'
+2026-03-24T16:18:05.272-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: c42d87bb-985f-474e-a4ac-016d7dfc25da | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.272-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'ACTIVE'
+2026-03-24T16:18:05.275-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Flujo Completo'
+2026-03-24T16:18:05.275-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: f002cf8e-52e5-4a70-a48e-8748a618fe4f | Estado: DRAFT | MaxEquipos: 8
+2026-03-24T16:18:05.275-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'ACTIVE'
+2026-03-24T16:18:05.284-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Gratis'
+2026-03-24T16:18:05.284-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 14609ed4-8371-41b6-a94e-9f4e40789ca6 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.293-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: ''
+2026-03-24T16:18:05.311-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Buscando torneo con ID: T999
+2026-03-24T16:18:05.316-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo'
+2026-03-24T16:18:05.316-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Invalido'
+2026-03-24T16:18:05.316-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: a8e7024a-9b73-4005-9cb4-debc10814397 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.316-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'ESTADO_INEXISTENTE'
+2026-03-24T16:18:05.324-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: NO-EXISTE → 'ACTIVE'
+2026-03-24T16:18:05.326-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo'
+2026-03-24T16:18:05.329-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo'
+2026-03-24T16:18:05.336-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Trans'
+2026-03-24T16:18:05.337-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: f33165df-7485-4732-bc45-7d7a61b47666 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.337-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'IN_PROGRESS'
+2026-03-24T16:18:05.341-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Comp'
+2026-03-24T16:18:05.342-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: e987c23a-be71-431e-8706-6aa93d440f31 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.342-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'ACTIVE'
+2026-03-24T16:18:05.351-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Primer Torneo'
+2026-03-24T16:18:05.353-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 28b478c5-ad0b-4634-9a02-4cc9c9c743f5 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.356-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Delete'
+2026-03-24T16:18:05.357-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: c532346a-b615-49fd-ba5d-5390f7fcb752 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.357-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'DELETED'
+2026-03-24T16:18:05.360-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo HP'
+2026-03-24T16:18:05.360-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 3afa0924-9663-47b7-9170-0d2e6d39d6f4 | Estado: DRAFT | MaxEquipos: 8
+2026-03-24T16:18:05.362-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Progress'
+2026-03-24T16:18:05.362-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: bd7617e9-5939-4c0e-9092-8949b159cc71 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.362-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'ACTIVE'
+2026-03-24T16:18:05.368-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Complete'
+2026-03-24T16:18:05.368-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: dba46d9d-c907-428a-b257-e91c12ee0e17 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.368-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'ACTIVE'
+2026-03-24T16:18:05.372-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Update'
+2026-03-24T16:18:05.372-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: eccb4f2b-c502-40f1-b241-4b1a8b94be58 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.372-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: T001 → 'ACTIVE'
+2026-03-24T16:18:05.374-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'T-A'
+2026-03-24T16:18:05.375-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 75428920-bd1a-46cb-a73e-e313d2503d86 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.375-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'T-B'
+2026-03-24T16:18:05.375-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 813812a1-9bd6-4680-addd-15bb27263866 | Estado: DRAFT | MaxEquipos: 6
+2026-03-24T16:18:05.375-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'T-C'
+2026-03-24T16:18:05.375-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 54f90e2c-c753-4635-ae2b-0743a9203a24 | Estado: DRAFT | MaxEquipos: 8
+2026-03-24T16:18:05.377-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Total torneos listados: 3
+2026-03-24T16:18:05.379-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Total torneos listados: 0
+2026-03-24T16:18:05.384-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Campos'
+2026-03-24T16:18:05.388-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: b1b14311-6997-41d3-ad60-61b2f4bda86f | Estado: DRAFT | MaxEquipos: 10
+2026-03-24T16:18:05.402-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 1'
+2026-03-24T16:18:05.402-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 876dc1c4-b3b9-4218-a943-b6a578a88433 | Estado: DRAFT | MaxEquipos: 4
+2026-03-24T16:18:05.402-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 2'
+2026-03-24T16:18:05.402-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: f2ade505-e113-4893-983b-0e7a2f944f94 | Estado: DRAFT | MaxEquipos: 6
+2026-03-24T16:18:05.402-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 3'
+2026-03-24T16:18:05.402-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: 0188d75b-a906-4c87-bc5c-12b37a69a067 | Estado: DRAFT | MaxEquipos: 8
+2026-03-24T16:18:05.408-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Find'
+2026-03-24T16:18:05.409-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Torneo creado — ID: e9cc51a0-0fe7-4ddf-bc1f-5d45aab1bca4 | Estado: DRAFT | MaxEquipos: 6
+2026-03-24T16:18:05.409-05:00  INFO 24420 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Buscando torneo con ID: T001

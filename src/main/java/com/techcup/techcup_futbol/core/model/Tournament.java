@@ -12,16 +12,20 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Table (name= "tournaments")
 public class Tournament {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private LocalDateTime startDate;
 
+    @Column(nullable = false)
     private LocalDateTime endDate;
 
     private Double registrationFee;
@@ -31,6 +35,7 @@ public class Tournament {
     private String rules;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TournamentState currentState;
 
     public void startTournament() {
