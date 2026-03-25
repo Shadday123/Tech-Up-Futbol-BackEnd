@@ -1,5 +1,6 @@
 package com.techcup.techcup_futbol.core.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
 import com.techcup.techcup_futbol.util.IdGenerator;
@@ -11,21 +12,26 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
+@Entity
+@Table(name= "tournaments")
 public class Tournament {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private LocalDateTime startDate;
 
+    @Column(nullable = false)
     private LocalDateTime endDate;
 
     private Double registrationFee;
 
     private int maxTeams;
-
-    private TournamentState currentState;
 
     private String configId;
 
@@ -41,6 +47,10 @@ public class Tournament {
 
     private String sanctions;
 
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TournamentState currentState;
 
     public void startTournament() {
         this.currentState = TournamentState.IN_PROGRESS;
