@@ -3,20 +3,29 @@ package com.techcup.techcup_futbol.core.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @Entity
+@Table (name= "tournaments")
 public class Tournament {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private LocalDateTime startDate;
 
+    @Column(nullable = false)
     private LocalDateTime endDate;
 
     private Double registrationFee;
@@ -26,6 +35,7 @@ public class Tournament {
     private String rules;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TournamentState currentState;
 
     public void startTournament() {
@@ -36,6 +46,25 @@ public class Tournament {
         this.currentState = TournamentState.COMPLETED;
     }
 
-    public void generateFixture() {}
+
+    public List<Match> generateFixture(List<Team> equipos) {
+        if (equipos == null || equipos.size() < 2) {
+            throw new IllegalArgumentException(
+                    "Se necesitan al menos 2 equipos para generar el fixture");
+        }
+
+        List<Team> mezclados = new ArrayList<>(equipos);
+        Collections.shuffle(mezclados, new SecureRandom());
+
+        List<Match> partidos = new ArrayList<>();
+        for (int i = 0; i + 1 < mezclados.size(); i += 2) {
+            Match partido = new Match();
+            partido.setId(UUID.randomUUID().toString());
+            partido.setLocalTeam(mezclados.get(i));
+            partido.setVisitorTeam(mezclados.get(i + 1));
+            partidos.add(partido);
+        }
+        return partidos;
+    }
 
 }

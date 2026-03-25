@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol.core.validator;
 
-import com.techcup.techcup_futbol.exception.PlayerException;
+import com.techcup.techcup_futbol.core.exception.PlayerException;
 
 public class EmailValidator {
 

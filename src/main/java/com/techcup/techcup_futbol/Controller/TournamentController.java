@@ -3,7 +3,6 @@ package com.techcup.techcup_futbol.Controller;
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
 import com.techcup.techcup_futbol.core.service.TournamentService;
-import com.techcup.techcup_futbol.exception.TournamentException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -101,9 +100,4 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.updateStatus(id, "DELETED"));
     }
 
-    @ExceptionHandler(TournamentException.class)
-    public ResponseEntity<String> handleTournamentException(TournamentException e) {
-        log.error("TournamentException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 }

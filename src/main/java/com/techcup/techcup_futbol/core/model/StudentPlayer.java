@@ -1,5 +1,6 @@
 package com.techcup.techcup_futbol.core.model;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,6 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
+@DiscriminatorValue("STUDENT")
 public class StudentPlayer extends Player {
 
     private int semester;

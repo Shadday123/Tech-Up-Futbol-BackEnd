@@ -6,7 +6,6 @@ import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.service.PlayerService;
 import com.techcup.techcup_futbol.core.service.TeamService;
-import com.techcup.techcup_futbol.exception.TeamException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -133,9 +132,5 @@ public class TeamController {
         );
     }
 
-    @ExceptionHandler(TeamException.class)
-    public ResponseEntity<String> handleTeamException(TeamException e) {
-        log.error("TeamException — campo: {} | mensaje: {}", e.getField(), e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+
 }

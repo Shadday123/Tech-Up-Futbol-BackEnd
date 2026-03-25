@@ -26,3 +26,4 @@ public class EliminationStrategy implements FixtureStrategy{
                 .collect(Collectors.toList());
     }
 }
+
