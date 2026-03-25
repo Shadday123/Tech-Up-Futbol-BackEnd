@@ -17,7 +17,9 @@ logging:
     com.techcup.techcup_futbol: DEBUG
     org.springframework: INFO
     org.hibernate: WARN
-
-logging:
   file:
     name: logs/techcup.log
+
+jwt:
+  secret: "TechCupFutbol2026ClaveSecretaMuyLargaParaQueSean256BitsMinimo!!"
+  expiration-ms: 86400000

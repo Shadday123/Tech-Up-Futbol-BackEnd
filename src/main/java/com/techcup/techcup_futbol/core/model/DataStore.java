@@ -138,6 +138,23 @@ public class DataStore {
         j8.setCaptain(false);
         j8.setSemester(3);
         jugadores.put(j8.getId(), j8);
+
+        // Usuario organizador para pruebas de login
+        StudentPlayer organizador = new StudentPlayer();
+        organizador.setId("J-ORG");
+        organizador.setFullname("Organizador TechCup");
+        organizador.setEmail("organizador@escuelaing.edu.co");
+        organizador.setNumberID(999999);
+        organizador.setPosition(PositionEnum.GoalKeeper);
+        organizador.setDorsalNumber(99);
+        organizador.setAge(30);
+        organizador.setGender("Masculino");
+        organizador.setCaptain(true);
+        organizador.setSemester(10);
+// Contraseña: Admin123 hasheada con BCrypt
+        organizador.setPasswordHash(
+                "$2a$10$tao5RmTFzFWXFF1wze8hJ.W6C3xMkbmr3aWr7xxQAsQW1gwivDi5C");
+        jugadores.put(organizador.getId(), organizador);
     }
 
 
