@@ -5,6 +5,9 @@ spring:
   application:
     name: techcup-futbol
 
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
   datasource:
     url : ${DB_URL}
     username: ${DB_USER}
@@ -28,3 +31,7 @@ logging:
 
   file:
     name: logs/techcup.log
+
+jwt:
+  secret: "TechCupFutbol2026ClaveSecretaMuyLargaParaQueSean256BitsMinimo!!"
+  expiration-ms: 86400000
