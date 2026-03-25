@@ -4,6 +4,7 @@ import com.techcup.techcup_futbol.Controller.dto.RefereeDTOs.*;
 import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.Referee;
 import com.techcup.techcup_futbol.core.exception.RefereeException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +56,19 @@ public class RefereeServiceImpl implements RefereeService {
                     String.format(RefereeException.REFEREE_NOT_FOUND, request.refereeId()));
         }
 
-        matchService.findAll();
+        Map<String, Match> matches = matchService.getMatches();
+        Match match = matches.get(matchId);
+        if (match == null) {
+            throw new RefereeException("matchId",
+                    String.format(RefereeException.MATCH_NOT_FOUND, matchId));
+        }
+
 
         if (matchRefereeIndex.containsKey(matchId)) {
             throw new RefereeException("match", RefereeException.MATCH_ALREADY_HAS_REFEREE);
         }
 
-        //referee.getAssignedMatches().add(match);
+        referee.getAssignedMatches().add(match);
         matchRefereeIndex.put(matchId, referee.getId());
 
         log.info("Árbitro '{}' asignado al partido {}", referee.getFullname(), matchId);

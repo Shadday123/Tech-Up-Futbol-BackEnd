@@ -49,6 +49,21 @@ public class TeamException extends RuntimeException {
     public static final String PLAYER_NOT_IN_TEAM =
             "El jugador '%s' no pertenece al equipo '%s'.";
 
+    public static final String PLAYER_NOT_AVAILABLE =
+            "El jugador '%s' no está disponible para recibir invitaciones. "
+                    + "Debe activar su disponibilidad antes de unirse a un equipo.";
+
+    public static final String TEAM_REQUIRES_PLAYERS =
+            "El equipo '%s' debe tener al menos un jugador. "
+                    + "No se puede eliminar al único jugador del equipo.";
+
+    public static final String CAPTAIN_NOT_IN_PLAYERS =
+            "El capitán debe estar incluido en la lista inicial de jugadores del equipo.";
+
+    public static final String CANNOT_REMOVE_CAPTAIN =
+            "No se puede eliminar al capitán '%s' del equipo. "
+                    + "Asigne un nuevo capitán antes de removerlo.";
+
 
     private final String field;
 

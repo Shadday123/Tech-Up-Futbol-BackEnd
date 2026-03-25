@@ -43,6 +43,37 @@ public class TeamValidator {
         }
     }
 
+    /**
+     * Validación de composición al crear el equipo.
+     * Un equipo no puede existir sin jugadores.
+     * El capitán debe estar incluido en la lista de jugadores.
+     * Todos los jugadores deben estar disponibles.
+     */
+    public static void validateCreationPlayers(Team equipo) {
+        if (equipo.getPlayers() == null || equipo.getPlayers().isEmpty()) {
+            throw new TeamException("players",
+                    String.format(TeamException.PLAYERS_LIST_EMPTY, equipo.getTeamName()));
+        }
+
+        boolean captainInPlayers = equipo.getPlayers().stream()
+                .anyMatch(p -> p.getId() != null
+                        && p.getId().equals(equipo.getCaptain().getId()));
+        if (!captainInPlayers) {
+            throw new TeamException("captain", TeamException.CAPTAIN_NOT_IN_PLAYERS);
+        }
+
+        for (Player p : equipo.getPlayers()) {
+            if (p.isHaveTeam()) {
+                throw new TeamException("player",
+                        String.format(TeamException.PLAYER_ALREADY_HAS_TEAM, p.getFullname()));
+            }
+            if (!p.isDisponible()) {
+                throw new TeamException("disponibilidad",
+                        String.format(TeamException.PLAYER_NOT_AVAILABLE, p.getFullname()));
+            }
+        }
+    }
+
     public static void validatePlayerAddition(Team equipo, Player jugador) {
         if (jugador == null) {
             throw new TeamException("player", TeamException.PLAYER_NULL);

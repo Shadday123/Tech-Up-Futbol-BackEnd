@@ -20,4 +20,7 @@ public interface MatchService {
     boolean isResultRegistered(String matchId);
 
     void registerMatch(Match match);
+
+    // Expone el mapa interno de partidos para RefereeService y BracketService
+    java.util.Map<String, com.techcup.techcup_futbol.core.model.Match> getMatches();
 }

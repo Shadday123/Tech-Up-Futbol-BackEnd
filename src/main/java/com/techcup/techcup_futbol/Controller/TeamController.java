@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/teams")
-@Tag(name = "Teams", description = "API para la gestión de equipos")
+@Tag(name = "Equipos", description = "Creación de equipos, invitación y remoción de jugadores")
 public class TeamController {
 
     private static final Logger log = LoggerFactory.getLogger(TeamController.class);
@@ -45,15 +45,18 @@ public class TeamController {
 
         log.info("POST /api/teams — nombre: {}", request.getTeamName());
 
+        Player capitan = playerService.obtenerPorId(request.getCaptainId());
+
+        List<Player> jugadores = request.getPlayerIds().stream()
+                .map(playerService::obtenerPorId)
+                .toList();
+
         Team teamEntity = new Team();
         teamEntity.setTeamName(request.getTeamName());
         teamEntity.setShieldUrl(request.getShieldUrl());
         teamEntity.setUniformColors(request.getUniformColors());
-
-        if (request.getCaptainId() != null) {
-            Player capitan = playerService.obtenerPorId(request.getCaptainId());
-            teamEntity.setCaptain(capitan);
-        }
+        teamEntity.setCaptain(capitan);
+        teamEntity.setPlayers(new java.util.ArrayList<>(jugadores));
 
         Team saved = teamService.createTeam(teamEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(saved));

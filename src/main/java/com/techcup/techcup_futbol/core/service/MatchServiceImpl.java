@@ -179,6 +179,10 @@ public class MatchServiceImpl implements MatchService {
         matchEvents.putIfAbsent(match.getId(), new ArrayList<>());
     }
 
+    @Override
+    public Map<String, Match> getMatches() {
+        return matches;
+    }
     private boolean isPlayerInTeam(String playerId, Team team) {
         if (team.getPlayers() == null) return false;
         return team.getPlayers().stream().anyMatch(p -> p.getId().equals(playerId));

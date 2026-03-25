@@ -1,19 +1,15 @@
 package com.techcup.techcup_futbol.core.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
+
 import java.time.LocalDateTime;
-@Entity
+
 @Data
 public class Match {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @OneToOne
     private Team localTeam;
-    @OneToOne
     private Team visitorTeam;
 
     private LocalDateTime dateTime;
@@ -26,7 +22,6 @@ public class Match {
 
     private int field;
 
-
     public int getGoalsFor(Team team) {
         if (team.equals(localTeam)) return scoreLocal;
         if (team.equals(visitorTeam)) return scoreVisitor;
@@ -38,7 +33,4 @@ public class Match {
         if (team.equals(visitorTeam)) return scoreLocal;
         return 0;
     }
-
-
-
 }
