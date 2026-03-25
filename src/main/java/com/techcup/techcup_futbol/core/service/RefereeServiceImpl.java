@@ -4,6 +4,7 @@ import com.techcup.techcup_futbol.Controller.dto.RefereeDTOs.*;
 import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.Referee;
 import com.techcup.techcup_futbol.core.exception.RefereeException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

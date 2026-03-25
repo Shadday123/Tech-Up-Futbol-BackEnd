@@ -1,21 +1,18 @@
 package com.techcup.techcup_futbol.core.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
+
+import com.techcup.techcup_futbol.util.IdGenerator;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Data
-@Entity
 public class Tournament {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     private String name;
@@ -28,10 +25,22 @@ public class Tournament {
 
     private int maxTeams;
 
+    private TournamentState currentState;
+
+    private String configId;
+
     private String rules;
 
-    @Enumerated(EnumType.STRING)
-    private TournamentState currentState;
+    private LocalDateTime registrationDeadline;
+
+    private List<String> importantDates;   // formato: "descripcion|datetime"
+
+    private List<String> matchSchedules;   // formato: "dia|horaInicio|horaFin"
+
+    private List<String> fields;           // formato: "nombre|ubicacion"
+
+    private String sanctions;
+
 
     public void startTournament() {
         this.currentState = TournamentState.IN_PROGRESS;
@@ -41,6 +50,9 @@ public class Tournament {
         this.currentState = TournamentState.COMPLETED;
     }
 
+    public boolean hasConfig() {
+        return this.configId != null;
+    }
 
     public List<Match> generateFixture(List<Team> equipos) {
         if (equipos == null || equipos.size() < 2) {
@@ -54,12 +66,11 @@ public class Tournament {
         List<Match> partidos = new ArrayList<>();
         for (int i = 0; i + 1 < mezclados.size(); i += 2) {
             Match partido = new Match();
-            partido.setId(UUID.randomUUID().toString());
+            partido.setId(IdGenerator.generateId());
             partido.setLocalTeam(mezclados.get(i));
             partido.setVisitorTeam(mezclados.get(i + 1));
             partidos.add(partido);
         }
         return partidos;
     }
-
 }

@@ -4,6 +4,7 @@ import com.techcup.techcup_futbol.Controller.dto.PlayerSearchRequest;
 import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
 import com.techcup.techcup_futbol.core.model.PositionEnum;
 import com.techcup.techcup_futbol.core.service.PlayerSearchService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/players/search")
+@Tag(name = "Mercado de Jugadores", description = "Búsqueda y filtrado de jugadores disponibles (sin equipo y con disponibilidad activa) para ser invitados a equipos")
 public class PlayerSearchController {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerSearchController.class);

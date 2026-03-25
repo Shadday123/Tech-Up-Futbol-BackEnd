@@ -2,6 +2,8 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
+import com.techcup.techcup_futbol.Controller.dto.TournamentConfigDTOs.CreateTournamentConfigRequest;
+import com.techcup.techcup_futbol.Controller.dto.TournamentConfigDTOs.TournamentConfigResponse;
 import com.techcup.techcup_futbol.core.service.TournamentService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tournaments")
-@Tag(name = "Tournaments", description = "API para la gestión de torneos")
+@Tag(name = "Torneos", description = "Ciclo de vida del torneo (DRAFT → ACTIVE → IN_PROGRESS → COMPLETED) y configuración de reglas, fechas y canchas")
 public class TournamentController {
 
     private static final Logger log = LoggerFactory.getLogger(TournamentController.class);
@@ -31,15 +33,16 @@ public class TournamentController {
         this.tournamentService = tournamentService;
     }
 
-    @Operation(summary = "Crear torneo", description = "Crea un nuevo torneo")
+    // ── Torneo
+
+    @Operation(summary = "Crear torneo", description = "Crea un nuevo torneo en estado DRAFT")
     @ApiResponse(responseCode = "201", description = "Torneo creado correctamente")
     @PostMapping
     public ResponseEntity<TournamentResponse> create(
             @Valid @RequestBody CreateTournamentRequest request) {
 
         log.info("POST /api/tournaments — nombre: {}", request.name());
-        TournamentResponse created = tournamentService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tournamentService.create(request));
     }
 
     @Operation(summary = "Listar torneos", description = "Obtiene todos los torneos")
@@ -50,7 +53,7 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.findAll());
     }
 
-    @Operation(summary = "Buscar torneo por ID", description = "Obtiene un torneo por su ID")
+    @Operation(summary = "Buscar torneo por ID")
     @ApiResponse(responseCode = "200", description = "Torneo encontrado")
     @GetMapping("/{id}")
     public ResponseEntity<TournamentResponse> findById(
@@ -60,44 +63,53 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.findById(id));
     }
 
-    @Operation(summary = "Iniciar torneo", description = "Cambia el estado del torneo a ACTIVO")
-    @ApiResponse(responseCode = "200", description = "Torneo iniciado")
+    @Operation(summary = "Activar torneo", description = "Cambia el estado a ACTIVE")
     @PutMapping("/{id}/start")
-    public ResponseEntity<TournamentResponse> start(
-            @Parameter(description = "ID del torneo") @PathVariable String id) {
-
+    public ResponseEntity<TournamentResponse> start(@PathVariable String id) {
         log.info("PUT /api/tournaments/{}/start", id);
         return ResponseEntity.ok(tournamentService.updateStatus(id, "ACTIVE"));
     }
 
-    @Operation(summary = "Poner torneo en progreso", description = "Cambia el estado del torneo a EN PROGRESO")
-    @ApiResponse(responseCode = "200", description = "Torneo en progreso")
+    @Operation(summary = "Poner torneo en progreso", description = "Cambia el estado a IN_PROGRESS")
     @PutMapping("/{id}/progress")
-    public ResponseEntity<TournamentResponse> progress(
-            @Parameter(description = "ID del torneo") @PathVariable String id) {
-
+    public ResponseEntity<TournamentResponse> progress(@PathVariable String id) {
         log.info("PUT /api/tournaments/{}/progress", id);
         return ResponseEntity.ok(tournamentService.updateStatus(id, "IN_PROGRESS"));
     }
 
-    @Operation(summary = "Finalizar torneo", description = "Cambia el estado del torneo a COMPLETADO")
-    @ApiResponse(responseCode = "200", description = "Torneo finalizado")
+    @Operation(summary = "Finalizar torneo", description = "Cambia el estado a COMPLETED")
     @PutMapping("/{id}/finish")
-    public ResponseEntity<TournamentResponse> finish(
-            @Parameter(description = "ID del torneo") @PathVariable String id) {
-
+    public ResponseEntity<TournamentResponse> finish(@PathVariable String id) {
         log.info("PUT /api/tournaments/{}/finish", id);
         return ResponseEntity.ok(tournamentService.updateStatus(id, "COMPLETED"));
     }
 
-    @Operation(summary = "Eliminar torneo (lógico)", description = "Marca el torneo como eliminado")
-    @ApiResponse(responseCode = "200", description = "Torneo eliminado lógicamente")
+    @Operation(summary = "Eliminar torneo (lógico)", description = "Marca el torneo como DELETED")
     @PutMapping("/{id}/delete")
-    public ResponseEntity<TournamentResponse> softDelete(
-            @Parameter(description = "ID del torneo") @PathVariable String id) {
-
+    public ResponseEntity<TournamentResponse> softDelete(@PathVariable String id) {
         log.info("PUT /api/tournaments/{}/delete", id);
         return ResponseEntity.ok(tournamentService.updateStatus(id, "DELETED"));
     }
 
+    // ── Configuración del torneo
+
+    @Operation(summary = "Crear o actualizar configuración del torneo",
+               description = "Establece fechas, reglas, horarios y canchas del torneo")
+    @ApiResponse(responseCode = "200", description = "Configuración guardada")
+    @PutMapping("/{id}/config")
+    public ResponseEntity<TournamentConfigResponse> createOrUpdateConfig(
+            @PathVariable String id,
+            @Valid @RequestBody CreateTournamentConfigRequest request) {
+
+        log.info("PUT /api/tournaments/{}/config", id);
+        return ResponseEntity.ok(tournamentService.createOrUpdateConfig(id, request));
+    }
+
+    @Operation(summary = "Obtener configuración del torneo")
+    @ApiResponse(responseCode = "200", description = "Configuración encontrada")
+    @GetMapping("/{id}/config")
+    public ResponseEntity<TournamentConfigResponse> findConfig(@PathVariable String id) {
+        log.info("GET /api/tournaments/{}/config", id);
+        return ResponseEntity.ok(tournamentService.findConfig(id));
+    }
 }

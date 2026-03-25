@@ -22,7 +22,7 @@ public class PlayerSearchServiceImpl implements PlayerSearchService {
         log.info("Buscando jugadores con filtros: {}", f);
 
         Stream<Player> stream = DataStore.jugadores.values().stream()
-                .filter(p -> !p.isHaveTeam());
+                .filter(p -> !p.isHaveTeam() && p.isDisponible());
 
         if (f.position() != null) {
             stream = stream.filter(p -> f.position().equals(p.getPosition()));

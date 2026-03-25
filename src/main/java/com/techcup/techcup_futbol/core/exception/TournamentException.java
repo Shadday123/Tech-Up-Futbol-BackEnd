@@ -29,6 +29,10 @@ public class TournamentException extends RuntimeException {
     public static final String TOURNAMENT_NOT_FOUND =
             "No se encontró el torneo con ID: %s";
 
+    public static final String CONFIG_NOT_FOUND =
+            "El torneo con ID '%s' aún no tiene configuración. "
+                    + "Use PUT /api/tournaments/{id}/config para crearla.";
+
     private final String field;
 
     public TournamentException(String message) {

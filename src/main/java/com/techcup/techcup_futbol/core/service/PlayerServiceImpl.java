@@ -5,10 +5,11 @@ import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.validator.EmailValidator;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
-import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import com.techcup.techcup_futbol.util.IdGenerator;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,10 +29,8 @@ public class PlayerServiceImpl implements PlayerService {
     public void registrar(Player jugador, String correo) {
         String ts = LocalDateTime.now().format(FMT);
 
-        if (jugador.getId() == null || jugador.getId().isBlank()) {
-            jugador.setId(IdGenerator.generateId());
-            log.debug("[{}] ID auto-generado: {}", ts, jugador.getId());
-        }
+        jugador.setId(IdGenerator.generateId());
+        log.debug("[{}] ID generado: {}", ts, jugador.getId());
 
         log.info("[{}] Iniciando registro — jugador: {} | email: {}",
                 ts, jugador.getFullname(), correo);
@@ -70,16 +69,15 @@ public class PlayerServiceImpl implements PlayerService {
                 ts, jugador.getFullname(), disponible);
 
         Player persistido = obtenerPorId(jugador.getId());
-        boolean estadoActual = !persistido.isHaveTeam(); // haveTeam=false → disponible=true
 
-        if (estadoActual == disponible) {
+        if (persistido.isDisponible() == disponible) {
             String msg = disponible
                     ? String.format(PlayerException.PLAYER_ALREADY_AVAILABLE, persistido.getFullname())
                     : String.format(PlayerException.PLAYER_ALREADY_UNAVAILABLE, persistido.getFullname());
-            throw new PlayerException("availability", msg);
+            throw new PlayerException("disponibilidad", msg);
         }
 
-        persistido.setHaveTeam(!disponible);
+        persistido.setDisponible(disponible);
         log.info("Disponibilidad actualizada — jugador: {} | disponible ahora: {}",
                 persistido.getFullname(), disponible);
     }

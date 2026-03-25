@@ -24,9 +24,9 @@ public class PlayerException extends RuntimeException {
 
 
     public static final String PLAYER_ALREADY_AVAILABLE =
-            "El jugador '%s' ya está disponible (sin equipo).";
+            "El jugador '%s' ya está marcado como disponible.";
     public static final String PLAYER_ALREADY_UNAVAILABLE =
-            "El jugador '%s' ya está marcado como con equipo.";
+            "El jugador '%s' ya está marcado como no disponible.";
 
     public static final String PHOTO_URL_EMPTY =
             "La URL de la foto no puede estar vacía.";

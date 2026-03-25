@@ -10,6 +10,7 @@ public record PlayerResponse(
         Integer dorsalNumber,
         String photoUrl,
         boolean haveTeam,
+        boolean disponible,
         Integer age,
         String gender,
         boolean isCaptain,

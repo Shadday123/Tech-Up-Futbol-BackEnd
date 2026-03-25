@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.*;
 import com.techcup.techcup_futbol.core.service.PaymentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/payments")
+@Tag(name = "Pagos", description = "Gestión de comprobantes de inscripción al torneo. Flujo: PENDING → UNDER_REVIEW → APPROVED / REJECTED. Un pago rechazado puede volver a PENDING")
 public class PaymentController {
 
     private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
