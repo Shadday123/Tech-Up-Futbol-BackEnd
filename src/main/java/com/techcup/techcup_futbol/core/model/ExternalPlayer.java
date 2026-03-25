@@ -1,4 +1,5 @@
 package com.techcup.techcup_futbol.core.model;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -6,6 +7,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
+@DiscriminatorValue("EXTERNAL")
 public class ExternalPlayer extends Player {
 
     @Override

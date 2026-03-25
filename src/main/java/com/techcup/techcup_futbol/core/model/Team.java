@@ -13,7 +13,6 @@ import java.util.List;
 public class Team {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
     @Column(nullable = false, unique = true)
@@ -25,11 +24,18 @@ public class Team {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private TeamStatus status;
 
-    @OneToOne
-    private Player captain;
-
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+            name = "team_players",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "plyaer_id")
+    )
     private List<Player> players;
+
+    @ManyToOne
+    @JoinColumn(name = "captain_id")
+    private Player captain;
 
 }

@@ -2,6 +2,8 @@ package com.techcup.techcup_futbol.Controller.mapper;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.Controller.dto.TournamentDTO;
 
+import java.util.UUID;
+
 public class TournamentMapper {
 
     public static Tournament toModel(TournamentDTO dto) {
@@ -12,7 +14,9 @@ public class TournamentMapper {
 
         Tournament tournament = new Tournament();
 
-        tournament.setId(dto.getId());
+        if (dto.getId() != null && !dto.getId().isBlank()){
+            tournament.setId(UUID.fromString(dto.getId()));
+        }
         tournament.setName(dto.getName());
         tournament.setStartDate(dto.getStartDate());
         tournament.setEndDate(dto.getEndDate());
@@ -32,7 +36,9 @@ public class TournamentMapper {
 
         TournamentDTO dto = new TournamentDTO();
 
-        dto.setId(tournament.getId());
+        if (tournament.getId() != null){
+            dto.setId(tournament.getId().toString());
+        }
         dto.setName(tournament.getName());
         dto.setStartDate(tournament.getStartDate());
         dto.setEndDate(tournament.getEndDate());
@@ -43,5 +49,4 @@ public class TournamentMapper {
 
         return dto;
     }
-
 }

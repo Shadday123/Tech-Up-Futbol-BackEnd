@@ -17,7 +17,7 @@ public class Tournament {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private UUID id;
 
     @Column(nullable = false)
     private String name;

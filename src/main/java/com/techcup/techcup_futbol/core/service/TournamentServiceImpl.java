@@ -2,18 +2,20 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
-import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
+import com.techcup.techcup_futbol.repository.TournamentRepository;
 import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,18 +23,25 @@ public class TournamentServiceImpl implements TournamentService {
 
     private static final Logger log = LoggerFactory.getLogger(TournamentServiceImpl.class);
 
+    @Autowired
+    private TournamentRepository tournamentRepository;
+
     // ── CREATE
 
     @Override
     public TournamentResponse create(CreateTournamentRequest request) {
         log.info("Creando torneo: '{}'", request.name());
 
+        if (request == null){
+            throw new TournamentException("request", "No puede ser null");
+        }
+
         TournamentValidator.validate(request);
 
         String id = IdGenerator.generateId();
 
         Tournament nuevoTorneo = new Tournament();
-        nuevoTorneo.setId(id);
+        nuevoTorneo.setId(UUID.fromString("000000"));
         nuevoTorneo.setName(request.name());
         nuevoTorneo.setStartDate(request.startDate());
         nuevoTorneo.setEndDate(request.endDate());
@@ -41,7 +50,7 @@ public class TournamentServiceImpl implements TournamentService {
         nuevoTorneo.setRules(request.rules());
         nuevoTorneo.setCurrentState(TournamentState.DRAFT);
 
-        DataStore.torneos.put(id, nuevoTorneo);
+        tournamentRepository.save(nuevoTorneo);
         log.info("Torneo creado — ID: {} | Estado: DRAFT | MaxEquipos: {}",
                 id, request.maxTeams());
 
@@ -54,11 +63,8 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentResponse updateStatus(String id, String nextStateName) {
         log.info("Actualizando estado del torneo ID: {} → '{}'", id, nextStateName);
 
-        Tournament torneo = DataStore.torneos.get(id);
-        if (torneo == null) {
-            throw new TournamentException("id",
-                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
-        }
+        Tournament torneo = tournamentRepository.findById(id)
+                .orElseThrow(() -> new TournamentException("id",String.format(TournamentException.TOURNAMENT_NOT_FOUND, id)));
 
         TournamentState next;
         try {
@@ -83,12 +89,9 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentResponse findById(String id) {
         log.info("Buscando torneo con ID: {}", id);
 
-        Tournament torneo = DataStore.torneos.get(id);
-        if (torneo == null) {
-            throw new TournamentException("id",
-                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
-        }
-
+        Tournament torneo = tournamentRepository.findById(id)
+                .orElseThrow(() -> new TournamentException("id",
+                        String.format(TournamentException.TOURNAMENT_NOT_FOUND,id)));
         return mapToResponse(torneo);
     }
 
@@ -96,9 +99,10 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public List<TournamentResponse> findAll() {
-        List<TournamentResponse> torneos = DataStore.torneos.values().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        List<TournamentResponse> torneos = tournamentRepository.findAll()
+                        .stream()
+                        .map(this::mapToResponse)
+                        .toList();
         log.info("Total torneos listados: {}", torneos.size());
         return torneos;
     }
@@ -107,7 +111,7 @@ public class TournamentServiceImpl implements TournamentService {
 
     private TournamentResponse mapToResponse(Tournament t) {
         return new TournamentResponse(
-                t.getId(),
+                t.getId().toString(),
                 t.getName(),
                 t.getStartDate(),
                 t.getEndDate(),
