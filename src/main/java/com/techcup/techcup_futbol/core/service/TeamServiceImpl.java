@@ -9,12 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.techcup.techcup_futbol.util.IdGenerator;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class TeamServiceImpl implements TeamService {
@@ -29,26 +30,28 @@ public class TeamServiceImpl implements TeamService {
     public Team createTeam(Team team) {
         String ts = LocalDateTime.now().format(FMT);
 
-        if (team.getId() == null || team.getId().isBlank()) {
-            team.setId(UUID.randomUUID().toString());
-        }
+        team.setId(IdGenerator.generateId());
 
         log.info("[{}] Creando equipo: {} | ID: {}", ts, team.getTeamName(), team.getId());
 
-        // Validar nombre único contra todos los equipos existentes
+        // Validar nombre único y capitán
         TeamValidator.validateTeamName(team.getTeamName(), getAllTeams());
         TeamValidator.validateCaptain(team);
+        TeamValidator.validateCreationPlayers(team);
 
-        // Asegurarse de que la lista de jugadores esté inicializada
-        if (team.getPlayers() == null) {
-            team.setPlayers(new ArrayList<>());
-        }
+        // Marcar a todos los jugadores iniciales como integrantes del equipo
+        team.getPlayers().forEach(p -> {
+            p.setHaveTeam(true);
+            log.debug("Jugador '{}' vinculado al nuevo equipo '{}'.",
+                    p.getFullname(), team.getTeamName());
+        });
 
         DataStore.equipos.put(team.getId(), team);
 
-        log.info("Equipo creado — ID: {} | Capitán: {} | Total equipos: {}",
+        log.info("Equipo creado — ID: {} | Capitán: {} | Jugadores: {} | Total equipos: {}",
                 team.getId(),
                 team.getCaptain().getFullname(),
+                team.getPlayers().size(),
                 DataStore.equipos.size());
 
         return team;
@@ -64,6 +67,11 @@ public class TeamServiceImpl implements TeamService {
 
         Team team = obtenerPorId(teamId);
         TeamValidator.validatePlayerAddition(team, player);
+
+        if (!player.isDisponible()) {
+            throw new TeamException("disponibilidad",
+                    String.format(TeamException.PLAYER_NOT_AVAILABLE, player.getFullname()));
+        }
 
         if (team.getPlayers() == null) {
             team.setPlayers(new ArrayList<>());
@@ -97,6 +105,16 @@ public class TeamServiceImpl implements TeamService {
                 .orElseThrow(() -> new TeamException("player",
                         String.format(TeamException.PLAYER_NOT_IN_TEAM,
                                 playerId, team.getTeamName())));
+
+        if (team.getCaptain() != null && team.getCaptain().getId().equals(playerId)) {
+            throw new TeamException("captain",
+                    String.format(TeamException.CANNOT_REMOVE_CAPTAIN, jugador.getFullname()));
+        }
+
+        if (team.getPlayers().size() <= 1) {
+            throw new TeamException("players",
+                    String.format(TeamException.TEAM_REQUIRES_PLAYERS, team.getTeamName()));
+        }
 
         team.getPlayers().remove(jugador);
         jugador.setHaveTeam(false);

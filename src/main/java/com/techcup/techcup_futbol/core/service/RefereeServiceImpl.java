@@ -4,6 +4,7 @@ import com.techcup.techcup_futbol.Controller.dto.RefereeDTOs.*;
 import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.Referee;
 import com.techcup.techcup_futbol.core.exception.RefereeException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class RefereeServiceImpl implements RefereeService {
         }
 
         Referee referee = new Referee();
-        referee.setId(UUID.randomUUID().toString());
+        referee.setId(IdGenerator.generateId());
         referee.setFullname(request.fullname());
         referee.setEmail(request.email());
         referee.setAssignedMatches(new ArrayList<>());

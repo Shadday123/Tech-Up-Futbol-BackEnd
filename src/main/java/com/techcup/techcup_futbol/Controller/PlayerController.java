@@ -5,6 +5,7 @@ import com.techcup.techcup_futbol.Controller.dto.PlayerResponse;
 import com.techcup.techcup_futbol.Controller.mapper.PlayerMapper;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.service.PlayerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/players")
+@Tag(name = "Jugadores", description = "Registro de jugadores, actualización de perfil y gestión de disponibilidad para el mercado de fichajes")
 public class PlayerController {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerController.class);
@@ -31,10 +32,6 @@ public class PlayerController {
 
     @PostMapping("/registro")
     public ResponseEntity<PlayerResponse> registrar(@Valid @RequestBody PlayerDTO dto) {
-        if (dto.getId() == null || dto.getId().isBlank()) {
-            dto.setId(UUID.randomUUID().toString());
-        }
-
         log.info("POST /api/players/registro — jugador: {} | email: {} | tipo: {}",
                 dto.getFullname(), dto.getEmail(), dto.getPlayerType());
 
@@ -57,12 +54,12 @@ public class PlayerController {
         return ResponseEntity.ok(PlayerMapper.mapToResponse(jugador));
     }
 
-    @PutMapping("/{id}/disponibilidad")
+    @PatchMapping("/{id}/disponibilidad")
     public ResponseEntity<PlayerResponse> cambiarDisponibilidad(
             @PathVariable String id,
             @RequestParam boolean disponible) {
 
-        log.info("PUT /api/players/{}/disponibilidad — disponible: {}", id, disponible);
+        log.info("PATCH /api/players/{}/disponibilidad — disponible: {}", id, disponible);
         Player jugador = playerService.obtenerPorId(id);
         playerService.cambiarDisponibilidad(jugador, disponible);
         return ResponseEntity.ok(PlayerMapper.mapToResponse(jugador));

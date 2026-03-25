@@ -3,6 +3,7 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.BracketDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.BracketException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,7 @@ public class BracketServiceImpl implements BracketService {
         }
 
         TournamentBrackets bracket = new TournamentBrackets();
-        bracket.setId(UUID.randomUUID().toString());
+        bracket.setId(IdGenerator.generateId());
         bracket.setTournament(tournament);
         bracket.setPhase(phase);
         bracket.setMatches(roundMatches);
@@ -166,7 +167,7 @@ public class BracketServiceImpl implements BracketService {
             }
 
             TournamentBrackets nextBracket = new TournamentBrackets();
-            nextBracket.setId(UUID.randomUUID().toString());
+            nextBracket.setId(IdGenerator.generateId());
             nextBracket.setTournament(tournament);
             nextBracket.setPhase(nextPhase);
             nextBracket.setMatches(nextMatches);
@@ -181,7 +182,7 @@ public class BracketServiceImpl implements BracketService {
 
     private Match buildMatch(Team local, Team visitor) {
         Match m = new Match();
-        m.setId(UUID.randomUUID().toString());
+        m.setId(IdGenerator.generateId());
         m.setLocalTeam(local);
         m.setVisitorTeam(visitor);
         return m;

@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
 import com.techcup.techcup_futbol.core.service.MatchService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/matches")
+@Tag(name = "Partidos", description = "Programación de encuentros entre equipos y registro de resultados. Los resultados actualizan automáticamente la tabla de posiciones")
 public class MatchController {
 
     private static final Logger log = LoggerFactory.getLogger(MatchController.class);

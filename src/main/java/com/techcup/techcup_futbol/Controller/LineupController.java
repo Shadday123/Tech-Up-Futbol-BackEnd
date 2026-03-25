@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.*;
 import com.techcup.techcup_futbol.core.service.LineupService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/lineups")
+@Tag(name = "Alineaciones", description = "Registro y consulta de formaciones por equipo por partido. Se requieren exactamente 7 titulares por equipo antes de iniciar un encuentro")
 public class LineupController {
 
     private static final Logger log = LoggerFactory.getLogger(LineupController.class);

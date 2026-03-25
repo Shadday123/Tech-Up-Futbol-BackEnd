@@ -89,6 +89,7 @@ public class PlayerMapper {
                 player.getDorsalNumber(),
                 player.getPhotoUrl(),
                 player.isHaveTeam(),
+                player.isDisponible(),
                 player.getAge(),
                 player.getGender(),
                 player.isCaptain(),

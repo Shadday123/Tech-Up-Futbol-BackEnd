@@ -3,6 +3,7 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.LineupException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -77,7 +78,7 @@ public class LineupServiceImpl implements LineupService {
                     .toList();
 
         Lineup lineup = new Lineup();
-        lineup.setId(UUID.randomUUID().toString());
+        lineup.setId(IdGenerator.generateId());
         lineup.setMatch(match);
         lineup.setTeam(team);
         lineup.setFormation(request.formation());

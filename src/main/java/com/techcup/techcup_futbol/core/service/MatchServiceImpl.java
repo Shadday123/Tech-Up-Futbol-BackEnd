@@ -3,6 +3,7 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         Match match = new Match();
-        match.setId(UUID.randomUUID().toString());
+        match.setId(IdGenerator.generateId());
         match.setLocalTeam(local);
         match.setVisitorTeam(visitor);
         match.setDateTime(request.dateTime());
@@ -118,7 +119,7 @@ public class MatchServiceImpl implements MatchService {
                             String.format(MatchException.PLAYER_NOT_IN_LINEUP, er.playerId()));
                 }
                 MatchEvent event = new MatchEvent();
-                event.setId(UUID.randomUUID().toString());
+                event.setId(IdGenerator.generateId());
                 event.setType(er.type());
                 event.setMinute(er.minute());
                 event.setPlayer(player);
