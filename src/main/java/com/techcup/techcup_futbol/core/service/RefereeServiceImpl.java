@@ -56,7 +56,7 @@ public class RefereeServiceImpl implements RefereeService {
                     String.format(RefereeException.REFEREE_NOT_FOUND, request.refereeId()));
         }
 
-        Map<String, Match> matches = matchService.findAll(matchId);
+        Map<String, Match> matches = matchService.getMatches();
         Match match = matches.get(matchId);
         if (match == null) {
             throw new RefereeException("matchId",
