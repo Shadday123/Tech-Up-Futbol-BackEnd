@@ -5,8 +5,11 @@ import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.validator.TeamValidator;
 import com.techcup.techcup_futbol.core.exception.TeamException;
+import com.techcup.techcup_futbol.repository.PlayerRepository;
+import com.techcup.techcup_futbol.repository.TeamRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.techcup.techcup_futbol.util.IdGenerator;
@@ -23,6 +26,12 @@ public class TeamServiceImpl implements TeamService {
     private static final Logger log = LoggerFactory.getLogger(TeamServiceImpl.class);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     // CREATE
 
@@ -46,13 +55,11 @@ public class TeamServiceImpl implements TeamService {
                     p.getFullname(), team.getTeamName());
         });
 
-        DataStore.equipos.put(team.getId(), team);
+        Team saved = teamRepository.save(team);
 
         log.info("Equipo creado — ID: {} | Capitán: {} | Jugadores: {} | Total equipos: {}",
-                team.getId(),
-                team.getCaptain().getFullname(),
-                team.getPlayers().size(),
-                DataStore.equipos.size());
+                saved.getId(),
+                saved.getCaptain().getFullname());
 
         return team;
     }
@@ -137,23 +144,14 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<Team> getAllTeams() {
         log.info("[{}] Listando todos los equipos — total: {}",
-                LocalDateTime.now().format(FMT), DataStore.equipos.size());
-        return new ArrayList<>(DataStore.equipos.values());
+                LocalDateTime.now().format(FMT));
+        return teamRepository.findAll();
     }
 
     @Override
     public Optional<Team> buscarPorId(String id) {
         log.info("[{}] Buscando equipo con ID: {}", LocalDateTime.now().format(FMT), id);
-        Optional<Team> resultado = Optional.ofNullable(DataStore.equipos.get(id));
-        if (resultado.isPresent()) {
-            Team t = resultado.get();
-            log.info("Equipo encontrado — Nombre: {} | Jugadores: {}",
-                    t.getTeamName(),
-                    t.getPlayers() != null ? t.getPlayers().size() : 0);
-        } else {
-            log.warn("No existe equipo con ID: {}", id);
-        }
-        return resultado;
+        return teamRepository.findById(id);
     }
 
     @Override
@@ -178,9 +176,7 @@ public class TeamServiceImpl implements TeamService {
             });
             log.info("Jugadores desvinculados: {}", equipo.getPlayers().size());
         }
-
-        DataStore.equipos.remove(id);
-        log.info("Equipo '{}' eliminado. Total equipos restantes: {}",
-                equipo.getTeamName(), DataStore.equipos.size());
+        teamRepository.deleteById(id);
+        log.info("Equipo '{}' eliminado. Total equipos restantes: {}", equipo.getTeamName());
     }
 }

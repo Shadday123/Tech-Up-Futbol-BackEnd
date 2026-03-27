@@ -5,8 +5,10 @@ import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.validator.EmailValidator;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
+import com.techcup.techcup_futbol.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.techcup.techcup_futbol.util.IdGenerator;
@@ -22,6 +24,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     // CREATE
 
@@ -44,11 +49,9 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         jugador.setEmail(correo);
-        DataStore.jugadores.put(jugador.getId(), jugador);
-
+        playerRepository.save(jugador);
         log.info("Jugador registrado — ID: {} | Email: {} | Total: {}",
-                jugador.getId(), correo, DataStore.jugadores.size());
-    }
+                jugador.getId(), correo);    }
 
     // UPDATE
 
@@ -87,7 +90,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<Player> listarJugadores() {
         log.info("[{}] Listando todos los jugadores del sistema", LocalDateTime.now().format(FMT));
-        List<Player> jugadores = new ArrayList<>(DataStore.jugadores.values());
+        List<Player> jugadores = playerRepository.findAll();
         if (jugadores.isEmpty()) {
             log.warn("No hay jugadores registrados en el sistema.");
         } else {
@@ -99,7 +102,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Optional<Player> buscarPorId(String id) {
         log.info("[{}] Buscando jugador con ID: {}", LocalDateTime.now().format(FMT), id);
-        Optional<Player> resultado = Optional.ofNullable(DataStore.jugadores.get(id));
+        Optional<Player> resultado = playerRepository.findById(id);
         if (resultado.isPresent()) {
             log.info("Jugador encontrado — Nombre: {}", resultado.get().getFullname());
         } else {
@@ -121,7 +124,7 @@ public class PlayerServiceImpl implements PlayerService {
         log.info("[{}] Eliminando jugador con ID: {}", LocalDateTime.now().format(FMT), id);
         Player jugador = obtenerPorId(id);
         log.info("Eliminando jugador: {} | Email: {}", jugador.getFullname(), jugador.getEmail());
-        DataStore.jugadores.remove(id);
-        log.info("Jugador eliminado. Total restante: {}", DataStore.jugadores.size());
+        playerRepository.deleteById(id);
+        log.info("Jugador eliminado correctamente");
     }
 }

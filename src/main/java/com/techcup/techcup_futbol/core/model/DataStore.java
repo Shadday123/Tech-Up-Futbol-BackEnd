@@ -1,16 +1,16 @@
 package com.techcup.techcup_futbol.core.model;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
 public class DataStore {
 
-    public static Map<String, Player>     jugadores = new HashMap<>();
-    public static Map<String, Team>       equipos   = new HashMap<>();
-    public static Map<String, Tournament> torneos   = new HashMap<>();
+    public static Map<String, Player>     jugadores = new ConcurrentHashMap<>();
+    public static Map<String, Team>       equipos   = new ConcurrentHashMap<>();
+    public static Map<String, Tournament> torneos   = new ConcurrentHashMap<>();
 
     public static void inicializarDatos() {
         inicializarJugadores();
@@ -154,6 +154,7 @@ public class DataStore {
 // Contraseña: Admin123 hasheada con BCrypt
         organizador.setPasswordHash(
                 "$2a$10$tao5RmTFzFWXFF1wze8hJ.W6C3xMkbmr3aWr7xxQAsQW1gwivDi5C");
+        organizador.setSystemRole(SystemRole.ORGANIZADOR);
         jugadores.put(organizador.getId(), organizador);
     }
 

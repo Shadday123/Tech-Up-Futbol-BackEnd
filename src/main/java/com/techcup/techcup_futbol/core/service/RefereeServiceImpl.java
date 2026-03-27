@@ -55,20 +55,14 @@ public class RefereeServiceImpl implements RefereeService {
             throw new RefereeException("refereeId",
                     String.format(RefereeException.REFEREE_NOT_FOUND, request.refereeId()));
         }
-
-        Map<String, Match> matches = matchService.getMatches();
-        Match match = matches.get(matchId);
-        if (match == null) {
-            throw new RefereeException("matchId",
-                    String.format(RefereeException.MATCH_NOT_FOUND, matchId));
-        }
+        matchService.findAll();
 
 
         if (matchRefereeIndex.containsKey(matchId)) {
             throw new RefereeException("match", RefereeException.MATCH_ALREADY_HAS_REFEREE);
         }
 
-        referee.getAssignedMatches().add(match);
+        //referee.getAssignedMatches().add(match);
         matchRefereeIndex.put(matchId, referee.getId());
 
         log.info("Árbitro '{}' asignado al partido {}", referee.getFullname(), matchId);

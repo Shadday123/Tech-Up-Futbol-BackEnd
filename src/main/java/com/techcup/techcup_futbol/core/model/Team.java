@@ -23,9 +23,17 @@ public class Team {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "captain_id")
     private Player captain;
 
-    private List<Player> players;
+    private TeamStatus status;
 
+    @ManyToMany
+    @JoinTable(
+            name = "team_players",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "plyaer_id")
+    )
+    private List<Player> players;
 }

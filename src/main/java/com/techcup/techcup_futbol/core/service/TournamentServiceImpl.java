@@ -8,14 +8,15 @@ import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
+import com.techcup.techcup_futbol.repository.TournamentRepository;
 import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import com.techcup.techcup_futbol.util.IdGenerator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,12 +27,18 @@ public class TournamentServiceImpl implements TournamentService {
 
     private static final Logger log = LoggerFactory.getLogger(TournamentServiceImpl.class);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    @Autowired
+    private TournamentRepository tournamentRepository;
 
     // ── CREATE
 
     @Override
     public TournamentResponse create(CreateTournamentRequest request) {
         log.info("Creando torneo: '{}'", request.name());
+
+        if (request == null){
+            throw new TournamentException("request", "No puede ser null");
+        }
 
         TournamentValidator.validate(request);
 
@@ -47,7 +54,7 @@ public class TournamentServiceImpl implements TournamentService {
         nuevoTorneo.setRules(request.rules());
         nuevoTorneo.setCurrentState(TournamentState.DRAFT);
 
-        DataStore.torneos.put(id, nuevoTorneo);
+        tournamentRepository.save(nuevoTorneo);
         log.info("Torneo creado — ID: {} | Estado: DRAFT | MaxEquipos: {}",
                 id, request.maxTeams());
 

@@ -1,6 +1,7 @@
 package com.techcup.techcup_futbol.core.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Player {
+@Table(name ="players")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name ="player_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class Player {
 
     private String id;
 
+    @Column(nullable = false)
     private String fullname;
     private String email;
 
@@ -30,6 +35,8 @@ public class Player {
     private int age;
     private String gender;
     private boolean captain;
+
+    private SystemRole systemRole = SystemRole.JUGADOR;
 
     @JsonIgnore
     private Affilation affiliation;
