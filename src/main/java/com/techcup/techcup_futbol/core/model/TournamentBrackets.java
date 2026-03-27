@@ -15,7 +15,4 @@ public class TournamentBrackets {
 
     private List<Match> matches;
 
-    public void promoteWinner(Match match) {
-        // Lógica para pasar al ganador a la siguiente fase
-    }
 }
