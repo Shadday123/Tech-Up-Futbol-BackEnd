@@ -16,7 +16,6 @@ public interface TournamentService {
     TournamentResponse updateStatus(String id, String nextState);
 
     // ── Configuración
-    TournamentConfigResponse createOrUpdateConfig(String tournamentId,
-                                                  CreateTournamentConfigRequest request);
+    TournamentConfigResponse createOrUpdateConfig(String tournamentId, CreateTournamentConfigRequest request);
     TournamentConfigResponse findConfig(String tournamentId);
 }

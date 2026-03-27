@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.security;
 
 import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.SystemRole;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        // Buscar el jugador en el DataStore por email
         Player player = DataStore.jugadores.values().stream()
                 .filter(p -> p.getEmail() != null
                         && p.getEmail().equalsIgnoreCase(email))
@@ -26,10 +26,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "No existe usuario con email: " + email));
 
-        // Asignar rol según si es capitán o no
-        String rol = player.isCaptain() ? "ROLE_CAPITAN" : "ROLE_JUGADOR";
+        SystemRole systemRole = player.getSystemRole() != null
+                ? player.getSystemRole() : SystemRole.JUGADOR;
+        String rol = "ROLE_" + systemRole.name();
 
-        // La contraseña viene del campo passwordHash del Player
         String password = player.getPasswordHash() != null
                 ? player.getPasswordHash()
                 : "";
