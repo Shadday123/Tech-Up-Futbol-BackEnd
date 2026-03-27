@@ -3,32 +3,32 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
 import com.techcup.techcup_futbol.Controller.dto.TournamentConfigDTOs.*;
+import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
-import com.techcup.techcup_futbol.repository.TournamentRepository;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
+import com.techcup.techcup_futbol.repository.TournamentRepository;
+import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TournamentServiceImpl implements TournamentService {
 
     private static final Logger log = LoggerFactory.getLogger(TournamentServiceImpl.class);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
-    private final TournamentRepository tournamentRepository;
-
-    public TournamentServiceImpl(TournamentRepository tournamentRepository) {
-        this.tournamentRepository = tournamentRepository;
-    }
+    @Autowired
+    private TournamentRepository tournamentRepository;
 
     // ── CREATE
 
@@ -36,22 +36,29 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentResponse create(CreateTournamentRequest request) {
         log.info("Creando torneo: '{}'", request.name());
 
+        if (request == null){
+            throw new TournamentException("request", "No puede ser null");
+        }
+
         TournamentValidator.validate(request);
 
-        Tournament torneo = new Tournament();
-        torneo.setName(request.name());
-        torneo.setStartDate(request.startDate());
-        torneo.setEndDate(request.endDate());
-        torneo.setRegistrationFee(request.registrationFee());
-        torneo.setMaxTeams(request.maxTeams());
-        torneo.setRules(request.rules());
-        torneo.setCurrentState(TournamentState.DRAFT);
+        String id = IdGenerator.generateId();
 
-        Tournament guardado = tournamentRepository.save(torneo);
+        Tournament nuevoTorneo = new Tournament();
+        nuevoTorneo.setId(id);
+        nuevoTorneo.setName(request.name());
+        nuevoTorneo.setStartDate(request.startDate());
+        nuevoTorneo.setEndDate(request.endDate());
+        nuevoTorneo.setRegistrationFee(request.registrationFee());
+        nuevoTorneo.setMaxTeams(request.maxTeams());
+        nuevoTorneo.setRules(request.rules());
+        nuevoTorneo.setCurrentState(TournamentState.DRAFT);
 
-        log.info("Torneo creado — ID: {} | Estado: DRAFT", guardado.getId());
+        tournamentRepository.save(nuevoTorneo);
+        log.info("Torneo creado — ID: {} | Estado: DRAFT | MaxEquipos: {}",
+                id, request.maxTeams());
 
-        return mapToResponse(guardado);
+        return mapToResponse(nuevoTorneo);
     }
 
     // ── UPDATE STATE
@@ -60,7 +67,11 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentResponse updateStatus(String id, String nextStateName) {
         log.info("Actualizando estado del torneo ID: {} → '{}'", id, nextStateName);
 
-        Tournament torneo = obtenerTorneo(id);
+        Tournament torneo = DataStore.torneos.get(id);
+        if (torneo == null) {
+            throw new TournamentException("id",
+                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
+        }
 
         TournamentState next;
         try {
@@ -74,10 +85,7 @@ public class TournamentServiceImpl implements TournamentService {
         TournamentValidator.validateStateTransition(torneo.getCurrentState(), next);
 
         torneo.setCurrentState(next);
-
-        tournamentRepository.save(torneo);
-
-        log.info("Estado actualizado a {}", next);
+        log.info("Estado del torneo '{}' actualizado a {}", id, next);
 
         return mapToResponse(torneo);
     }
@@ -88,7 +96,11 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentResponse findById(String id) {
         log.info("Buscando torneo con ID: {}", id);
 
-        Tournament torneo = obtenerTorneo(id);
+        Tournament torneo = DataStore.torneos.get(id);
+        if (torneo == null) {
+            throw new TournamentException("id",
+                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
+        }
 
         return mapToResponse(torneo);
     }
@@ -97,14 +109,11 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public List<TournamentResponse> findAll() {
-        List<TournamentResponse> lista = tournamentRepository.findAll()
-                .stream()
+        List<TournamentResponse> torneos = DataStore.torneos.values().stream()
                 .map(this::mapToResponse)
-                .toList();
-
-        log.info("Total torneos: {}", lista.size());
-
-        return lista;
+                .collect(Collectors.toList());
+        log.info("Total torneos listados: {}", torneos.size());
+        return torneos;
     }
 
     // ── CONFIG — CREATE / UPDATE
@@ -119,17 +128,18 @@ public class TournamentServiceImpl implements TournamentService {
         if (tournament.getCurrentState() == TournamentState.IN_PROGRESS
                 || tournament.getCurrentState() == TournamentState.COMPLETED) {
             throw new TournamentException("state",
-                    "Solo se pueden configurar torneos en estado DRAFT o ACTIVE.");
+                    "Solo se pueden configurar torneos en estado Borrador o Activo.");
         }
 
         if (request.registrationDeadline() != null
                 && !request.registrationDeadline().isBefore(tournament.getStartDate())) {
             throw new TournamentException("registrationDeadline",
-                    "La fecha de cierre debe ser anterior al inicio.");
+                    "La fecha de cierre de inscripciones debe ser estrictamente anterior "
+                            + "a la fecha de inicio del torneo.");
         }
 
         if (tournament.getConfigId() == null) {
-            tournament.setConfigId(UUID.randomUUID().toString());
+            tournament.setConfigId(IdGenerator.generateId());
         }
 
         tournament.setRules(request.rules());
@@ -138,27 +148,22 @@ public class TournamentServiceImpl implements TournamentService {
 
         if (request.importantDates() != null) {
             tournament.setImportantDates(request.importantDates().stream()
-                    .map(d -> d.description() + "|" +
-                            (d.date() != null ? d.date().format(FMT) : ""))
+                    .map(d -> d.description() + "|"
+                            + (d.date() != null ? d.date().format(FMT) : ""))
                     .toList());
         }
-
         if (request.matchSchedules() != null) {
             tournament.setMatchSchedules(request.matchSchedules().stream()
                     .map(s -> s.dayOfWeek() + "|" + s.startTime() + "|" + s.endTime())
                     .toList());
         }
-
         if (request.fields() != null) {
             tournament.setFields(request.fields().stream()
                     .map(f -> f.name() + "|" + f.location())
                     .toList());
         }
 
-        tournamentRepository.save(tournament);
-
-        log.info("Configuración guardada");
-
+        log.info("Configuración guardada para torneo ID: {}", tournamentId);
         return toConfigResponse(tournament);
     }
 
@@ -176,17 +181,20 @@ public class TournamentServiceImpl implements TournamentService {
         return toConfigResponse(tournament);
     }
 
-    // ── HELPERS
+    // ── HELPERS PRIVADOS
 
     private Tournament obtenerTorneo(String id) {
-        return tournamentRepository.findById(UUID.fromString(id))
-                .orElseThrow(() -> new TournamentException("id",
-                        String.format(TournamentException.TOURNAMENT_NOT_FOUND, id)));
+        Tournament t = DataStore.torneos.get(id);
+        if (t == null) {
+            throw new TournamentException("id",
+                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
+        }
+        return t;
     }
 
     private TournamentResponse mapToResponse(Tournament t) {
         return new TournamentResponse(
-                t.getId().toString(),
+                t.getId(),
                 t.getName(),
                 t.getStartDate(),
                 t.getEndDate(),
@@ -198,46 +206,32 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     private TournamentConfigResponse toConfigResponse(Tournament t) {
-
         List<ImportantDateDTO> dates = t.getImportantDates() == null ? List.of()
                 : t.getImportantDates().stream().map(s -> {
             String[] parts = s.split("\\|", 2);
-            return new ImportantDateDTO(
-                    parts[0],
+            return new ImportantDateDTO(parts[0],
                     parts.length > 1 && !parts[1].isBlank()
-                            ? LocalDateTime.parse(parts[1], FMT)
-                            : null
-            );
+                            ? LocalDateTime.parse(parts[1], FMT) : null);
         }).toList();
 
         List<MatchScheduleDTO> schedules = t.getMatchSchedules() == null ? List.of()
                 : t.getMatchSchedules().stream().map(s -> {
             String[] p = s.split("\\|", 3);
-            return new MatchScheduleDTO(
-                    p[0],
+            return new MatchScheduleDTO(p[0],
                     p.length > 1 ? p[1] : "",
-                    p.length > 2 ? p[2] : ""
-            );
+                    p.length > 2 ? p[2] : "");
         }).toList();
 
         List<FieldDTO> fields = t.getFields() == null ? List.of()
                 : t.getFields().stream().map(s -> {
             String[] p = s.split("\\|", 2);
-            return new FieldDTO(
-                    p[0],
-                    p.length > 1 ? p[1] : ""
-            );
+            return new FieldDTO(p[0], p.length > 1 ? p[1] : "");
         }).toList();
 
         return new TournamentConfigResponse(
-                t.getConfigId(),
-                t.getId().toString(),
-                t.getRules(),
-                t.getRegistrationDeadline(),
-                dates,
-                schedules,
-                fields,
-                t.getSanctions()
+                t.getConfigId(), t.getId(),
+                t.getRules(), t.getRegistrationDeadline(),
+                dates, schedules, fields, t.getSanctions()
         );
     }
 }

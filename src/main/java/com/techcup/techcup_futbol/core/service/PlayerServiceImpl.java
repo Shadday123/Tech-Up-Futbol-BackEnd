@@ -1,14 +1,14 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.repository.PlayerRepository;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.validator.EmailValidator;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
+import com.techcup.techcup_futbol.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.techcup.techcup_futbol.util.IdGenerator;
 
@@ -49,10 +49,8 @@ public class PlayerServiceImpl implements PlayerService {
 
         jugador.setEmail(correo);
         playerRepository.save(jugador);
-
         log.info("Jugador registrado — ID: {} | Email: {} | Total: {}",
-                jugador.getId(), correo);
-    }
+                jugador.getId(), correo);    }
 
     // UPDATE
 

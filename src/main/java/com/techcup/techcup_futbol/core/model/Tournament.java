@@ -1,6 +1,11 @@
 package com.techcup.techcup_futbol.core.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 import com.techcup.techcup_futbol.util.IdGenerator;
@@ -10,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -18,8 +22,7 @@ import java.util.UUID;
 public class Tournament {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private String id;
 
     @Column(nullable = false)
     private String name;

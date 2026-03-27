@@ -1,24 +1,11 @@
 package com.techcup.techcup_futbol.core.model;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import jakarta.persistence.DiscriminatorValue;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
 @DiscriminatorValue("EXTERNAL")
 public class ExternalPlayer extends Player {
-
-    @Override
-    public void changeAvailability() {
-        this.setHaveTeam(!this.isHaveTeam());
-    }
-
-    @Override
-    public void respondToInvitation(boolean accept) {
-        if (accept) {
-            this.setHaveTeam(true);
-        }
-    }
 }

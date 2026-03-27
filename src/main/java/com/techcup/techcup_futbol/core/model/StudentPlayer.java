@@ -1,27 +1,17 @@
 package com.techcup.techcup_futbol.core.model;
 
 import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
 
+
+@Entity
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
+@Table(name = "studentPlayer")
 @DiscriminatorValue("STUDENT")
 public class StudentPlayer extends Player {
 
     private int semester;
-
-    @Override
-    public void changeAvailability() {
-        this.setHaveTeam(!this.isHaveTeam());
-    }
-
-    @Override
-    public void respondToInvitation(boolean accept) {
-        if (accept) {
-            this.setHaveTeam(true);
-        }
-    }
 }
