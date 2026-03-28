@@ -19,6 +19,64 @@
 2026-03-25T16:41:37.610-05:00  INFO 7932 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : No active profile set, falling back to 1 default profile: "default"
 2026-03-25T16:41:41.941-05:00  INFO 7932 --- [techcup-futbol] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@27bc1d44, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1af677f8, org.springframework.security.web.context.SecurityContextHolderFilter@7c901203, org.springframework.security.web.header.HeaderWriterFilter@6735f210, org.springframework.web.filter.CorsFilter@7a55fb81, org.springframework.security.web.authentication.logout.LogoutFilter@53cb0bcb, com.techcup.techcup_futbol.security.JwtFilter@4a89ef44, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@79f5a6ed, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@722787b5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5a3cf878, org.springframework.security.web.session.SessionManagementFilter@4044589a, org.springframework.security.web.access.ExceptionTranslationFilter@69a373fd, org.springframework.security.web.access.intercept.AuthorizationFilter@713999c2]
 2026-03-25T16:41:42.923-05:00  INFO 7932 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : Started TechcupFutbolApplicationTests in 6.265 seconds (process running for 9.159)
+2026-03-27T21:46:18.401-05:00  INFO 18792 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.1 with PID 18792 (C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd\target\classes started by invitado1 in C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd)
+2026-03-27T21:46:18.403-05:00 DEBUG 18792 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T21:46:18.404-05:00  INFO 18792 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T21:46:21.196-05:00  INFO 18792 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T21:46:21.235-05:00  INFO 18792 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T21:46:21.236-05:00  INFO 18792 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T21:46:21.555-05:00  INFO 18792 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T21:46:21.557-05:00  INFO 18792 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3069 ms
+2026-03-27T21:46:21.760-05:00 DEBUG 18792 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T21:46:22.027-05:00  WARN 18792 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerController' defined in file [C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\PlayerController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T21:46:22.033-05:00  INFO 18792 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T21:46:22.074-05:00  INFO 18792 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T21:46:22.131-05:00 ERROR 18792 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field playerRepository in com.techcup.techcup_futbol.core.service.PlayerServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' in your configuration.
+
+2026-03-27T21:46:43.732-05:00  INFO 21760 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.1 with PID 21760 (C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd\target\classes started by invitado1 in C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd)
+2026-03-27T21:46:43.735-05:00 DEBUG 21760 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T21:46:43.736-05:00  INFO 21760 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T21:46:46.228-05:00  INFO 21760 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T21:46:46.252-05:00  INFO 21760 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T21:46:46.253-05:00  INFO 21760 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T21:46:46.438-05:00  INFO 21760 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T21:46:46.440-05:00  INFO 21760 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2611 ms
+2026-03-27T21:46:46.568-05:00 DEBUG 21760 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T21:46:46.787-05:00  WARN 21760 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerController' defined in file [C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\PlayerController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T21:46:46.790-05:00  INFO 21760 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T21:46:46.816-05:00  INFO 21760 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T21:46:46.849-05:00 ERROR 21760 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field playerRepository in com.techcup.techcup_futbol.core.service.PlayerServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' in your configuration.
+
 2026-03-27T15:41:12.885-05:00  INFO 16940 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : Starting TechcupFutbolApplicationTests using Java 21.0.2 with PID 16940 (started by juan.rodriguez-ce in C:\Users\juan.rodriguez-ce\Tech-Up-Futbol-BackEnd)
 2026-03-27T15:41:12.888-05:00 DEBUG 16940 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : Running with Spring Boot v3.2.5, Spring v6.1.6
 2026-03-27T15:41:12.889-05:00  INFO 16940 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : No active profile set, falling back to 1 default profile: "default"
