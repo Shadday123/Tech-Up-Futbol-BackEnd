@@ -5,6 +5,9 @@ import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.core.model.PositionEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.*;
+import org.springframework.stereotype.Repository;
+
+@Repository
 
 public interface PlayerRepository extends JpaRepository<Player, String>{
 

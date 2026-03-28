@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
@@ -8,7 +8,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:h2:mem:techcupdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
     username: ${DB_USER:sa}
-    password: ${DB_PASS:}
+    password: ${DB_PASS:lo}
     driver-class-name: ${DB_DRIVER:org.h2.Driver}
 
   h2:

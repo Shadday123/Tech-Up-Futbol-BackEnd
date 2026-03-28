@@ -8642,3 +8642,866 @@ java.lang.IllegalStateException: ApplicationContext failure threshold (1) exceed
 2026-03-27T21:24:24.610-05:00  INFO 24968 --- [techcup-futbol] [main] c.t.t.Controller.StandingsController     : POST /api/standings/tournament/T002/register-team/c37fa04b-8c83-4979-93a2-b1ce44f4aaf8
 2026-03-27T21:24:24.615-05:00  INFO 24968 --- [techcup-futbol] [main] c.t.t.Controller.StandingsController     : GET /api/standings/tournament/T001
 2026-03-27T21:24:24.618-05:00  INFO 24968 --- [techcup-futbol] [main] c.t.t.Controller.StandingsController     : POST /api/standings/tournament/T001/register-team/a63dc333-b960-46d4-a667-ef3936f1f3e7
+2026-03-27T21:39:42.324-05:00  INFO 3328 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 3328 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T21:39:42.327-05:00 DEBUG 3328 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T21:39:42.329-05:00  INFO 3328 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T21:39:46.670-05:00  INFO 3328 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T21:39:46.694-05:00  INFO 3328 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T21:39:46.695-05:00  INFO 3328 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T21:39:46.822-05:00  INFO 3328 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T21:39:46.822-05:00  INFO 3328 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4416 ms
+2026-03-27T21:39:46.928-05:00 DEBUG 3328 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T21:39:47.156-05:00  WARN 3328 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T21:39:47.162-05:00  INFO 3328 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T21:39:47.218-05:00  INFO 3328 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T21:39:47.261-05:00 ERROR 3328 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T21:49:13.257-05:00  INFO 24660 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 24660 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T21:49:13.261-05:00 DEBUG 24660 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T21:49:13.262-05:00  INFO 24660 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T21:49:15.896-05:00  INFO 24660 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T21:49:15.918-05:00  INFO 24660 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T21:49:15.919-05:00  INFO 24660 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T21:49:16.041-05:00  INFO 24660 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T21:49:16.042-05:00  INFO 24660 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2698 ms
+2026-03-27T21:49:16.174-05:00 DEBUG 24660 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T21:49:16.423-05:00  WARN 24660 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T21:49:16.427-05:00  INFO 24660 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T21:49:16.480-05:00  INFO 24660 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T21:49:16.523-05:00 ERROR 24660 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T21:55:08.730-05:00  INFO 24904 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 24904 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T21:55:08.735-05:00 DEBUG 24904 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T21:55:08.737-05:00  INFO 24904 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T21:55:12.493-05:00  INFO 24904 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T21:55:12.514-05:00  INFO 24904 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T21:55:12.514-05:00  INFO 24904 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T21:55:12.707-05:00  INFO 24904 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T21:55:12.708-05:00  INFO 24904 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3848 ms
+2026-03-27T21:55:12.920-05:00 DEBUG 24904 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T21:55:13.105-05:00  WARN 24904 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T21:55:13.109-05:00  INFO 24904 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T21:55:13.155-05:00  INFO 24904 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T21:55:13.203-05:00 ERROR 24904 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T22:35:36.190-05:00  INFO 10508 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 10508 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T22:35:36.195-05:00 DEBUG 10508 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T22:35:36.196-05:00  INFO 10508 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T22:35:40.028-05:00  INFO 10508 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T22:35:40.098-05:00  INFO 10508 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T22:35:40.100-05:00  INFO 10508 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T22:35:40.597-05:00  INFO 10508 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T22:35:40.598-05:00  INFO 10508 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4319 ms
+2026-03-27T22:35:40.863-05:00 DEBUG 10508 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T22:35:41.088-05:00  WARN 10508 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T22:35:41.094-05:00  INFO 10508 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T22:35:41.141-05:00  INFO 10508 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T22:35:41.181-05:00 ERROR 10508 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T22:36:18.160-05:00  INFO 7736 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 7736 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T22:36:18.167-05:00 DEBUG 7736 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T22:36:18.169-05:00  INFO 7736 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T22:36:22.358-05:00  INFO 7736 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T22:36:22.392-05:00  INFO 7736 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T22:36:22.393-05:00  INFO 7736 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T22:36:22.582-05:00  INFO 7736 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T22:36:22.583-05:00  INFO 7736 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4266 ms
+2026-03-27T22:36:22.716-05:00 DEBUG 7736 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T22:36:22.977-05:00  WARN 7736 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T22:36:22.992-05:00  INFO 7736 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T22:36:23.058-05:00  INFO 7736 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T22:36:23.127-05:00 ERROR 7736 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T22:44:59.448-05:00  INFO 23864 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 23864 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T22:44:59.457-05:00 DEBUG 23864 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T22:44:59.459-05:00  INFO 23864 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T22:45:02.715-05:00  INFO 23864 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T22:45:02.735-05:00  INFO 23864 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T22:45:02.735-05:00  INFO 23864 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T22:45:02.853-05:00  INFO 23864 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T22:45:02.854-05:00  INFO 23864 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3255 ms
+2026-03-27T22:45:02.948-05:00 DEBUG 23864 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T22:45:03.110-05:00  WARN 23864 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T22:45:03.116-05:00  INFO 23864 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T22:45:03.150-05:00  INFO 23864 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T22:45:03.209-05:00 ERROR 23864 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T22:50:17.517-05:00  INFO 13036 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 13036 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T22:50:17.521-05:00 DEBUG 13036 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T22:50:17.522-05:00  INFO 13036 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T22:50:19.906-05:00  INFO 13036 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T22:50:19.934-05:00  INFO 13036 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T22:50:19.935-05:00  INFO 13036 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T22:50:20.065-05:00  INFO 13036 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T22:50:20.065-05:00  INFO 13036 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2434 ms
+2026-03-27T22:50:20.197-05:00 DEBUG 13036 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T22:50:20.343-05:00  WARN 13036 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T22:50:20.350-05:00  INFO 13036 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T22:50:20.382-05:00  INFO 13036 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T22:50:20.434-05:00 ERROR 13036 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T22:52:55.767-05:00  INFO 2340 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 2340 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T22:52:55.772-05:00 DEBUG 2340 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T22:52:55.775-05:00  INFO 2340 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T22:52:58.348-05:00  INFO 2340 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T22:52:58.373-05:00  INFO 2340 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T22:52:58.374-05:00  INFO 2340 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T22:52:58.525-05:00  INFO 2340 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T22:52:58.526-05:00  INFO 2340 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2663 ms
+2026-03-27T22:52:58.641-05:00 DEBUG 2340 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T22:52:58.810-05:00  WARN 2340 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T22:52:58.815-05:00  INFO 2340 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T22:52:58.848-05:00  INFO 2340 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T22:52:58.889-05:00 ERROR 2340 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T22:57:54.717-05:00  INFO 17920 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 17920 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T22:57:54.723-05:00 DEBUG 17920 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T22:57:54.725-05:00  INFO 17920 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T22:58:01.624-05:00  INFO 17920 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T22:58:01.656-05:00  INFO 17920 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T22:58:01.657-05:00  INFO 17920 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T22:58:01.885-05:00  INFO 17920 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T22:58:01.886-05:00  INFO 17920 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7029 ms
+2026-03-27T22:58:02.027-05:00 DEBUG 17920 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T22:58:02.656-05:00  WARN 17920 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T22:58:02.674-05:00  INFO 17920 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T22:58:02.749-05:00  INFO 17920 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T22:58:02.800-05:00 ERROR 17920 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T22:59:33.948-05:00  INFO 25508 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 25508 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T22:59:33.955-05:00 DEBUG 25508 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T22:59:33.958-05:00  INFO 25508 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T22:59:39.066-05:00  INFO 25508 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T22:59:39.095-05:00  INFO 25508 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T22:59:39.096-05:00  INFO 25508 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T22:59:39.489-05:00  INFO 25508 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T22:59:39.491-05:00  INFO 25508 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 5290 ms
+2026-03-27T22:59:39.666-05:00 DEBUG 25508 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T22:59:40.064-05:00  WARN 25508 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T22:59:40.070-05:00  INFO 25508 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T22:59:40.114-05:00  INFO 25508 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T22:59:40.199-05:00 ERROR 25508 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T23:11:49.756-05:00  INFO 18972 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 18972 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T23:11:49.758-05:00 DEBUG 18972 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T23:11:49.761-05:00  INFO 18972 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T23:11:52.358-05:00  INFO 18972 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T23:11:52.393-05:00  INFO 18972 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T23:11:52.395-05:00  INFO 18972 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T23:11:52.637-05:00  INFO 18972 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T23:11:52.639-05:00  INFO 18972 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2803 ms
+2026-03-27T23:11:52.792-05:00 DEBUG 18972 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T23:11:52.944-05:00  WARN 18972 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T23:11:52.944-05:00  INFO 18972 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T23:11:52.981-05:00  INFO 18972 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T23:11:53.017-05:00 ERROR 18972 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.TournamentRepository' in your configuration.
+
+2026-03-27T23:17:47.134-05:00  INFO 3680 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 3680 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T23:17:47.145-05:00 DEBUG 3680 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T23:17:47.161-05:00  INFO 3680 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T23:17:48.982-05:00  INFO 3680 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-27T23:17:49.167-05:00  INFO 3680 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 164 ms. Found 11 JPA repository interfaces.
+2026-03-27T23:17:51.559-05:00  INFO 3680 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T23:17:51.608-05:00  INFO 3680 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T23:17:51.610-05:00  INFO 3680 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T23:17:51.825-05:00  INFO 3680 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T23:17:51.827-05:00  INFO 3680 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4486 ms
+2026-03-27T23:17:51.949-05:00 DEBUG 3680 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T23:17:52.140-05:00  WARN 3680 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'bracketController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\BracketController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'bracketServiceImpl': Unsatisfied dependency expressed through field 'tournamentRepository': Error creating bean with name 'tournamentRepository' defined in com.techcup.techcup_futbol.repository.TournamentRepository defined in @EnableJpaRepositories declared on TechcupFutbolApplication: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+2026-03-27T23:17:52.145-05:00  INFO 3680 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T23:17:52.195-05:00  INFO 3680 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T23:17:52.245-05:00 ERROR 3680 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field tournamentRepository in com.techcup.techcup_futbol.core.service.BracketServiceImpl required a bean named 'entityManagerFactory' that could not be found.
+
+
+Action:
+
+Consider defining a bean named 'entityManagerFactory' in your configuration.
+
+2026-03-27T23:21:07.450-05:00  INFO 20492 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 20492 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T23:21:07.454-05:00 DEBUG 20492 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T23:21:07.456-05:00  INFO 20492 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T23:21:09.148-05:00  INFO 20492 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-27T23:21:09.335-05:00  INFO 20492 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 162 ms. Found 11 JPA repository interfaces.
+2026-03-27T23:21:12.083-05:00  INFO 20492 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T23:21:12.125-05:00  INFO 20492 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T23:21:12.127-05:00  INFO 20492 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T23:21:12.383-05:00  INFO 20492 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T23:21:12.385-05:00  INFO 20492 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4788 ms
+2026-03-27T23:21:12.487-05:00  INFO 20492 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-27T23:21:12.688-05:00 DEBUG 20492 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T23:21:14.305-05:00  INFO 20492 --- [techcup-futbol] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-27T23:21:14.443-05:00  INFO 20492 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-27T23:21:14.454-05:00  WARN 20492 --- [techcup-futbol] [main] o.h.e.j.e.i.JdbcEnvironmentInitiator     : HHH000342: Could not obtain connection to query metadata
+
+java.lang.RuntimeException: Driver org.h2.Driver claims to not accept jdbcUrl, jdbc:postgresql://localhost:5432/techcup
+	at com.zaxxer.hikari.util.DriverDataSource.<init>(DriverDataSource.java:110) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.initializeDataSource(PoolBase.java:326) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.<init>(PoolBase.java:112) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:93) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-5.0.1.jar:na]
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:428) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:61) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:276) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:107) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:238) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:215) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.model.relational.Database.<init>(Database.java:45) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:223) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:191) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:170) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1432) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1503) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1833) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1234) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.techcup.techcup_futbol.TechcupFutbolApplication.main(TechcupFutbolApplication.java:13) ~[classes/:na]
+
+2026-03-27T23:21:14.591-05:00  WARN 20492 --- [techcup-futbol] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-27T23:21:18.592-05:00  INFO 20492 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-27T23:21:18.607-05:00 ERROR 20492 --- [techcup-futbol] [main] j.LocalContainerEntityManagerFactoryBean : Failed to initialize JPA EntityManagerFactory: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is java.lang.RuntimeException: Driver org.h2.Driver claims to not accept jdbcUrl, jdbc:postgresql://localhost:5432/techcup
+2026-03-27T23:21:18.613-05:00  WARN 20492 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is java.lang.RuntimeException: Driver org.h2.Driver claims to not accept jdbcUrl, jdbc:postgresql://localhost:5432/techcup
+2026-03-27T23:21:18.617-05:00  INFO 20492 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T23:21:18.659-05:00  INFO 20492 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T23:21:18.729-05:00 ERROR 20492 --- [techcup-futbol] [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is java.lang.RuntimeException: Driver org.h2.Driver claims to not accept jdbcUrl, jdbc:postgresql://localhost:5432/techcup
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1786) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1234) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.techcup.techcup_futbol.TechcupFutbolApplication.main(TechcupFutbolApplication.java:13) ~[classes/:na]
+Caused by: jakarta.persistence.PersistenceException: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is java.lang.RuntimeException: Driver org.h2.Driver claims to not accept jdbcUrl, jdbc:postgresql://localhost:5432/techcup
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:421) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1833) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782) ~[spring-beans-6.1.6.jar:6.1.6]
+	... 16 common frames omitted
+Caused by: java.lang.RuntimeException: Driver org.h2.Driver claims to not accept jdbcUrl, jdbc:postgresql://localhost:5432/techcup
+	at com.zaxxer.hikari.util.DriverDataSource.<init>(DriverDataSource.java:110) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.initializeDataSource(PoolBase.java:326) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.<init>(PoolBase.java:112) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:93) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-5.0.1.jar:na]
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:428) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:46) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:39) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.exec.ImprovedExtractionContextImpl.getJdbcConnection(ImprovedExtractionContextImpl.java:63) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.extract.spi.ExtractionContext.getQueryResults(ExtractionContext.java:43) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.extract.internal.SequenceInformationExtractorLegacyImpl.extractMetadata(SequenceInformationExtractorLegacyImpl.java:39) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.initializeSequences(DatabaseInformationImpl.java:66) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.<init>(DatabaseInformationImpl.java:60) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.Helper.buildDatabaseInformation(Helper.java:185) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:98) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:286) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:145) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429) ~[na:na]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:142) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.6.jar:6.1.6]
+	... 20 common frames omitted
+
+2026-03-27T23:27:33.553-05:00  INFO 14964 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 14964 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T23:27:33.557-05:00 DEBUG 14964 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T23:27:33.560-05:00  INFO 14964 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T23:27:35.311-05:00  INFO 14964 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-27T23:27:35.522-05:00  INFO 14964 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 182 ms. Found 11 JPA repository interfaces.
+2026-03-27T23:27:37.962-05:00  INFO 14964 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T23:27:38.010-05:00  INFO 14964 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T23:27:38.013-05:00  INFO 14964 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T23:27:38.309-05:00  INFO 14964 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T23:27:38.319-05:00  INFO 14964 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4598 ms
+2026-03-27T23:27:38.453-05:00  INFO 14964 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-27T23:27:39.021-05:00  INFO 14964 --- [techcup-futbol] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:techcupdb user=SA
+2026-03-27T23:27:39.025-05:00  INFO 14964 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-27T23:27:39.057-05:00  INFO 14964 --- [techcup-futbol] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:techcupdb'
+2026-03-27T23:27:39.224-05:00 DEBUG 14964 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T23:27:40.135-05:00  INFO 14964 --- [techcup-futbol] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-27T23:27:40.255-05:00  WARN 14964 --- [techcup-futbol] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-27T23:27:43.437-05:00  WARN 14964 --- [techcup-futbol] [main] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:574) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:514) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.createTable(AbstractSchemaMigrator.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:286) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:145) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429) ~[na:na]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:142) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1833) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1234) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.techcup.techcup_futbol.TechcupFutbolApplication.main(TechcupFutbolApplication.java:13) ~[classes/:na]
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier"; SQL statement:
+create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id)) [42001-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getSyntaxError(DbException.java:261) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.readIdentifier(Parser.java:5533) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8994) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreate(Parser.java:6404) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parsePrepared(Parser.java:666) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:592) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:564) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.prepareCommand(Parser.java:483) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231) ~[h2-2.2.224.jar:2.2.224]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-5.0.1.jar:na]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	... 38 common frames omitted
+
+2026-03-27T23:27:43.672-05:00  INFO 14964 --- [techcup-futbol] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27T23:27:45.789-05:00  WARN 14964 --- [techcup-futbol] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-27T23:27:46.698-05:00  INFO 14964 --- [techcup-futbol] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@57596d71, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1c12f0f4, org.springframework.security.web.context.SecurityContextHolderFilter@3e455d01, org.springframework.security.web.header.HeaderWriterFilter@ca31ad7, org.springframework.web.filter.CorsFilter@149bdb4e, org.springframework.security.web.authentication.logout.LogoutFilter@63bdf82d, com.techcup.techcup_futbol.security.JwtFilter@3711c71c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3a2b1f24, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@72d2470, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1f5aac08, org.springframework.security.web.session.SessionManagementFilter@521032a6, org.springframework.security.web.access.ExceptionTranslationFilter@3bbc8c82, org.springframework.security.web.access.intercept.AuthorizationFilter@11fb4f69]
+2026-03-27T23:27:47.610-05:00  WARN 14964 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-03-27T23:27:47.615-05:00  INFO 14964 --- [techcup-futbol] [main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27T23:27:47.619-05:00  INFO 14964 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-03-27T23:27:47.623-05:00  INFO 14964 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-03-27T23:27:47.690-05:00  INFO 14964 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T23:27:47.752-05:00 ERROR 14964 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-03-27T23:33:36.318-05:00  INFO 18776 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 18776 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T23:33:36.322-05:00 DEBUG 18776 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T23:33:36.324-05:00  INFO 18776 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T23:33:37.518-05:00  INFO 18776 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-27T23:33:37.624-05:00  INFO 18776 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 92 ms. Found 11 JPA repository interfaces.
+2026-03-27T23:33:39.147-05:00  INFO 18776 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-03-27T23:33:39.175-05:00  INFO 18776 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T23:33:39.176-05:00  INFO 18776 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T23:33:39.328-05:00  INFO 18776 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T23:33:39.330-05:00  INFO 18776 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2901 ms
+2026-03-27T23:33:39.387-05:00  INFO 18776 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-27T23:33:39.769-05:00  INFO 18776 --- [techcup-futbol] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:techcupdb user=SA
+2026-03-27T23:33:39.773-05:00  INFO 18776 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-27T23:33:39.790-05:00  INFO 18776 --- [techcup-futbol] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:techcupdb'
+2026-03-27T23:33:39.906-05:00 DEBUG 18776 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T23:33:40.599-05:00  INFO 18776 --- [techcup-futbol] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-27T23:33:40.686-05:00  WARN 18776 --- [techcup-futbol] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-27T23:33:42.568-05:00  WARN 18776 --- [techcup-futbol] [main] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:574) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:514) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.createTable(AbstractSchemaMigrator.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:286) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:145) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429) ~[na:na]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:142) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1833) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1234) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.techcup.techcup_futbol.TechcupFutbolApplication.main(TechcupFutbolApplication.java:13) ~[classes/:na]
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier"; SQL statement:
+create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id)) [42001-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getSyntaxError(DbException.java:261) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.readIdentifier(Parser.java:5533) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8994) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreate(Parser.java:6404) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parsePrepared(Parser.java:666) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:592) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:564) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.prepareCommand(Parser.java:483) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231) ~[h2-2.2.224.jar:2.2.224]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-5.0.1.jar:na]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	... 38 common frames omitted
+
+2026-03-27T23:33:42.719-05:00  INFO 18776 --- [techcup-futbol] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27T23:33:44.026-05:00  WARN 18776 --- [techcup-futbol] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-27T23:33:44.549-05:00  INFO 18776 --- [techcup-futbol] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@834529e, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5c519da4, org.springframework.security.web.context.SecurityContextHolderFilter@73625632, org.springframework.security.web.header.HeaderWriterFilter@524945e2, org.springframework.web.filter.CorsFilter@4f67d628, org.springframework.security.web.authentication.logout.LogoutFilter@5988e36e, com.techcup.techcup_futbol.security.JwtFilter@1edfedf1, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2591477f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@761d3c20, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3ef2f84c, org.springframework.security.web.session.SessionManagementFilter@1150b923, org.springframework.security.web.access.ExceptionTranslationFilter@d1b9dd7, org.springframework.security.web.access.intercept.AuthorizationFilter@f8b6743]
+2026-03-27T23:33:45.216-05:00  INFO 18776 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path ''
+2026-03-27T23:33:45.229-05:00  INFO 18776 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Started TechcupFutbolApplication in 9.632 seconds (process running for 10.303)
+2026-03-27T23:35:00.700-05:00  INFO 18776 --- [techcup-futbol] [http-nio-8081-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-27T23:35:00.749-05:00  INFO 18776 --- [techcup-futbol] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-27T23:35:01.022-05:00  INFO 18776 --- [techcup-futbol] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 261 ms
+2026-03-27T23:36:25.983-05:00  INFO 2340 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 2340 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T23:36:25.990-05:00 DEBUG 2340 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T23:36:25.993-05:00  INFO 2340 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T23:36:28.717-05:00  INFO 2340 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-27T23:36:28.838-05:00  INFO 2340 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 105 ms. Found 11 JPA repository interfaces.
+2026-03-27T23:36:30.454-05:00  INFO 2340 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-03-27T23:36:30.478-05:00  INFO 2340 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T23:36:30.480-05:00  INFO 2340 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T23:36:30.608-05:00  INFO 2340 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T23:36:30.609-05:00  INFO 2340 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4498 ms
+2026-03-27T23:36:30.652-05:00  INFO 2340 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-27T23:36:31.047-05:00  INFO 2340 --- [techcup-futbol] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:techcupdb user=SA
+2026-03-27T23:36:31.051-05:00  INFO 2340 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-27T23:36:31.098-05:00  INFO 2340 --- [techcup-futbol] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:techcupdb'
+2026-03-27T23:36:31.215-05:00 DEBUG 2340 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T23:36:31.951-05:00  INFO 2340 --- [techcup-futbol] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-27T23:36:32.029-05:00  WARN 2340 --- [techcup-futbol] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-27T23:36:33.723-05:00  WARN 2340 --- [techcup-futbol] [main] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:574) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:514) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.createTable(AbstractSchemaMigrator.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:286) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:145) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429) ~[na:na]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:142) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1833) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1234) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.techcup.techcup_futbol.TechcupFutbolApplication.main(TechcupFutbolApplication.java:13) ~[classes/:na]
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier"; SQL statement:
+create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id)) [42001-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getSyntaxError(DbException.java:261) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.readIdentifier(Parser.java:5533) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8994) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreate(Parser.java:6404) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parsePrepared(Parser.java:666) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:592) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:564) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.prepareCommand(Parser.java:483) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231) ~[h2-2.2.224.jar:2.2.224]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-5.0.1.jar:na]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	... 38 common frames omitted
+
+2026-03-27T23:36:33.782-05:00  INFO 2340 --- [techcup-futbol] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27T23:36:35.089-05:00  WARN 2340 --- [techcup-futbol] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-27T23:36:35.642-05:00  INFO 2340 --- [techcup-futbol] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@27311c99, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@76ac3ad0, org.springframework.security.web.context.SecurityContextHolderFilter@344eaf7e, org.springframework.security.web.header.HeaderWriterFilter@3e455d01, org.springframework.web.filter.CorsFilter@1e6be9f0, org.springframework.security.web.authentication.logout.LogoutFilter@1f5aac08, com.techcup.techcup_futbol.security.JwtFilter@7dbae40, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@f8b6743, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@644eed73, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4ff5711b, org.springframework.security.web.session.SessionManagementFilter@3446ab40, org.springframework.security.web.access.ExceptionTranslationFilter@18a9e8db, org.springframework.security.web.access.intercept.AuthorizationFilter@26fee641]
+2026-03-27T23:36:36.062-05:00  INFO 2340 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path ''
+2026-03-27T23:36:36.072-05:00  INFO 2340 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Started TechcupFutbolApplication in 11.113 seconds (process running for 12.144)
+2026-03-27T23:38:09.117-05:00  INFO 2340 --- [techcup-futbol] [http-nio-8081-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-27T23:38:09.142-05:00  INFO 2340 --- [techcup-futbol] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-27T23:38:09.319-05:00  INFO 2340 --- [techcup-futbol] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 175 ms
+2026-03-27T23:49:10.399-05:00  INFO 16300 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 16300 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T23:49:10.403-05:00 DEBUG 16300 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T23:49:10.405-05:00  INFO 16300 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T23:49:11.742-05:00  INFO 16300 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-27T23:49:11.886-05:00  INFO 16300 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 124 ms. Found 11 JPA repository interfaces.
+2026-03-27T23:49:14.014-05:00  INFO 16300 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-03-27T23:49:14.061-05:00  INFO 16300 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T23:49:14.068-05:00  INFO 16300 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T23:49:14.321-05:00  INFO 16300 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T23:49:14.323-05:00  INFO 16300 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3824 ms
+2026-03-27T23:49:14.377-05:00  INFO 16300 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-27T23:49:14.742-05:00  INFO 16300 --- [techcup-futbol] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:techcupdb user=SA
+2026-03-27T23:49:14.746-05:00  INFO 16300 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-27T23:49:14.779-05:00  INFO 16300 --- [techcup-futbol] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:techcupdb'
+2026-03-27T23:49:14.891-05:00 DEBUG 16300 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T23:49:15.669-05:00  INFO 16300 --- [techcup-futbol] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-27T23:49:15.771-05:00  WARN 16300 --- [techcup-futbol] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-27T23:49:27.842-05:00  WARN 16300 --- [techcup-futbol] [main] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:574) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:514) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.createTable(AbstractSchemaMigrator.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:286) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:145) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429) ~[na:na]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:142) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1833) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1234) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.techcup.techcup_futbol.TechcupFutbolApplication.main(TechcupFutbolApplication.java:13) ~[classes/:na]
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier"; SQL statement:
+create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id)) [42001-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getSyntaxError(DbException.java:261) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.readIdentifier(Parser.java:5533) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8994) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreate(Parser.java:6404) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parsePrepared(Parser.java:666) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:592) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:564) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.prepareCommand(Parser.java:483) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231) ~[h2-2.2.224.jar:2.2.224]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-5.0.1.jar:na]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	... 38 common frames omitted
+
+2026-03-27T23:49:29.978-05:00  INFO 16300 --- [techcup-futbol] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27T23:49:36.514-05:00  WARN 16300 --- [techcup-futbol] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-27T23:49:37.130-05:00  INFO 16300 --- [techcup-futbol] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1da40ae8, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1766b009, org.springframework.security.web.context.SecurityContextHolderFilter@64a74723, org.springframework.security.web.header.HeaderWriterFilter@54c2cfc9, org.springframework.web.filter.CorsFilter@7be95197, org.springframework.security.web.authentication.logout.LogoutFilter@5c519da4, com.techcup.techcup_futbol.security.JwtFilter@463045fb, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1b7648f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@45c73e09, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7719b257, org.springframework.security.web.session.SessionManagementFilter@52e2e426, org.springframework.security.web.access.ExceptionTranslationFilter@7a7698f4, org.springframework.security.web.access.intercept.AuthorizationFilter@4c1c134]
+2026-03-27T23:49:37.720-05:00  INFO 16300 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path ''
+2026-03-27T23:49:37.730-05:00  INFO 16300 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Started TechcupFutbolApplication in 28.241 seconds (process running for 31.408)

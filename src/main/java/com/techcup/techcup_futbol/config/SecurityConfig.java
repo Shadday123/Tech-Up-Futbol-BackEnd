@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/api/players/registro").permitAll()
                         .requestMatchers(HttpMethod.GET,
