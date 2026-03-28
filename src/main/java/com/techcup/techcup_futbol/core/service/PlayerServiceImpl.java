@@ -76,7 +76,7 @@ public class PlayerServiceImpl implements PlayerService {
             String msg = disponible
                     ? String.format(PlayerException.PLAYER_ALREADY_AVAILABLE, persistido.getFullname())
                     : String.format(PlayerException.PLAYER_ALREADY_UNAVAILABLE, persistido.getFullname());
-            throw new PlayerException("disponibilidad", msg);
+            throw new PlayerException("availability", msg);
         }
 
         persistido.setDisponible(disponible);

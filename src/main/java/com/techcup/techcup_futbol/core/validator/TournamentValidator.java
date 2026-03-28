@@ -44,7 +44,7 @@ public class TournamentValidator {
         }
     }
     public static void validateMaxTeams(int maxTeams) {
-        if (maxTeams < 4) {
+        if (maxTeams < 2) {
             throw new TournamentException("maxTeams",
                     String.format(TournamentException.MAX_TEAMS_TOO_LOW, maxTeams));
         }

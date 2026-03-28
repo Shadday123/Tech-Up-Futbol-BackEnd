@@ -3,24 +3,37 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
+import com.techcup.techcup_futbol.repository.MatchEventRepository;
+import com.techcup.techcup_futbol.repository.MatchRepository;
+import com.techcup.techcup_futbol.repository.PlayerRepository;
+import com.techcup.techcup_futbol.repository.TeamRepository;
 import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchServiceImpl implements MatchService {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceImpl.class);
 
-    private final Map<String, Match>           matches         = new HashMap<>();
-    private final Map<String, List<MatchEvent>> matchEvents    = new HashMap<>();
-    private final Map<String, MatchStatus>     matchStatusMap  = new HashMap<>();
+    @Autowired
+    private MatchRepository matchRepository;
 
+    @Autowired
+    private MatchEventRepository matchEventRepository;
+
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     @Autowired
     @Lazy
@@ -29,22 +42,21 @@ public class MatchServiceImpl implements MatchService {
     @Autowired
     private StandingsService standingsService;
 
-    // CREATE
+    // ── CREATE
 
     @Override
+    @Transactional
     public MatchResponse create(CreateMatchRequest request) {
         log.info("Creando partido: {} vs {}", request.localTeamId(), request.visitorTeamId());
 
-        Team local = DataStore.equipos.get(request.localTeamId());
-        if (local == null) {
-            throw new MatchException("localTeamId",
-                    String.format(MatchException.TEAM_NOT_FOUND, request.localTeamId()));
-        }
-        Team visitor = DataStore.equipos.get(request.visitorTeamId());
-        if (visitor == null) {
-            throw new MatchException("visitorTeamId",
-                    String.format(MatchException.TEAM_NOT_FOUND, request.visitorTeamId()));
-        }
+        Team local = teamRepository.findById(request.localTeamId())
+                .orElseThrow(() -> new MatchException("localTeamId",
+                        String.format(MatchException.TEAM_NOT_FOUND, request.localTeamId())));
+
+        Team visitor = teamRepository.findById(request.visitorTeamId())
+                .orElseThrow(() -> new MatchException("visitorTeamId",
+                        String.format(MatchException.TEAM_NOT_FOUND, request.visitorTeamId())));
+
         if (request.localTeamId().equals(request.visitorTeamId())) {
             throw new MatchException("teams", MatchException.SAME_TEAM);
         }
@@ -55,11 +67,9 @@ public class MatchServiceImpl implements MatchService {
         match.setVisitorTeam(visitor);
         match.setDateTime(request.dateTime());
         match.setField(request.field());
+        match.setStatus(MatchStatus.SCHEDULED);
 
-        matches.put(match.getId(), match);
-        matchStatusMap.put(match.getId(), MatchStatus.SCHEDULED);
-        matchEvents.put(match.getId(), new ArrayList<>());
-
+        matchRepository.save(match);
         lineupService.registerMatch(match);
 
         log.info("Partido creado ID: {} — {} vs {}", match.getId(),
@@ -70,15 +80,15 @@ public class MatchServiceImpl implements MatchService {
     // ── REGISTER RESULT
 
     @Override
+    @Transactional
     public MatchResponse registerResult(String matchId, RegisterResultRequest request) {
         log.info("Registrando resultado del partido ID: {}", matchId);
 
-        Match match = matches.get(matchId);
-        if (match == null) {
-            throw new MatchException("matchId",
-                    String.format(MatchException.MATCH_NOT_FOUND, matchId));
-        }
-        if (matchStatusMap.get(matchId) == MatchStatus.FINISHED) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchException("matchId",
+                        String.format(MatchException.MATCH_NOT_FOUND, matchId)));
+
+        if (match.getStatus() == MatchStatus.FINISHED) {
             throw new MatchException("status", MatchException.RESULT_ALREADY_REGISTERED);
         }
 
@@ -105,34 +115,34 @@ public class MatchServiceImpl implements MatchService {
                                 visitorGoals, request.scoreVisitor()));
             }
 
-            List<MatchEvent> events = new ArrayList<>();
+            matchEventRepository.deleteByMatchId(matchId);
+
             int yellowCount = 0, redCount = 0;
             for (MatchEventRequest er : request.events()) {
-                Player player = DataStore.jugadores.get(er.playerId());
-                if (player == null) {
-                    throw new MatchException("events",
-                            String.format(MatchException.PLAYER_NOT_IN_LINEUP, er.playerId()));
-                }
+                Player player = playerRepository.findById(er.playerId())
+                        .orElseThrow(() -> new MatchException("events",
+                                String.format(MatchException.PLAYER_NOT_IN_LINEUP, er.playerId())));
+
                 MatchEvent event = new MatchEvent();
                 event.setId(IdGenerator.generateId());
                 event.setType(er.type());
                 event.setMinute(er.minute());
                 event.setPlayer(player);
                 event.setMatch(match);
-                events.add(event);
+                matchEventRepository.save(event);
+
                 if ("YELLOW_CARD".equalsIgnoreCase(er.type())) yellowCount++;
                 if ("RED_CARD".equalsIgnoreCase(er.type())) redCount++;
             }
-            matchEvents.put(matchId, events);
             match.setYellowCards(yellowCount);
             match.setRedCards(redCount);
         }
 
         match.setScoreLocal(request.scoreLocal());
         match.setScoreVisitor(request.scoreVisitor());
-        matchStatusMap.put(matchId, MatchStatus.FINISHED);
+        match.setStatus(MatchStatus.FINISHED);
+        matchRepository.save(match);
 
-        // Notificar a StandingsService para recalcular tabla
         standingsService.updateFromMatch(match);
 
         log.info("Resultado registrado — {} {} : {} {}",
@@ -141,62 +151,60 @@ public class MatchServiceImpl implements MatchService {
         return toResponse(match);
     }
 
-    // READ
+    // ── READ
 
     @Override
     public MatchResponse findById(String matchId) {
-        Match match = matches.get(matchId);
-        if (match == null) {
-            throw new MatchException("matchId",
-                    String.format(MatchException.MATCH_NOT_FOUND, matchId));
-        }
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchException("matchId",
+                        String.format(MatchException.MATCH_NOT_FOUND, matchId)));
         return toResponse(match);
     }
 
     @Override
     public List<MatchResponse> findAll() {
-        return matches.values().stream().map(this::toResponse).toList();
+        return matchRepository.findAll().stream().map(this::toResponse).toList();
     }
 
     @Override
     public List<MatchResponse> findByTeamId(String teamId) {
-        return matches.values().stream()
-                .filter(m -> m.getLocalTeam().getId().equals(teamId)
-                        || m.getVisitorTeam().getId().equals(teamId))
-                .map(this::toResponse)
-                .toList();
+        return matchRepository.findByLocalTeamIdOrVisitorTeamId(teamId, teamId)
+                .stream().map(this::toResponse).toList();
     }
 
     @Override
     public boolean isResultRegistered(String matchId) {
-        return MatchStatus.FINISHED.equals(matchStatusMap.get(matchId));
+        return matchRepository.findById(matchId)
+                .map(m -> m.getStatus() == MatchStatus.FINISHED)
+                .orElse(false);
     }
 
     @Override
+    @Transactional
     public void registerMatch(Match match) {
-        matches.put(match.getId(), match);
-        matchStatusMap.putIfAbsent(match.getId(), MatchStatus.SCHEDULED);
-        matchEvents.putIfAbsent(match.getId(), new ArrayList<>());
+        if (!matchRepository.existsById(match.getId())) {
+            matchRepository.save(match);
+        }
     }
 
     @Override
     public Map<String, Match> getMatches() {
-        return matches;
+        return matchRepository.findAll().stream()
+                .collect(Collectors.toMap(Match::getId, m -> m));
     }
+
     private boolean isPlayerInTeam(String playerId, Team team) {
         if (team.getPlayers() == null) return false;
         return team.getPlayers().stream().anyMatch(p -> p.getId().equals(playerId));
     }
 
     private MatchResponse toResponse(Match m) {
-        List<MatchEventResponse> events = matchEvents.getOrDefault(m.getId(), List.of())
+        List<MatchEventResponse> events = matchEventRepository.findByMatchId(m.getId())
                 .stream().map(e -> new MatchEventResponse(
                         e.getId(), e.getType(), e.getMinute(),
                         e.getPlayer() != null ? e.getPlayer().getId() : null,
                         e.getPlayer() != null ? e.getPlayer().getFullname() : null
                 )).toList();
-
-        String status = matchStatusMap.getOrDefault(m.getId(), MatchStatus.SCHEDULED).name();
 
         return new MatchResponse(
                 m.getId(),
@@ -205,7 +213,7 @@ public class MatchServiceImpl implements MatchService {
                 m.getDateTime(),
                 m.getScoreLocal(), m.getScoreVisitor(),
                 m.getYellowCards(), m.getRedCards(),
-                m.getField(), status, events
+                m.getField(), m.getStatus().name(), events
         );
     }
 }

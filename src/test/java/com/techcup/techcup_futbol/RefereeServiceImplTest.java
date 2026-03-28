@@ -3,21 +3,27 @@ package com.techcup.techcup_futbol;
 import com.techcup.techcup_futbol.Controller.dto.RefereeDTOs.*;
 import com.techcup.techcup_futbol.core.exception.RefereeException;
 import com.techcup.techcup_futbol.core.model.*;
-import com.techcup.techcup_futbol.core.service.MatchServiceImpl;
 import com.techcup.techcup_futbol.core.service.RefereeServiceImpl;
+import com.techcup.techcup_futbol.repository.MatchRepository;
+import com.techcup.techcup_futbol.repository.RefereeRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("RefereeServiceImpl Tests")
 class RefereeServiceImplTest {
 
@@ -25,7 +31,46 @@ class RefereeServiceImplTest {
     private RefereeServiceImpl service;
 
     @Mock
-    private MatchServiceImpl matchService;
+    private RefereeRepository refereeRepository;
+
+    @Mock
+    private MatchRepository matchRepository;
+
+    private final Map<String, Referee> refereeStore = new HashMap<>();
+    private final Map<String, Match> matchStore = new HashMap<>();
+
+    @BeforeEach
+    void setUp() {
+        refereeStore.clear();
+        matchStore.clear();
+
+        when(refereeRepository.save(any(Referee.class))).thenAnswer(inv -> {
+            Referee r = inv.getArgument(0);
+            refereeStore.put(r.getId(), r);
+            return r;
+        });
+
+        when(refereeRepository.findById(anyString())).thenAnswer(inv ->
+                Optional.ofNullable(refereeStore.get(inv.getArgument(0, String.class))));
+
+        when(refereeRepository.findAll()).thenAnswer(inv ->
+                new ArrayList<>(refereeStore.values()));
+
+        when(refereeRepository.existsByEmail(anyString())).thenAnswer(inv -> {
+            String email = inv.getArgument(0, String.class);
+            return refereeStore.values().stream()
+                    .anyMatch(r -> r.getEmail().equalsIgnoreCase(email));
+        });
+
+        when(matchRepository.save(any(Match.class))).thenAnswer(inv -> {
+            Match m = inv.getArgument(0);
+            matchStore.put(m.getId(), m);
+            return m;
+        });
+
+        when(matchRepository.findById(anyString())).thenAnswer(inv ->
+                Optional.ofNullable(matchStore.get(inv.getArgument(0, String.class))));
+    }
 
     // ── Happy Path
 
@@ -83,7 +128,6 @@ class RefereeServiceImplTest {
                     new CreateRefereeRequest("Árbitro Asig", "asig@example.com"));
 
             Match match = buildMatch();
-            when(matchService.getMatches()).thenReturn(Map.of(match.getId(), match));
 
             RefereeResponse resp = service.assignToMatch(
                     match.getId(), new AssignRefereeRequest(ref.id()));
@@ -100,10 +144,6 @@ class RefereeServiceImplTest {
 
             Match m1 = buildMatch();
             Match m2 = buildMatch();
-            Map<String, Match> matchMap = new HashMap<>();
-            matchMap.put(m1.getId(), m1);
-            matchMap.put(m2.getId(), m2);
-            when(matchService.getMatches()).thenReturn(matchMap);
 
             service.assignToMatch(m1.getId(), new AssignRefereeRequest(ref.id()));
             RefereeResponse resp = service.assignToMatch(m2.getId(),
@@ -143,7 +183,6 @@ class RefereeServiceImplTest {
         @DisplayName("EP-REF-03: assignToMatch() lanza RefereeException si árbitro no existe")
         void assignToMatchArbitroNoExisteLanza() {
             Match match = buildMatch();
-            when(matchService.getMatches()).thenReturn(Map.of(match.getId(), match));
 
             RefereeException ex = assertThrows(RefereeException.class,
                     () -> service.assignToMatch(match.getId(),
@@ -156,7 +195,6 @@ class RefereeServiceImplTest {
         void assignToMatchPartidoNoExisteLanza() {
             RefereeResponse ref = service.create(
                     new CreateRefereeRequest("Ref Sin Partido", "sin@example.com"));
-            when(matchService.getMatches()).thenReturn(new HashMap<>());
 
             RefereeException ex = assertThrows(RefereeException.class,
                     () -> service.assignToMatch("NO-EXISTE",
@@ -173,7 +211,6 @@ class RefereeServiceImplTest {
                     new CreateRefereeRequest("Ref2 Ya", "ya2@example.com"));
 
             Match match = buildMatch();
-            when(matchService.getMatches()).thenReturn(Map.of(match.getId(), match));
 
             service.assignToMatch(match.getId(), new AssignRefereeRequest(ref1.id()));
 
@@ -228,7 +265,6 @@ class RefereeServiceImplTest {
             assertEquals(0, service.findById(ref.id()).assignedMatches().size());
 
             Match match = buildMatch();
-            when(matchService.getMatches()).thenReturn(Map.of(match.getId(), match));
             service.assignToMatch(match.getId(), new AssignRefereeRequest(ref.id()));
 
             assertEquals(1, service.findById(ref.id()).assignedMatches().size());
@@ -247,6 +283,7 @@ class RefereeServiceImplTest {
         m.setVisitorTeam(visitor);
         m.setDateTime(LocalDateTime.now().plusDays(1));
         m.setField(1);
+        matchStore.put(m.getId(), m);
         return m;
     }
 

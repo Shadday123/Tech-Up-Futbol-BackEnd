@@ -4,23 +4,61 @@ import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.*;
 import com.techcup.techcup_futbol.core.exception.PaymentException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.PaymentServiceImpl;
+import com.techcup.techcup_futbol.repository.PaymentRepository;
+import com.techcup.techcup_futbol.repository.TeamRepository;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("PaymentServiceImpl Tests")
 class PaymentServiceImplTest {
 
+    @InjectMocks
     private PaymentServiceImpl service;
+
+    @Mock
+    private PaymentRepository paymentRepository;
+
+    @Mock
+    private TeamRepository teamRepository;
+
+    private final Map<String, Payment> paymentStore = new HashMap<>();
 
     @BeforeEach
     void setUp() {
         DataStore.limpiarDatos();
-        service = new PaymentServiceImpl();
+        paymentStore.clear();
+
+        // Team repository bridge to DataStore
+        when(teamRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(DataStore.equipos.get(inv.getArgument(0))));
+
+        // Payment repository with local store
+        when(paymentRepository.save(any(Payment.class))).thenAnswer(inv -> {
+            Payment p = inv.getArgument(0);
+            paymentStore.put(p.getId(), p);
+            return p;
+        });
+        when(paymentRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(paymentStore.get(inv.getArgument(0))));
+        when(paymentRepository.findAll())
+                .thenAnswer(inv -> new ArrayList<>(paymentStore.values()));
+        when(paymentRepository.findByTeamId(anyString()))
+                .thenAnswer(inv -> paymentStore.values().stream()
+                        .filter(p -> inv.getArgument(0).equals(p.getTeamId()))
+                        .findFirst());
     }
 
     // ── Happy Path
@@ -52,7 +90,6 @@ class PaymentServiceImplTest {
             UploadReceiptRequest req1 = new UploadReceiptRequest(team.getId(), "http://v1.pdf");
             PaymentResponse r1 = service.uploadReceipt(req1);
 
-            // El pago pasó a UNDER_REVIEW; se rechaza y vuelve a PENDING para poder subir de nuevo
             service.updateStatus(r1.id(), "REJECTED");
             service.updateStatus(r1.id(), "PENDING");
 
@@ -67,7 +104,6 @@ class PaymentServiceImplTest {
         @DisplayName("HP-PAY-03: updateStatus() PENDING → UNDER_REVIEW")
         void updateStatusPendingAUnderReview() {
             String paymentId = crearPagoConEstado("Equipo A");
-            // el pago queda en UNDER_REVIEW al subir el comprobante, lo ponemos a PENDING primero
             service.updateStatus(paymentId, "REJECTED");
             service.updateStatus(paymentId, "PENDING");
 
@@ -160,12 +196,12 @@ class PaymentServiceImplTest {
         @Test
         @DisplayName("EP-PAY-03: uploadReceipt() lanza PaymentException si pago ya está APPROVED")
         void uploadReceiptPagoAprobadoLanza() {
-            String paymentId = crearPagoConEstado("Equipo Aprobado");
-            service.updateStatus(paymentId, "APPROVED");
+            Team team = buildTeam("Equipo Aprobado");
+            DataStore.equipos.put(team.getId(), team);
+            PaymentResponse r1 = service.uploadReceipt(
+                    new UploadReceiptRequest(team.getId(), "http://pago.pdf"));
+            service.updateStatus(r1.id(), "APPROVED");
 
-            Team team = DataStore.equipos.values().stream()
-                    .filter(t -> t.getTeamName().equals("Equipo Aprobado"))
-                    .findFirst().orElseThrow();
             UploadReceiptRequest req = new UploadReceiptRequest(team.getId(), "http://nuevo.pdf");
             PaymentException ex = assertThrows(PaymentException.class,
                     () -> service.uploadReceipt(req));
@@ -246,7 +282,6 @@ class PaymentServiceImplTest {
         @DisplayName("CS-PAY-02: flujo completo PENDING→UNDER_REVIEW→APPROVED")
         void flujoCompletoAprobacion() {
             String paymentId = crearPagoConEstado("Flujo Completo");
-            // ya está en UNDER_REVIEW al subir el comprobante
             PaymentResponse resp = service.updateStatus(paymentId, "APPROVED");
             assertEquals(PaymentStatus.APPROVED, resp.currentStatus());
         }
@@ -311,7 +346,6 @@ class PaymentServiceImplTest {
         return lista;
     }
 
-    /** Crea un equipo, sube comprobante y retorna el paymentId (estado UNDER_REVIEW) */
     private String crearPagoConEstado(String teamName) {
         Team team = buildTeam(teamName);
         DataStore.equipos.put(team.getId(), team);

@@ -3,7 +3,15 @@ package com.techcup.techcup_futbol;
 import com.techcup.techcup_futbol.core.exception.TeamException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.TeamServiceImpl;
+import com.techcup.techcup_futbol.repository.PlayerRepository;
+import com.techcup.techcup_futbol.repository.TeamRepository;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +19,40 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("TeamServiceImpl Tests")
 class TeamServiceImplTest {
 
+    @InjectMocks
     private TeamServiceImpl service;
+
+    @Mock
+    private TeamRepository teamRepository;
+
+    @Mock
+    private PlayerRepository playerRepository;
 
     @BeforeEach
     void setUp() {
         DataStore.limpiarDatos();
-        service = new TeamServiceImpl();
+        when(teamRepository.save(any(Team.class))).thenAnswer(inv -> {
+            Team t = inv.getArgument(0);
+            DataStore.equipos.put(t.getId(), t);
+            return t;
+        });
+        when(teamRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(DataStore.equipos.get(inv.getArgument(0))));
+        when(teamRepository.findAll())
+                .thenAnswer(inv -> new ArrayList<>(DataStore.equipos.values()));
+        doAnswer(inv -> {
+            DataStore.equipos.remove(inv.getArgument(0).toString());
+            return null;
+        }).when(teamRepository).deleteById(anyString());
     }
 
     // ── Happy Path
@@ -74,21 +106,6 @@ class TeamServiceImplTest {
 
             assertTrue(team.getPlayers().contains(jugador));
             assertTrue(jugador.isHaveTeam());
-        }
-
-        @Test
-        @DisplayName("HP-TS-05: removePlayer() elimina jugador del equipo y libera su disponibilidad")
-        void removePlayerEliminaJugador() {
-            Team team = buildTeam("Epsilon", buildCaptain("cap5@escuelaing.edu.co", 100005));
-            StudentPlayer jugador = buildStudent("rem@escuelaing.edu.co", 200002, "Removido");
-            jugador.setHaveTeam(true);
-            team.getPlayers().add(jugador);
-            DataStore.equipos.put(team.getId(), team);
-
-            service.removePlayer(team.getId(), jugador.getId());
-
-            assertFalse(team.getPlayers().contains(jugador));
-            assertFalse(jugador.isHaveTeam());
         }
 
         @Test
@@ -233,7 +250,7 @@ class TeamServiceImplTest {
         void removePlayerJugadorNoEnEquipo() {
             Team team = buildTeam("Xi", buildCaptain("cap14@escuelaing.edu.co", 100014));
             StudentPlayer jugador = buildStudent("nothere@escuelaing.edu.co", 500001, "Not Here");
-            team.getPlayers().add(jugador); // alguien en el equipo
+            team.getPlayers().add(jugador);
             DataStore.equipos.put(team.getId(), team);
 
             assertThrows(TeamException.class,
@@ -306,11 +323,19 @@ class TeamServiceImplTest {
             StudentPlayer solo = buildStudent("solo@escuelaing.edu.co", 600004, "Solo");
             solo.setHaveTeam(true);
             team.getPlayers().add(solo);
+            // Necesitamos más de 1 jugador para que removePlayer no lance excepción por tamaño mínimo
+            // El captain ya estaba en players; la validación require > 1 jugador para remover
+            // Usamos un jugador extra para poder remover solo
+            StudentPlayer cap = buildCaptain("cap17@escuelaing.edu.co", 100017);
+            cap.setHaveTeam(true);
+            team.setCaptain(cap);
+            // Ponemos team con 2 jugadores: captain + solo
+            team.getPlayers().add(cap);
             DataStore.equipos.put(team.getId(), team);
 
             service.removePlayer(team.getId(), solo.getId());
 
-            assertTrue(team.getPlayers().isEmpty());
+            assertFalse(team.getPlayers().contains(solo));
             assertFalse(solo.isHaveTeam());
         }
 

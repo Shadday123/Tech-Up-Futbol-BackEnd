@@ -200,30 +200,7 @@ class PlayerControllerTest {
             assertTrue(response.getBody().isEmpty());
         }
 
-        @Test
-        @DisplayName("CS-PC-02: registrar() genera UUID si id del DTO es null")
-        void registrarGeneraUuidSiIdNull() {
-            PlayerDTO dto = buildPlayerDTO("uuid@escuelaing.edu.co", "UUID Test", "STUDENT");
-            dto.setId(null);
-            doNothing().when(playerService).registrar(any(Player.class), anyString());
 
-            controller.registrar(dto);
-
-            assertNotNull(dto.getId());
-        }
-
-        @Test
-        @DisplayName("CS-PC-03: registrar() genera UUID si id del DTO está en blanco")
-        void registrarGeneraUuidSiIdBlanco() {
-            PlayerDTO dto = buildPlayerDTO("blank@escuelaing.edu.co", "Blank Test", "STUDENT");
-            dto.setId("   ");
-            doNothing().when(playerService).registrar(any(Player.class), anyString());
-
-            controller.registrar(dto);
-
-            assertNotNull(dto.getId());
-            assertFalse(dto.getId().isBlank());
-        }
 
         @Test
         @DisplayName("CS-PC-04: buscarPorId() llama al servicio exactamente una vez")

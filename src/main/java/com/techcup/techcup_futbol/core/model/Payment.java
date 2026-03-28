@@ -1,20 +1,29 @@
 package com.techcup.techcup_futbol.core.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "payments")
 public class Payment {
 
+    @Id
     private String id;
+
+    @Column(name = "team_id")
+    private String teamId;
 
     private String receiptUrl;
 
     private Double amount;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentStatus currentStatus = PaymentStatus.PENDING;
 
     public void uploadReceipt(String url) {

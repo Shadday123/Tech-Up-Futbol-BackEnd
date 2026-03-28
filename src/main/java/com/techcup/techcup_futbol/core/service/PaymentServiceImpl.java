@@ -2,76 +2,74 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.PaymentResponse;
 import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.UploadReceiptRequest;
-import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Payment;
 import com.techcup.techcup_futbol.core.model.PaymentStatus;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.exception.PaymentException;
+import com.techcup.techcup_futbol.repository.PaymentRepository;
+import com.techcup.techcup_futbol.repository.TeamRepository;
 import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
     private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
-    private final Map<String, Payment> payments = new HashMap<>();
-    private final Map<String, String> teamPaymentIndex = new HashMap<>();
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private TeamRepository teamRepository;
 
     @Override
+    @Transactional
     public PaymentResponse uploadReceipt(UploadReceiptRequest request) {
         log.info("Subiendo comprobante para equipo ID: {}", request.teamId());
 
-        Team team = DataStore.equipos.get(request.teamId());
-        if (team == null) {
-            throw new PaymentException("teamId",
-                    String.format(PaymentException.TEAM_NOT_FOUND, request.teamId()));
-        }
+        Team team = teamRepository.findById(request.teamId())
+                .orElseThrow(() -> new PaymentException("teamId",
+                        String.format(PaymentException.TEAM_NOT_FOUND, request.teamId())));
+
         if (request.receiptUrl() == null || request.receiptUrl().isBlank()) {
             throw new PaymentException("receiptUrl", PaymentException.RECEIPT_URL_EMPTY);
         }
 
-        Payment payment = teamPaymentIndex.containsKey(request.teamId())
-                ? payments.get(teamPaymentIndex.get(request.teamId()))
-                : new Payment();
-
-        if (payment.getId() == null) {
-            payment = new Payment(
-                    IdGenerator.generateId(),
-                    null,
-                    team.getPlayers() != null ? team.getPlayers().size() * 50.0 : 0.0,
-                    PaymentStatus.PENDING
-            );
-        }
+        Payment payment = paymentRepository.findByTeamId(request.teamId())
+                .orElseGet(() -> {
+                    Payment p = new Payment();
+                    p.setId(IdGenerator.generateId());
+                    p.setTeamId(request.teamId());
+                    p.setAmount(team.getPlayers() != null ? team.getPlayers().size() * 50.0 : 0.0);
+                    p.setCurrentStatus(PaymentStatus.PENDING);
+                    return p;
+                });
 
         if (payment.getCurrentStatus() == PaymentStatus.APPROVED) {
             throw new PaymentException("status", PaymentException.PAYMENT_ALREADY_APPROVED);
         }
 
         payment.uploadReceipt(request.receiptUrl());
-        payments.put(payment.getId(), payment);
-        teamPaymentIndex.put(request.teamId(), payment.getId());
+        paymentRepository.save(payment);
 
         log.info("Comprobante subido — pago ID: {} | estado: {}", payment.getId(), payment.getCurrentStatus());
         return toResponse(payment, team);
     }
 
     @Override
+    @Transactional
     public PaymentResponse updateStatus(String paymentId, String newStatus) {
         log.info("Actualizando estado del pago ID: {} → {}", paymentId, newStatus);
 
-        Payment payment = payments.get(paymentId);
-        if (payment == null) {
-            throw new PaymentException("id",
-                    String.format(PaymentException.PAYMENT_NOT_FOUND, paymentId));
-        }
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentException("id",
+                        String.format(PaymentException.PAYMENT_NOT_FOUND, paymentId)));
 
         PaymentStatus next;
         try {
@@ -83,53 +81,48 @@ public class PaymentServiceImpl implements PaymentService {
 
         validateStatusTransition(payment.getCurrentStatus(), next);
         payment.updateValidationStatus(next);
+        paymentRepository.save(payment);
 
         log.info("Estado actualizado — pago ID: {} | nuevo estado: {}", paymentId, next);
 
-        Team team = teamPaymentIndex.entrySet().stream()
-                .filter(e -> e.getValue().equals(paymentId))
-                .map(e -> DataStore.equipos.get(e.getKey()))
-                .findFirst().orElse(null);
+        Team team = payment.getTeamId() != null
+                ? teamRepository.findById(payment.getTeamId()).orElse(null)
+                : null;
 
         return toResponse(payment, team);
     }
 
     @Override
     public PaymentResponse findById(String paymentId) {
-        Payment payment = payments.get(paymentId);
-        if (payment == null) {
-            throw new PaymentException("id",
-                    String.format(PaymentException.PAYMENT_NOT_FOUND, paymentId));
-        }
-        Team team = teamPaymentIndex.entrySet().stream()
-                .filter(e -> e.getValue().equals(paymentId))
-                .map(e -> DataStore.equipos.get(e.getKey()))
-                .findFirst().orElse(null);
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentException("id",
+                        String.format(PaymentException.PAYMENT_NOT_FOUND, paymentId)));
+
+        Team team = payment.getTeamId() != null
+                ? teamRepository.findById(payment.getTeamId()).orElse(null)
+                : null;
+
         return toResponse(payment, team);
     }
 
     @Override
     public List<PaymentResponse> findAll() {
-        List<PaymentResponse> result = new ArrayList<>();
-        for (Map.Entry<String, Payment> entry : payments.entrySet()) {
-            String teamId = teamPaymentIndex.entrySet().stream()
-                    .filter(e -> e.getValue().equals(entry.getKey()))
-                    .map(Map.Entry::getKey)
-                    .findFirst().orElse(null);
-            Team team = teamId != null ? DataStore.equipos.get(teamId) : null;
-            result.add(toResponse(entry.getValue(), team));
-        }
-        return result;
+        return paymentRepository.findAll().stream().map(p -> {
+            Team team = p.getTeamId() != null
+                    ? teamRepository.findById(p.getTeamId()).orElse(null)
+                    : null;
+            return toResponse(p, team);
+        }).toList();
     }
 
     @Override
     public PaymentResponse findByTeamId(String teamId) {
-        String paymentId = teamPaymentIndex.get(teamId);
-        if (paymentId == null) {
-            throw new PaymentException("teamId",
-                    String.format(PaymentException.PAYMENT_NOT_FOUND, teamId));
-        }
-        return findById(paymentId);
+        Payment payment = paymentRepository.findByTeamId(teamId)
+                .orElseThrow(() -> new PaymentException("teamId",
+                        String.format(PaymentException.PAYMENT_NOT_FOUND, teamId)));
+
+        Team team = teamRepository.findById(teamId).orElse(null);
+        return toResponse(payment, team);
     }
 
     private void validateStatusTransition(PaymentStatus current, PaymentStatus next) {

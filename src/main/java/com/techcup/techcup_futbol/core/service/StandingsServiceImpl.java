@@ -3,10 +3,14 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.StandingsDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
+import com.techcup.techcup_futbol.repository.StandingsRepository;
+import com.techcup.techcup_futbol.repository.TournamentRepository;
 import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,21 +20,33 @@ public class StandingsServiceImpl implements StandingsService {
 
     private static final Logger log = LoggerFactory.getLogger(StandingsServiceImpl.class);
 
-    private final Map<String, Map<String, Standings>> tournamentStandings = new ConcurrentHashMap<>();
+    @Autowired
+    private StandingsRepository standingsRepository;
+
+    @Autowired
+    private TournamentRepository tournamentRepository;
+
+    // Índice en memoria para saber a qué torneo pertenece cada equipo
     private final Map<String, String> teamTournamentIndex = new ConcurrentHashMap<>();
 
     public void registerTeamInTournament(String tournamentId, Team team) {
-        tournamentStandings.computeIfAbsent(tournamentId, k -> new LinkedHashMap<>());
-        if (!tournamentStandings.get(tournamentId).containsKey(team.getId())) {
+        teamTournamentIndex.put(team.getId(), tournamentId);
+
+        boolean exists = standingsRepository
+                .findByTournamentIdAndTeamId(tournamentId, team.getId())
+                .isPresent();
+
+        if (!exists) {
             Standings s = new Standings();
             s.setId(IdGenerator.generateId());
+            s.setTournamentId(tournamentId);
             s.setTeam(team);
-            tournamentStandings.get(tournamentId).put(team.getId(), s);
-            teamTournamentIndex.put(team.getId(), tournamentId);
+            standingsRepository.save(s);
         }
     }
 
     @Override
+    @Transactional
     public void updateFromMatch(Match match) {
         String tournamentId = teamTournamentIndex.get(match.getLocalTeam().getId());
         if (tournamentId == null) {
@@ -39,26 +55,22 @@ public class StandingsServiceImpl implements StandingsService {
             return;
         }
 
-        Map<String, Standings> table = tournamentStandings.get(tournamentId);
-        if (table == null) return;
-
-        updateTeamStandings(table, match.getLocalTeam(), match.getScoreLocal(), match.getScoreVisitor());
-        updateTeamStandings(table, match.getVisitorTeam(), match.getScoreVisitor(), match.getScoreLocal());
+        updateTeamStandings(tournamentId, match.getLocalTeam(),
+                match.getScoreLocal(), match.getScoreVisitor());
+        updateTeamStandings(tournamentId, match.getVisitorTeam(),
+                match.getScoreVisitor(), match.getScoreLocal());
 
         log.info("Tabla de posiciones actualizada para torneo ID: {}", tournamentId);
     }
 
     @Override
     public StandingsResponse findByTournamentId(String tournamentId) {
-        Tournament tournament = DataStore.torneos.get(tournamentId);
-        if (tournament == null) {
-            throw new TournamentException("id",
-                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, tournamentId));
-        }
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new TournamentException("id",
+                        String.format(TournamentException.TOURNAMENT_NOT_FOUND, tournamentId)));
 
-        Map<String, Standings> table = tournamentStandings.getOrDefault(tournamentId, Map.of());
-
-        List<Standings> sorted = table.values().stream()
+        List<Standings> sorted = standingsRepository.findByTournamentId(tournamentId)
+                .stream()
                 .sorted(Comparator
                         .comparingInt(Standings::getPoints).reversed()
                         .thenComparingInt(Standings::getGoalsDifference).reversed()
@@ -83,14 +95,16 @@ public class StandingsServiceImpl implements StandingsService {
         return new StandingsResponse(tournamentId, tournament.getName(), dtos);
     }
 
-    private void updateTeamStandings(Map<String, Standings> table, Team team, int goalsFor, int goalsAgainst) {
-        Standings s = table.get(team.getId());
-        if (s == null) {
-            s = new Standings();
-            s.setId(IdGenerator.generateId());
-            s.setTeam(team);
-            table.put(team.getId(), s);
-        }
+    private void updateTeamStandings(String tournamentId, Team team, int goalsFor, int goalsAgainst) {
+        Standings s = standingsRepository
+                .findByTournamentIdAndTeamId(tournamentId, team.getId())
+                .orElseGet(() -> {
+                    Standings ns = new Standings();
+                    ns.setId(IdGenerator.generateId());
+                    ns.setTournamentId(tournamentId);
+                    ns.setTeam(team);
+                    return ns;
+                });
 
         s.setMatchesPlayed(s.getMatchesPlayed() + 1);
         s.setGoalsFor(s.getGoalsFor() + goalsFor);
@@ -106,5 +120,7 @@ public class StandingsServiceImpl implements StandingsService {
         } else {
             s.setMatchesLost(s.getMatchesLost() + 1);
         }
+
+        standingsRepository.save(s);
     }
 }

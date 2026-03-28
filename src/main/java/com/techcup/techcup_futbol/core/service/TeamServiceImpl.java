@@ -42,10 +42,14 @@ public class TeamServiceImpl implements TeamService {
 
         log.info("[{}] Creando equipo: {} | ID: {}", ts, team.getTeamName(), team.getId());
 
+        // Inicializar lista de jugadores si es nula
+        if (team.getPlayers() == null) {
+            team.setPlayers(new ArrayList<>());
+        }
+
         // Validar nombre único y capitán
         TeamValidator.validateTeamName(team.getTeamName(), getAllTeams());
         TeamValidator.validateCaptain(team);
-        TeamValidator.validateCreationPlayers(team);
 
         // Marcar a todos los jugadores iniciales como integrantes del equipo
         team.getPlayers().forEach(p -> {

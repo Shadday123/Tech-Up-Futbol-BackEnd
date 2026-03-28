@@ -4,22 +4,38 @@ import com.techcup.techcup_futbol.Controller.dto.PlayerSearchRequest;
 import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.PlayerSearchServiceImpl;
+import com.techcup.techcup_futbol.repository.PlayerRepository;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("PlayerSearchServiceImpl Tests")
 class PlayerSearchServiceImplTest {
 
+    @InjectMocks
     private PlayerSearchServiceImpl service;
+
+    @Mock
+    private PlayerRepository playerRepository;
 
     @BeforeEach
     void setUp() {
         DataStore.limpiarDatos();
-        service = new PlayerSearchServiceImpl();
+        when(playerRepository.findAll())
+                .thenAnswer(inv -> new ArrayList<>(DataStore.jugadores.values()));
     }
 
     // ── Happy Path

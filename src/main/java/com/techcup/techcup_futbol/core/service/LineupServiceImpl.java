@@ -3,10 +3,16 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.LineupException;
+import com.techcup.techcup_futbol.repository.LineupRepository;
+import com.techcup.techcup_futbol.repository.MatchRepository;
+import com.techcup.techcup_futbol.repository.PlayerRepository;
+import com.techcup.techcup_futbol.repository.TeamRepository;
 import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -15,31 +21,40 @@ public class LineupServiceImpl implements LineupService {
 
     private static final Logger log = LoggerFactory.getLogger(LineupServiceImpl.class);
 
-    private final Map<String, Match> matches = new HashMap<>();
-    private final Map<String, Lineup> lineups = new HashMap<>();
+    @Autowired
+    private LineupRepository lineupRepository;
 
+    @Autowired
+    private MatchRepository matchRepository;
+
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    @Override
+    @Transactional
     public void registerMatch(Match match) {
-        matches.put(match.getId(), match);
+        if (match != null && !matchRepository.existsById(match.getId())) {
+            matchRepository.save(match);
+        }
     }
 
     @Override
+    @Transactional
     public LineupResponse create(CreateLineupRequest request) {
         log.info("Creando alineación — partido: {} | equipo: {}", request.matchId(), request.teamId());
 
-        Match match = matches.get(request.matchId());
-        if (match == null) {
-            throw new LineupException("matchId",
-                    String.format(LineupException.MATCH_NOT_FOUND, request.matchId()));
-        }
+        Match match = matchRepository.findById(request.matchId())
+                .orElseThrow(() -> new LineupException("matchId",
+                        String.format(LineupException.MATCH_NOT_FOUND, request.matchId())));
 
-        Team team = DataStore.equipos.get(request.teamId());
-        if (team == null) {
-            throw new LineupException("teamId",
-                    String.format(LineupException.TEAM_NOT_FOUND, request.teamId()));
-        }
+        Team team = teamRepository.findById(request.teamId())
+                .orElseThrow(() -> new LineupException("teamId",
+                        String.format(LineupException.TEAM_NOT_FOUND, request.teamId())));
 
-        String key = request.matchId() + "_" + request.teamId();
-        if (lineups.containsKey(key)) {
+        if (lineupRepository.existsByMatchIdAndTeamId(request.matchId(), request.teamId())) {
             throw new LineupException("lineup",
                     String.format(LineupException.LINEUP_ALREADY_EXISTS,
                             request.matchId(), team.getTeamName()));
@@ -61,14 +76,15 @@ public class LineupServiceImpl implements LineupService {
                 throw new LineupException("starters",
                         String.format(LineupException.PLAYER_NOT_IN_TEAM, sid, team.getTeamName()));
             }
-            starters.add(DataStore.jugadores.get(sid));
+            starters.add(playerRepository.findById(sid)
+                    .orElseThrow(() -> new LineupException("starters",
+                            String.format(LineupException.PLAYER_NOT_IN_TEAM, sid, team.getTeamName()))));
         }
 
         List<Player> substitutes = new ArrayList<>();
         if (request.substituteIds() != null) {
             for (String sid : request.substituteIds()) {
-                Player p = DataStore.jugadores.get(sid);
-                if (p != null) substitutes.add(p);
+                playerRepository.findById(sid).ifPresent(substitutes::add);
             }
         }
 
@@ -86,39 +102,31 @@ public class LineupServiceImpl implements LineupService {
         lineup.setSubstitutes(substitutes);
         lineup.setFieldPositions(positions);
 
-        lineups.put(key, lineup);
+        lineupRepository.save(lineup);
         log.info("Alineación creada ID: {} para equipo '{}'", lineup.getId(), team.getTeamName());
         return toResponse(lineup);
     }
 
     @Override
     public LineupResponse findByMatchAndTeam(String matchId, String teamId) {
-        String key = matchId + "_" + teamId;
-        Lineup lineup = lineups.get(key);
-        if (lineup == null) {
-            throw new LineupException("lineup",
-                    String.format(LineupException.LINEUP_NOT_FOUND, matchId, teamId));
-        }
+        Lineup lineup = lineupRepository.findByMatchIdAndTeamId(matchId, teamId)
+                .orElseThrow(() -> new LineupException("lineup",
+                        String.format(LineupException.LINEUP_NOT_FOUND, matchId, teamId)));
         return toResponse(lineup);
     }
 
     @Override
     public LineupResponse findRivalLineup(String matchId, String myTeamId) {
-        Match match = matches.get(matchId);
-        if (match == null) {
-            throw new LineupException("matchId",
-                    String.format(LineupException.MATCH_NOT_FOUND, matchId));
-        }
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new LineupException("matchId",
+                        String.format(LineupException.MATCH_NOT_FOUND, matchId)));
 
         String rivalId = match.getLocalTeam().getId().equals(myTeamId)
                 ? match.getVisitorTeam().getId()
                 : match.getLocalTeam().getId();
 
-        String rivalKey = matchId + "_" + rivalId;
-        Lineup rivalLineup = lineups.get(rivalKey);
-        if (rivalLineup == null) {
-            throw new LineupException("lineup", LineupException.RIVAL_LINEUP_NOT_PUBLISHED);
-        }
+        Lineup rivalLineup = lineupRepository.findByMatchIdAndTeamId(matchId, rivalId)
+                .orElseThrow(() -> new LineupException("lineup", LineupException.RIVAL_LINEUP_NOT_PUBLISHED));
         return toResponse(rivalLineup);
     }
 

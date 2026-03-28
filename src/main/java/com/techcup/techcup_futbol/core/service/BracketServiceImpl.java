@@ -3,11 +3,17 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.BracketDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.BracketException;
+import com.techcup.techcup_futbol.repository.MatchRepository;
+import com.techcup.techcup_futbol.repository.TeamRepository;
+import com.techcup.techcup_futbol.repository.TournamentBracketsRepository;
+import com.techcup.techcup_futbol.repository.TournamentRepository;
 import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -16,39 +22,46 @@ public class BracketServiceImpl implements BracketService {
 
     private static final Logger log = LoggerFactory.getLogger(BracketServiceImpl.class);
 
-    private final Map<String, List<TournamentBrackets>> tournamentBrackets = new HashMap<>();
-    private final Map<String, Match>                    bracketMatches     = new LinkedHashMap<>();
-    private final Map<String, MatchStatus>              bracketMatchStatus  = new HashMap<>();
-    private final Map<String, Team>                     matchWinners       = new HashMap<>();
+    @Autowired
+    private TournamentRepository tournamentRepository;
 
     @Autowired
-    @org.springframework.context.annotation.Lazy
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private TournamentBracketsRepository tournamentBracketsRepository;
+
+    @Autowired
+    private MatchRepository matchRepository;
+
+    @Autowired
+    @Lazy
     private MatchService matchService;
 
     // ── GENERATE
 
     @Override
+    @Transactional
     public BracketResponse generate(String tournamentId, GenerateBracketRequest request) {
         log.info("Generando llaves para torneo ID: {} con {} equipos",
                 tournamentId, request.teamsCount());
 
-        Tournament tournament = DataStore.torneos.get(tournamentId);
-        if (tournament == null) {
-            throw new BracketException("tournamentId",
-                    String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId));
-        }
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new BracketException("tournamentId",
+                        String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId)));
 
-        // Si ya existen llaves con resultados, no se puede regenerar
-        if (tournamentBrackets.containsKey(tournamentId)) {
-            boolean hasResults = bracketMatches.values().stream()
-                    .anyMatch(m -> bracketMatchStatus.get(m.getId()) == MatchStatus.FINISHED);
+        List<TournamentBrackets> existing = tournamentBracketsRepository.findByTournamentId(tournamentId);
+        if (!existing.isEmpty()) {
+            boolean hasResults = existing.stream()
+                    .flatMap(b -> b.getMatches().stream())
+                    .anyMatch(m -> m.getStatus() == MatchStatus.FINISHED);
             if (hasResults) {
                 throw new BracketException("bracket", BracketException.RESULTS_ALREADY_REGISTERED);
             }
-            tournamentBrackets.remove(tournamentId);
+            tournamentBracketsRepository.deleteAll(existing);
         }
 
-        List<Team> teams = new ArrayList<>(DataStore.equipos.values());
+        List<Team> teams = new ArrayList<>(teamRepository.findAll());
         int count = Math.min(request.teamsCount(), teams.size());
 
         if (count < 2) {
@@ -63,15 +76,13 @@ public class BracketServiceImpl implements BracketService {
         Collections.shuffle(teams.subList(0, count), new java.security.SecureRandom());
         List<Team> selected = new ArrayList<>(teams.subList(0, count));
 
-        List<TournamentBrackets> phases = new ArrayList<>();
         PhaseEnum phase = resolveInitialPhase(count);
-
         List<Match> roundMatches = new ArrayList<>();
+
         for (int i = 0; i < selected.size() - 1; i += 2) {
             Match m = buildMatch(selected.get(i), selected.get(i + 1));
+            matchRepository.save(m);
             roundMatches.add(m);
-            bracketMatches.put(m.getId(), m);
-            bracketMatchStatus.put(m.getId(), MatchStatus.SCHEDULED);
             matchService.registerMatch(m);
         }
 
@@ -80,9 +91,9 @@ public class BracketServiceImpl implements BracketService {
         bracket.setTournament(tournament);
         bracket.setPhase(phase);
         bracket.setMatches(roundMatches);
-        phases.add(bracket);
+        tournamentBracketsRepository.save(bracket);
 
-        tournamentBrackets.put(tournamentId, phases);
+        List<TournamentBrackets> phases = List.of(bracket);
         log.info("Llaves generadas: {} partidos en fase {}", roundMatches.size(), phase);
         return toResponse(tournamentId, tournament, phases);
     }
@@ -91,13 +102,12 @@ public class BracketServiceImpl implements BracketService {
 
     @Override
     public BracketResponse findByTournamentId(String tournamentId) {
-        Tournament tournament = DataStore.torneos.get(tournamentId);
-        if (tournament == null) {
-            throw new BracketException("tournamentId",
-                    String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId));
-        }
-        List<TournamentBrackets> phases = tournamentBrackets.get(tournamentId);
-        if (phases == null || phases.isEmpty()) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new BracketException("tournamentId",
+                        String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId)));
+
+        List<TournamentBrackets> phases = tournamentBracketsRepository.findByTournamentId(tournamentId);
+        if (phases.isEmpty()) {
             throw new BracketException("bracket",
                     String.format(BracketException.BRACKET_NOT_FOUND, tournament.getName()));
         }
@@ -107,20 +117,17 @@ public class BracketServiceImpl implements BracketService {
     // ── ADVANCE WINNER
 
     @Override
+    @Transactional
     public BracketResponse advanceWinner(String tournamentId, String matchId) {
         log.info("Avanzando ganador del partido ID: {}", matchId);
 
-        Tournament tournament = DataStore.torneos.get(tournamentId);
-        if (tournament == null) {
-            throw new BracketException("tournamentId",
-                    String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId));
-        }
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new BracketException("tournamentId",
+                        String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId)));
 
-        Match match = bracketMatches.get(matchId);
-        if (match == null) {
-            throw new BracketException("matchId",
-                    String.format(BracketException.MATCH_NOT_FOUND, matchId));
-        }
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new BracketException("matchId",
+                        String.format(BracketException.MATCH_NOT_FOUND, matchId)));
 
         if (!matchService.isResultRegistered(matchId)) {
             throw new BracketException("matchId", BracketException.RESULT_NOT_REGISTERED);
@@ -134,18 +141,19 @@ public class BracketServiceImpl implements BracketService {
                 ? match.getLocalTeam()
                 : match.getVisitorTeam();
 
-        matchWinners.put(matchId, winner);
-        bracketMatchStatus.put(matchId, MatchStatus.FINISHED);
+        match.setWinner(winner);
+        match.setStatus(MatchStatus.FINISHED);
+        matchRepository.save(match);
 
-        List<TournamentBrackets> phases = tournamentBrackets.get(tournamentId);
+        List<TournamentBrackets> phases = tournamentBracketsRepository.findByTournamentId(tournamentId);
         TournamentBrackets currentPhase = phases.get(phases.size() - 1);
 
         boolean allFinished = currentPhase.getMatches().stream()
-                .allMatch(m -> bracketMatchStatus.get(m.getId()) == MatchStatus.FINISHED);
+                .allMatch(m -> m.getStatus() == MatchStatus.FINISHED && m.getWinner() != null);
 
         if (allFinished && currentPhase.getPhase() != PhaseEnum.FINAL) {
             List<Team> winners = currentPhase.getMatches().stream()
-                    .map(m -> matchWinners.get(m.getId()))
+                    .map(Match::getWinner)
                     .filter(Objects::nonNull)
                     .toList();
 
@@ -153,9 +161,8 @@ public class BracketServiceImpl implements BracketService {
             List<Match> nextMatches = new ArrayList<>();
             for (int i = 0; i < winners.size() - 1; i += 2) {
                 Match nm = buildMatch(winners.get(i), winners.get(i + 1));
+                matchRepository.save(nm);
                 nextMatches.add(nm);
-                bracketMatches.put(nm.getId(), nm);
-                bracketMatchStatus.put(nm.getId(), MatchStatus.SCHEDULED);
                 matchService.registerMatch(nm);
             }
 
@@ -164,20 +171,23 @@ public class BracketServiceImpl implements BracketService {
             nextBracket.setTournament(tournament);
             nextBracket.setPhase(nextPhase);
             nextBracket.setMatches(nextMatches);
-            phases.add(nextBracket);
+            tournamentBracketsRepository.save(nextBracket);
+
+            phases = tournamentBracketsRepository.findByTournamentId(tournamentId);
             log.info("Fase {} generada con {} partidos", nextPhase, nextMatches.size());
         }
 
         return toResponse(tournamentId, tournament, phases);
     }
 
-    // HELPERS
+    // ── HELPERS
 
     private Match buildMatch(Team local, Team visitor) {
         Match m = new Match();
         m.setId(IdGenerator.generateId());
         m.setLocalTeam(local);
         m.setVisitorTeam(visitor);
+        m.setStatus(MatchStatus.SCHEDULED);
         return m;
     }
 
@@ -208,17 +218,16 @@ public class BracketServiceImpl implements BracketService {
         List<PhaseDTO> phaseDTOs = phases.stream().map(b -> {
             List<BracketMatchDTO> matchDTOs = b.getMatches() == null ? List.of()
                     : b.getMatches().stream().map(m -> {
-                Team w  = matchWinners.get(m.getId());
-                MatchStatus st = bracketMatchStatus.getOrDefault(
-                        m.getId(), MatchStatus.SCHEDULED);
+                Team w = m.getWinner();
+                MatchStatus st = m.getStatus() != null ? m.getStatus() : MatchStatus.SCHEDULED;
                 return new BracketMatchDTO(
                         m.getId(),
                         m.getLocalTeam().getId(),   m.getLocalTeam().getTeamName(),
                         m.getVisitorTeam().getId(), m.getVisitorTeam().getTeamName(),
                         st == MatchStatus.FINISHED ? m.getScoreLocal()   : null,
                         st == MatchStatus.FINISHED ? m.getScoreVisitor() : null,
-                        w != null ? w.getId()        : null,
-                        w != null ? w.getTeamName()  : null,
+                        w != null ? w.getId()       : null,
+                        w != null ? w.getTeamName() : null,
                         st.name()
                 );
             }).toList();

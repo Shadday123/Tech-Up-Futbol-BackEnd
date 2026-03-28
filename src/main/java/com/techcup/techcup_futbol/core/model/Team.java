@@ -11,7 +11,6 @@ import java.util.List;
 public class Team {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
     @Column(nullable = false, unique = true)
@@ -21,20 +20,18 @@ public class Team {
 
     private String uniformColors;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-
     @ManyToOne
     @JoinColumn(name = "captain_id")
     private Player captain;
 
+    @Enumerated(EnumType.STRING)
     private TeamStatus status;
 
     @ManyToMany
     @JoinTable(
             name = "team_players",
             joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "plyaer_id")
+            inverseJoinColumns = @JoinColumn(name = "player_id")
     )
     private List<Player> players;
 }

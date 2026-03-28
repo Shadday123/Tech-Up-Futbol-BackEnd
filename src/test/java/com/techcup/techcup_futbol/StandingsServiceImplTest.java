@@ -4,23 +4,69 @@ import com.techcup.techcup_futbol.Controller.dto.StandingsDTOs.StandingsResponse
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.StandingsServiceImpl;
+import com.techcup.techcup_futbol.repository.StandingsRepository;
+import com.techcup.techcup_futbol.repository.TournamentRepository;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("StandingsServiceImpl Tests")
 class StandingsServiceImplTest {
 
+    @InjectMocks
     private StandingsServiceImpl service;
+
+    @Mock
+    private StandingsRepository standingsRepository;
+
+    @Mock
+    private TournamentRepository tournamentRepository;
+
+    private final Map<String, Standings> standingsStore = new HashMap<>();
 
     @BeforeEach
     void setUp() {
         DataStore.limpiarDatos();
-        service = new StandingsServiceImpl();
+        standingsStore.clear();
+
+        when(tournamentRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(DataStore.torneos.get(inv.getArgument(0, String.class))));
+
+        when(standingsRepository.save(any(Standings.class))).thenAnswer(inv -> {
+            Standings s = inv.getArgument(0);
+            standingsStore.put(s.getId(), s);
+            return s;
+        });
+
+        when(standingsRepository.findByTournamentIdAndTeamId(anyString(), anyString())).thenAnswer(inv -> {
+            String tId = inv.getArgument(0);
+            String teamId = inv.getArgument(1);
+            return standingsStore.values().stream()
+                    .filter(s -> s.getTournamentId().equals(tId) && s.getTeam().getId().equals(teamId))
+                    .findFirst();
+        });
+
+        when(standingsRepository.findByTournamentId(anyString())).thenAnswer(inv -> {
+            String tId = inv.getArgument(0);
+            return standingsStore.values().stream()
+                    .filter(s -> s.getTournamentId().equals(tId))
+                    .collect(Collectors.toList());
+        });
     }
 
     // ── Happy Path
@@ -249,7 +295,7 @@ class StandingsServiceImplTest {
 
     private Tournament buildTorneo(String id) {
         Tournament t = new Tournament();
-        t.setId(UUID.fromString(id));
+        t.setId(id);
         t.setName("Torneo " + id);
         t.setStartDate(LocalDateTime.now().plusDays(5));
         t.setEndDate(LocalDateTime.now().plusDays(30));

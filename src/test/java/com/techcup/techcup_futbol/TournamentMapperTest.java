@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 class TournamentMapperTest {
 
@@ -18,10 +17,10 @@ class TournamentMapperTest {
     @BeforeEach
     void setup(){
         dtoTorneo = new TournamentDTO();
-        dtoTorneo.setId("T001");
+        dtoTorneo.setId("dto-torneo-001");
         dtoTorneo.setName("TechCup 2026-1");
-        dtoTorneo.setStartDate(LocalDateTime.of(2026, 3, 18, 8, 00));
-        dtoTorneo.setEndDate(LocalDateTime.of(2026, 4, 16, 16, 00));
+        dtoTorneo.setStartDate(LocalDateTime.of(2026, 3, 18, 8, 0));
+        dtoTorneo.setEndDate(LocalDateTime.of(2026, 4, 16, 16, 0));
         dtoTorneo.setRegistrationFee(130000.0);
         dtoTorneo.setMaxTeams(16);
         dtoTorneo.setRules("Reglas por hacer");
@@ -29,7 +28,7 @@ class TournamentMapperTest {
 
 
         torneoCompleto = new Tournament();
-        torneoCompleto.setId(UUID.fromString("T003"));
+        torneoCompleto.setId("T003");
         torneoCompleto.setName("TechCup Relampago 2026-1");
         torneoCompleto.setStartDate(LocalDateTime.of(2026, 4, 18, 8, 00));
         torneoCompleto.setEndDate(LocalDateTime.of(2026, 5, 16, 17, 00));

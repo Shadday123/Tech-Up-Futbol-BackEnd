@@ -2,7 +2,6 @@ package com.techcup.techcup_futbol.core.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.util.UUID;
 import com.techcup.techcup_futbol.util.IdGenerator;
 
 import java.security.SecureRandom;
@@ -13,12 +12,11 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name= "tournaments")
+@Table(name = "tournaments")
 public class Tournament {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private String id;
 
     @Column(nullable = false)
     private String name;
@@ -39,14 +37,22 @@ public class Tournament {
 
     private LocalDateTime registrationDeadline;
 
-    private List<String> importantDates;   // formato: "descripcion|datetime"
+    @ElementCollection
+    @CollectionTable(name = "tournament_important_dates", joinColumns = @JoinColumn(name = "tournament_id"))
+    @Column(name = "date_entry")
+    private List<String> importantDates;
 
-    private List<String> matchSchedules;   // formato: "dia|horaInicio|horaFin"
+    @ElementCollection
+    @CollectionTable(name = "tournament_match_schedules", joinColumns = @JoinColumn(name = "tournament_id"))
+    @Column(name = "schedule_entry")
+    private List<String> matchSchedules;
 
-    private List<String> fields;           // formato: "nombre|ubicacion"
+    @ElementCollection
+    @CollectionTable(name = "tournament_fields", joinColumns = @JoinColumn(name = "tournament_id"))
+    @Column(name = "field_entry")
+    private List<String> fields;
 
     private String sanctions;
-
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

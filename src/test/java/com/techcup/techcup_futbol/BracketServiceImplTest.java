@@ -5,20 +5,28 @@ import com.techcup.techcup_futbol.core.exception.BracketException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.BracketServiceImpl;
 import com.techcup.techcup_futbol.core.service.MatchService;
+import com.techcup.techcup_futbol.repository.MatchRepository;
+import com.techcup.techcup_futbol.repository.TeamRepository;
+import com.techcup.techcup_futbol.repository.TournamentBracketsRepository;
+import com.techcup.techcup_futbol.repository.TournamentRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("BracketServiceImpl Tests")
 class BracketServiceImplTest {
 
@@ -28,9 +36,60 @@ class BracketServiceImplTest {
     @Mock
     private MatchService matchService;
 
+    @Mock
+    private TournamentRepository tournamentRepository;
+
+    @Mock
+    private TeamRepository teamRepository;
+
+    @Mock
+    private TournamentBracketsRepository tournamentBracketsRepository;
+
+    @Mock
+    private MatchRepository matchRepository;
+
+    private final Map<String, Match> matchStore = new HashMap<>();
+    private final Map<String, TournamentBrackets> bracketStore = new HashMap<>();
+
     @BeforeEach
     void setUp() {
         DataStore.limpiarDatos();
+        matchStore.clear();
+        bracketStore.clear();
+
+        when(tournamentRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(DataStore.torneos.get(inv.getArgument(0, String.class))));
+
+        when(teamRepository.findAll())
+                .thenAnswer(inv -> new ArrayList<>(DataStore.equipos.values()));
+
+        when(matchRepository.save(any(Match.class))).thenAnswer(inv -> {
+            Match m = inv.getArgument(0);
+            matchStore.put(m.getId(), m);
+            return m;
+        });
+
+        when(matchRepository.findById(anyString())).thenAnswer(inv ->
+                Optional.ofNullable(matchStore.get(inv.getArgument(0, String.class))));
+
+        when(tournamentBracketsRepository.save(any(TournamentBrackets.class))).thenAnswer(inv -> {
+            TournamentBrackets b = inv.getArgument(0);
+            bracketStore.put(b.getId(), b);
+            return b;
+        });
+
+        when(tournamentBracketsRepository.findByTournamentId(anyString())).thenAnswer(inv -> {
+            String tId = inv.getArgument(0, String.class);
+            return bracketStore.values().stream()
+                    .filter(b -> b.getTournament().getId().equals(tId))
+                    .collect(Collectors.toList());
+        });
+
+        doAnswer(inv -> {
+            List<TournamentBrackets> toDelete = inv.getArgument(0);
+            toDelete.forEach(b -> bracketStore.remove(b.getId()));
+            return null;
+        }).when(tournamentBracketsRepository).deleteAll(anyList());
     }
 
     // ── Happy Path
@@ -112,7 +171,7 @@ class BracketServiceImplTest {
 
         @Test
         @DisplayName("HP-BRK-06: advanceWinner() determina ganador cuando local gana")
-        void advanceWinnerLocalGana() throws Exception {
+        void advanceWinnerLocalGana() {
             Tournament torneo = buildTorneo();
             addTeams(2);
             DataStore.torneos.put(torneo.getId().toString(), torneo);
@@ -158,7 +217,7 @@ class BracketServiceImplTest {
 
         @Test
         @DisplayName("HP-BRK-09: advanceWinner() visitante gana si su marcador es mayor")
-        void advanceWinnerVisitanteGana() throws Exception {
+        void advanceWinnerVisitanteGana() {
             Tournament torneo = buildTorneo();
             addTeams(2);
             DataStore.torneos.put(torneo.getId().toString(), torneo);
@@ -276,7 +335,7 @@ class BracketServiceImplTest {
 
         @Test
         @DisplayName("EP-BRK-09: advanceWinner() lanza BracketException si partido terminó en empate")
-        void advanceWinnerEmpateNoTieneGanadorLanza() throws Exception {
+        void advanceWinnerEmpateNoTieneGanadorLanza() {
             Tournament torneo = buildTorneo();
             addTeams(2);
             DataStore.torneos.put(torneo.getId().toString(), torneo);
@@ -348,7 +407,7 @@ class BracketServiceImplTest {
 
     private Tournament buildTorneo() {
         Tournament t = new Tournament();
-        t.setId(UUID.fromString("Test"));
+        t.setId("torneo-test");
         t.setName("Torneo Test");
         t.setStartDate(LocalDateTime.now().plusDays(5));
         t.setEndDate(LocalDateTime.now().plusDays(30));
@@ -369,17 +428,8 @@ class BracketServiceImplTest {
         }
     }
 
-    /**
-     * Accede al campo privado bracketMatches via reflection para modificar
-     * el marcador de un partido antes de llamar advanceWinner().
-     */
-    @SuppressWarnings("unchecked")
-    private void setMatchScore(String matchId, int scoreLocal, int scoreVisitor)
-            throws Exception {
-        Field field = BracketServiceImpl.class.getDeclaredField("bracketMatches");
-        field.setAccessible(true);
-        Map<String, Match> bracketMatches = (Map<String, Match>) field.get(service);
-        Match match = bracketMatches.get(matchId);
+    private void setMatchScore(String matchId, int scoreLocal, int scoreVisitor) {
+        Match match = matchStore.get(matchId);
         match.setScoreLocal(scoreLocal);
         match.setScoreVisitor(scoreVisitor);
     }

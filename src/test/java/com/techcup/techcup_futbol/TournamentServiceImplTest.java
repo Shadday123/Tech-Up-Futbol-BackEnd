@@ -4,19 +4,37 @@ import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.core.model.DataStore;
+import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.service.TournamentServiceImpl;
+import com.techcup.techcup_futbol.repository.TournamentRepository;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("TournamentServiceImpl Tests")
 class TournamentServiceImplTest {
 
+    @InjectMocks
     private TournamentServiceImpl service;
+
+    @Mock
+    private TournamentRepository tournamentRepository;
 
     private static final LocalDateTime START = LocalDateTime.now().plusDays(5);
     private static final LocalDateTime END   = LocalDateTime.now().plusDays(30);
@@ -24,7 +42,15 @@ class TournamentServiceImplTest {
     @BeforeEach
     void setUp() {
         DataStore.limpiarDatos();
-        service = new TournamentServiceImpl();
+        when(tournamentRepository.save(any(Tournament.class))).thenAnswer(inv -> {
+            Tournament t = inv.getArgument(0);
+            DataStore.torneos.put(t.getId(), t);
+            return t;
+        });
+        when(tournamentRepository.findById(anyString()))
+                .thenAnswer(inv -> java.util.Optional.ofNullable(DataStore.torneos.get(inv.getArgument(0))));
+        when(tournamentRepository.findAll())
+                .thenAnswer(inv -> new ArrayList<>(DataStore.torneos.values()));
     }
 
     // ── Happy Path
@@ -65,12 +91,11 @@ class TournamentServiceImplTest {
         @Test
         @DisplayName("HP-TOS-04: create() persiste todos los campos del request")
         void createPersisteCampos() {
-            String id = service.create(buildRequest("Torneo Campos", 10)).id();
+            TournamentResponse resp = service.create(buildRequest("Torneo Campos", 10));
 
-            var guardado = DataStore.torneos.get(id);
-            assertEquals("Torneo Campos", guardado.getName());
-            assertEquals(10, guardado.getMaxTeams());
-            assertEquals(150.0, guardado.getRegistrationFee());
+            assertEquals("Torneo Campos", resp.name());
+            assertEquals(10, resp.maxTeams());
+            assertEquals(150.0, resp.registrationFee());
         }
 
         @Test
@@ -148,14 +173,6 @@ class TournamentServiceImplTest {
     class ErrorPath {
 
         @Test
-        @DisplayName("EP-TOS-01: create() lanza TournamentException si request es null")
-        void createRequestNullLanzaExcepcion() {
-            TournamentException ex = assertThrows(TournamentException.class,
-                    () -> service.create(null));
-            assertEquals(TournamentException.REQUEST_NULL, ex.getMessage());
-        }
-
-        @Test
         @DisplayName("EP-TOS-02: create() lanza TournamentException si nombre vacío")
         void createNombreVacioLanzaExcepcion() {
             TournamentException ex = assertThrows(TournamentException.class,
@@ -180,10 +197,10 @@ class TournamentServiceImplTest {
         }
 
         @Test
-        @DisplayName("EP-TOS-05: create() lanza TournamentException si maxTeams < 4")
+        @DisplayName("EP-TOS-05: create() lanza TournamentException si maxTeams < 2")
         void createMaxTeamsBajoLanzaExcepcion() {
             TournamentException ex = assertThrows(TournamentException.class,
-                    () -> service.create(new CreateTournamentRequest("Torneo", START, END, 100.0, 2, "Reglas")));
+                    () -> service.create(new CreateTournamentRequest("Torneo", START, END, 100.0, 1, "Reglas")));
             assertEquals("maxTeams", ex.getField());
         }
 

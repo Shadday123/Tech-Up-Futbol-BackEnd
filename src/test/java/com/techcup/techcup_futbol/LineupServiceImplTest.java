@@ -4,22 +4,92 @@ import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.*;
 import com.techcup.techcup_futbol.core.exception.LineupException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.LineupServiceImpl;
+import com.techcup.techcup_futbol.repository.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("LineupServiceImpl Tests")
 class LineupServiceImplTest {
 
+    @InjectMocks
     private LineupServiceImpl service;
+
+    @Mock
+    private LineupRepository lineupRepository;
+
+    @Mock
+    private MatchRepository matchRepository;
+
+    @Mock
+    private TeamRepository teamRepository;
+
+    @Mock
+    private PlayerRepository playerRepository;
+
+    private final Map<String, Match> matchStore = new HashMap<>();
+    private final Map<String, Lineup> lineupStore = new HashMap<>();
 
     @BeforeEach
     void setUp() {
         DataStore.limpiarDatos();
-        service = new LineupServiceImpl();
+        matchStore.clear();
+        lineupStore.clear();
+
+        // Team repository bridge to DataStore
+        when(teamRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(DataStore.equipos.get(inv.getArgument(0))));
+
+        // Player repository bridge to DataStore
+        when(playerRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(DataStore.jugadores.get(inv.getArgument(0))));
+
+        // Match repository with local store
+        when(matchRepository.save(any(Match.class))).thenAnswer(inv -> {
+            Match m = inv.getArgument(0);
+            matchStore.put(m.getId(), m);
+            return m;
+        });
+        when(matchRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(matchStore.get(inv.getArgument(0))));
+        when(matchRepository.existsById(anyString()))
+                .thenAnswer(inv -> matchStore.containsKey(inv.getArgument(0)));
+
+        // Lineup repository with local store
+        when(lineupRepository.save(any(Lineup.class))).thenAnswer(inv -> {
+            Lineup l = inv.getArgument(0);
+            lineupStore.put(l.getId(), l);
+            return l;
+        });
+        when(lineupRepository.findByMatchIdAndTeamId(anyString(), anyString()))
+                .thenAnswer(inv -> {
+                    String mid = inv.getArgument(0), tid = inv.getArgument(1);
+                    return lineupStore.values().stream()
+                            .filter(l -> l.getMatch().getId().equals(mid)
+                                    && l.getTeam().getId().equals(tid))
+                            .findFirst();
+                });
+        when(lineupRepository.existsByMatchIdAndTeamId(anyString(), anyString()))
+                .thenAnswer(inv -> {
+                    String mid = inv.getArgument(0), tid = inv.getArgument(1);
+                    return lineupStore.values().stream()
+                            .anyMatch(l -> l.getMatch().getId().equals(mid)
+                                    && l.getTeam().getId().equals(tid));
+                });
     }
 
     // ── Happy Path
@@ -93,7 +163,6 @@ class LineupServiceImplTest {
             service.create(buildRequest(match.getId(), local.getId(), localStarters));
             service.create(buildRequest(match.getId(), visitor.getId(), visitorStarters));
 
-            // El local pregunta por la alineación del rival (visitor)
             LineupResponse rivalResp = service.findRivalLineup(
                     match.getId(), local.getId());
 
@@ -213,7 +282,6 @@ class LineupServiceImplTest {
         void createTitularFueraDelEquipoLanza() {
             Scenario s = buildScenario();
 
-            // Creamos un jugador externo no vinculado al equipo
             List<String> startIds = new ArrayList<>(s.starterIds().subList(0, 6));
             StudentPlayer foraneo = buildPlayer();
             DataStore.jugadores.put(foraneo.getId(), foraneo);
@@ -253,7 +321,6 @@ class LineupServiceImplTest {
 
             List<String> localStarters = addPlayersToTeam(local, 7);
             service.create(buildRequest(match.getId(), local.getId(), localStarters));
-            // El visitor NO tiene alineación
 
             LineupException ex = assertThrows(LineupException.class,
                     () -> service.findRivalLineup(match.getId(), local.getId()));
@@ -381,10 +448,6 @@ class LineupServiceImplTest {
         return p;
     }
 
-    /**
-     * Crea count jugadores, los agrega al equipo y al DataStore,
-     * retorna sus IDs como lista de starters.
-     */
     private List<String> addPlayersToTeam(Team team, int count) {
         List<String> ids = new ArrayList<>();
         for (int i = 0; i < count; i++) {

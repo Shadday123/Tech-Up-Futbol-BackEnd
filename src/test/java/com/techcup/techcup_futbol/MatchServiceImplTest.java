@@ -4,21 +4,25 @@ import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.*;
+import com.techcup.techcup_futbol.repository.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("MatchServiceImpl Tests")
 class MatchServiceImplTest {
 
@@ -26,14 +30,77 @@ class MatchServiceImplTest {
     private MatchServiceImpl service;
 
     @Mock
+    private MatchRepository matchRepository;
+
+    @Mock
+    private MatchEventRepository matchEventRepository;
+
+    @Mock
+    private TeamRepository teamRepository;
+
+    @Mock
+    private PlayerRepository playerRepository;
+
+    @Mock
     private LineupService lineupService;
 
     @Mock
     private StandingsService standingsService;
 
+    private final Map<String, Match> matchStore = new HashMap<>();
+    private final Map<String, MatchEvent> eventStore = new HashMap<>();
+
     @BeforeEach
     void setUp() {
         DataStore.limpiarDatos();
+        matchStore.clear();
+        eventStore.clear();
+
+        // Team repository bridge to DataStore
+        when(teamRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(DataStore.equipos.get(inv.getArgument(0))));
+
+        // Match repository with local store
+        when(matchRepository.save(any(Match.class))).thenAnswer(inv -> {
+            Match m = inv.getArgument(0);
+            matchStore.put(m.getId(), m);
+            return m;
+        });
+        when(matchRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(matchStore.get(inv.getArgument(0))));
+        when(matchRepository.findAll())
+                .thenAnswer(inv -> new ArrayList<>(matchStore.values()));
+        when(matchRepository.existsById(anyString()))
+                .thenAnswer(inv -> matchStore.containsKey(inv.getArgument(0)));
+        when(matchRepository.findByLocalTeamIdOrVisitorTeamId(anyString(), anyString()))
+                .thenAnswer(inv -> {
+                    String id1 = inv.getArgument(0);
+                    String id2 = inv.getArgument(1);
+                    return matchStore.values().stream()
+                            .filter(m -> m.getLocalTeam().getId().equals(id1)
+                                    || m.getVisitorTeam().getId().equals(id2))
+                            .collect(Collectors.toList());
+                });
+
+        // Player repository bridge to DataStore
+        when(playerRepository.findById(anyString()))
+                .thenAnswer(inv -> Optional.ofNullable(DataStore.jugadores.get(inv.getArgument(0))));
+
+        // MatchEvent repository with local store
+        when(matchEventRepository.save(any(MatchEvent.class))).thenAnswer(inv -> {
+            MatchEvent e = inv.getArgument(0);
+            eventStore.put(e.getId(), e);
+            return e;
+        });
+        when(matchEventRepository.findByMatchId(anyString()))
+                .thenAnswer(inv -> eventStore.values().stream()
+                        .filter(e -> e.getMatch().getId().equals(inv.getArgument(0)))
+                        .collect(Collectors.toList()));
+        doAnswer(inv -> {
+            String mid = inv.getArgument(0);
+            eventStore.entrySet().removeIf(entry -> entry.getValue().getMatch().getId().equals(mid));
+            return null;
+        }).when(matchEventRepository).deleteByMatchId(anyString());
     }
 
     // ── Happy Path
@@ -316,7 +383,6 @@ class MatchServiceImplTest {
 
             String matchId = service.create(buildRequest(local.getId(), visitor.getId())).id();
 
-            // Declaro 2 goles locales pero solo hay 1 evento GOAL del equipo local
             List<MatchEventRequest> events = List.of(
                     new MatchEventRequest("GOAL", 5, pat.player.getId())
             );

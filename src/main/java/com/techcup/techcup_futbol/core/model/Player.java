@@ -27,6 +27,7 @@ public abstract class Player {
 
     private int numberID;
 
+    @Enumerated(EnumType.STRING)
     private PositionEnum position;
 
     private int dorsalNumber;
@@ -38,8 +39,10 @@ public abstract class Player {
     private String gender;
     private boolean captain;
 
+    @Enumerated(EnumType.STRING)
     private SystemRole systemRole = SystemRole.JUGADOR;
 
+    @Transient
     @JsonIgnore
     private Affilation affiliation;
 

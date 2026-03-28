@@ -2,11 +2,12 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.Controller.dto.PlayerSearchRequest;
 import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
-import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
+import com.techcup.techcup_futbol.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +18,14 @@ public class PlayerSearchServiceImpl implements PlayerSearchService {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerSearchServiceImpl.class);
 
+    @Autowired
+    private PlayerRepository playerRepository;
+
     @Override
     public List<PlayerSearchResult> search(PlayerSearchRequest f) {
         log.info("Buscando jugadores con filtros: {}", f);
 
-        Stream<Player> stream = DataStore.jugadores.values().stream()
+        Stream<Player> stream = playerRepository.findAll().stream()
                 .filter(p -> !p.isHaveTeam() && p.isDisponible());
 
         if (f.position() != null) {

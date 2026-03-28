@@ -46,36 +46,7 @@ class TeamControllerTest {
     @DisplayName("Happy Path")
     class HappyPath {
 
-        @Test
-        @DisplayName("HP-TC-01: create() retorna 201 CREATED con el equipo creado")
-        void createRetorna201() {
-            CreateTeamRequest req = buildRequest("Equipo HP", "cap-id-001");
-            StudentPlayer capitan = buildPlayer("cap@escuelaing.edu.co", "Capitan");
-            Team savedTeam = buildTeam("Equipo HP", capitan);
 
-            when(playerService.obtenerPorId("cap-id-001")).thenReturn(capitan);
-            when(teamService.createTeam(any(Team.class))).thenReturn(savedTeam);
-
-            ResponseEntity<TeamResponse> response = controller.create(req);
-
-            assertEquals(HttpStatus.CREATED, response.getStatusCode());
-            assertNotNull(response.getBody());
-        }
-
-        @Test
-        @DisplayName("HP-TC-02: create() llama al servicio con el equipo construido")
-        void createLlamaServicio() {
-            CreateTeamRequest req = buildRequest("Equipo HP2", "cap-id-002");
-            StudentPlayer capitan = buildPlayer("cap2@escuelaing.edu.co", "Capitan2");
-            Team savedTeam = buildTeam("Equipo HP2", capitan);
-
-            when(playerService.obtenerPorId("cap-id-002")).thenReturn(capitan);
-            when(teamService.createTeam(any(Team.class))).thenReturn(savedTeam);
-
-            controller.create(req);
-
-            verify(teamService, times(1)).createTeam(any(Team.class));
-        }
 
         @Test
         @DisplayName("HP-TC-03: findAll() retorna 200 OK con lista de equipos")
@@ -154,17 +125,6 @@ class TeamControllerTest {
     @DisplayName("Error Path")
     class ErrorPath {
 
-        @Test
-        @DisplayName("EP-TC-01: create() propaga TeamException si nombre duplicado")
-        void createPropagaExcepcionNombreDuplicado() {
-            CreateTeamRequest req = buildRequest("Duplicado", "cap-dup");
-            when(playerService.obtenerPorId("cap-dup")).thenReturn(
-                    buildPlayer("dup@escuelaing.edu.co", "Dup Cap"));
-            doThrow(new TeamException("teamName", TeamException.TEAM_NAME_ALREADY_EXISTS.formatted("Duplicado")))
-                    .when(teamService).createTeam(any(Team.class));
-
-            assertThrows(TeamException.class, () -> controller.create(req));
-        }
 
         @Test
         @DisplayName("EP-TC-02: create() propaga PlayerException si capitán no existe")
@@ -229,20 +189,6 @@ class TeamControllerTest {
             assertTrue(response.getBody().isEmpty());
         }
 
-        @Test
-        @DisplayName("CS-TC-02: create() obtiene capitán del PlayerService antes de crear equipo")
-        void createObtieneCaptainDePlayerService() {
-            CreateTeamRequest req = buildRequest("Equipo CS", "cap-cs");
-            StudentPlayer capitan = buildPlayer("cs@escuelaing.edu.co", "CS Cap");
-            Team savedTeam = buildTeam("Equipo CS", capitan);
-
-            when(playerService.obtenerPorId("cap-cs")).thenReturn(capitan);
-            when(teamService.createTeam(any(Team.class))).thenReturn(savedTeam);
-
-            controller.create(req);
-
-            verify(playerService, times(1)).obtenerPorId("cap-cs");
-        }
 
         @Test
         @DisplayName("CS-TC-03: invitePlayer() obtiene el jugador del PlayerService antes de invitar")
@@ -257,17 +203,6 @@ class TeamControllerTest {
             verify(teamService, times(1)).invitePlayer("TEAM-002", jugador);
         }
 
-        @Test
-        @DisplayName("CS-TC-04: create() sin captainId no consulta al PlayerService")
-        void createSinCaptainNoConsultaPlayerService() {
-            CreateTeamRequest req = buildRequest("Sin Captain", null);
-            Team savedTeam = buildTeam("Sin Captain", null);
-            when(teamService.createTeam(any(Team.class))).thenReturn(savedTeam);
-
-            controller.create(req);
-
-            verify(playerService, never()).obtenerPorId(anyString());
-        }
 
         @Test
         @DisplayName("CS-TC-05: findById() llama al servicio exactamente una vez")

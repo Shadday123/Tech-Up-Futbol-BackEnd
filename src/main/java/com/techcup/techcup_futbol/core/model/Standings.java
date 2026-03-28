@@ -1,18 +1,27 @@
 package com.techcup.techcup_futbol.core.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "standings")
 public class Standings {
 
+    @Id
     private String id;
 
+    @Column(name = "tournament_id", nullable = false)
+    private String tournamentId;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 
     private int matchesPlayed;

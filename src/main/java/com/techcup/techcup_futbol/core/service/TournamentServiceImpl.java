@@ -13,13 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,26 +26,25 @@ public class TournamentServiceImpl implements TournamentService {
 
     private static final Logger log = LoggerFactory.getLogger(TournamentServiceImpl.class);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
     @Autowired
     private TournamentRepository tournamentRepository;
-
 
     // ── CREATE
 
     @Override
+    @Transactional
     public TournamentResponse create(CreateTournamentRequest request) {
         log.info("Creando torneo: '{}'", request.name());
 
-        if (request == null){
+        if (request == null) {
             throw new TournamentException("request", "No puede ser null");
         }
 
         TournamentValidator.validate(request);
 
-        String id = IdGenerator.generateId();
-
         Tournament nuevoTorneo = new Tournament();
-        nuevoTorneo.setId(UUID.fromString(id));
+        nuevoTorneo.setId(IdGenerator.generateId());
         nuevoTorneo.setName(request.name());
         nuevoTorneo.setStartDate(request.startDate());
         nuevoTorneo.setEndDate(request.endDate());
@@ -57,7 +55,7 @@ public class TournamentServiceImpl implements TournamentService {
 
         tournamentRepository.save(nuevoTorneo);
         log.info("Torneo creado — ID: {} | Estado: DRAFT | MaxEquipos: {}",
-                id, request.maxTeams());
+                nuevoTorneo.getId(), request.maxTeams());
 
         return mapToResponse(nuevoTorneo);
     }
@@ -65,14 +63,11 @@ public class TournamentServiceImpl implements TournamentService {
     // ── UPDATE STATE
 
     @Override
+    @Transactional
     public TournamentResponse updateStatus(String id, String nextStateName) {
         log.info("Actualizando estado del torneo ID: {} → '{}'", id, nextStateName);
 
         Tournament torneo = obtenerTorneo(id);
-        if (torneo == null) {
-            throw new TournamentException("id",
-                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
-        }
 
         TournamentState next;
         try {
@@ -86,8 +81,8 @@ public class TournamentServiceImpl implements TournamentService {
         TournamentValidator.validateStateTransition(torneo.getCurrentState(), next);
 
         torneo.setCurrentState(next);
+        tournamentRepository.save(torneo);
         log.info("Estado del torneo '{}' actualizado a {}", id, next);
-        Tournament actualizado = tournamentRepository.save(torneo);
 
         return mapToResponse(torneo);
     }
@@ -97,14 +92,7 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public TournamentResponse findById(String id) {
         log.info("Buscando torneo con ID: {}", id);
-
-        Tournament torneo = obtenerTorneo(id);
-        if (torneo == null) {
-            throw new TournamentException("id",
-                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
-        }
-
-        return mapToResponse(torneo);
+        return mapToResponse(obtenerTorneo(id));
     }
 
     // ── READ — TODOS
@@ -116,13 +104,12 @@ public class TournamentServiceImpl implements TournamentService {
                 .collect(Collectors.toList());
         log.info("Total torneos listados: {}", torneos.size());
         return torneos;
-
-
     }
 
     // ── CONFIG — CREATE / UPDATE
 
     @Override
+    @Transactional
     public TournamentConfigResponse createOrUpdateConfig(String tournamentId,
                                                          CreateTournamentConfigRequest request) {
         log.info("Configurando torneo ID: {}", tournamentId);
@@ -167,6 +154,7 @@ public class TournamentServiceImpl implements TournamentService {
                     .toList());
         }
 
+        tournamentRepository.save(tournament);
         log.info("Configuración guardada para torneo ID: {}", tournamentId);
         return toConfigResponse(tournament);
     }
@@ -188,14 +176,14 @@ public class TournamentServiceImpl implements TournamentService {
     // ── HELPERS PRIVADOS
 
     private Tournament obtenerTorneo(String id) {
-        return tournamentRepository.findById(UUID.fromString(id))
-                .orElseThrow(()-> new TournamentException("id",
-                        String.format(TournamentException.TOURNAMENT_NOT_FOUND,id)));
+        return tournamentRepository.findById(id)
+                .orElseThrow(() -> new TournamentException("id",
+                        String.format(TournamentException.TOURNAMENT_NOT_FOUND, id)));
     }
 
     private TournamentResponse mapToResponse(Tournament t) {
         return new TournamentResponse(
-                t.getId().toString(),
+                t.getId(),
                 t.getName(),
                 t.getStartDate(),
                 t.getEndDate(),
@@ -230,7 +218,7 @@ public class TournamentServiceImpl implements TournamentService {
         }).toList();
 
         return new TournamentConfigResponse(
-                t.getConfigId(), t.getId().toString(),
+                t.getConfigId(), t.getId(),
                 t.getRules(), t.getRegistrationDeadline(),
                 dates, schedules, fields, t.getSanctions()
         );
