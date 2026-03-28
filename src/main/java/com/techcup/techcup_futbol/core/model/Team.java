@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 
+@Entity
 @Data
 @Table(name = "teams")
 public class Team {

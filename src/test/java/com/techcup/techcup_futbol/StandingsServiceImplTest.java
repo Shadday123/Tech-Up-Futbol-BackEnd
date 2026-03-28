@@ -34,10 +34,10 @@ class StandingsServiceImplTest {
         void registerTeamRegistraEnTabla() {
             Tournament torneo = buildTorneo("T001");
             Team equipo = buildEquipo("Equipo A");
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            service.registerTeamInTournament(torneo.getId(), equipo);
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            service.registerTeamInTournament(torneo.getId().toString(), equipo);
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
 
             assertEquals(1, resp.standings().size());
             assertEquals("Equipo A", resp.standings().get(0).teamName());
@@ -48,12 +48,12 @@ class StandingsServiceImplTest {
         void registerTeamNoDuplica() {
             Tournament torneo = buildTorneo("T002");
             Team equipo = buildEquipo("Equipo B");
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            service.registerTeamInTournament(torneo.getId(), equipo);
-            service.registerTeamInTournament(torneo.getId(), equipo); // segunda vez
+            service.registerTeamInTournament(torneo.getId().toString(), equipo);
+            service.registerTeamInTournament(torneo.getId().toString(), equipo); // segunda vez
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             assertEquals(1, resp.standings().size());
         }
 
@@ -63,15 +63,15 @@ class StandingsServiceImplTest {
             Tournament torneo = buildTorneo("T003");
             Team local   = buildEquipo("Local Win");
             Team visitor = buildEquipo("Visitor Lose");
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            service.registerTeamInTournament(torneo.getId(), local);
-            service.registerTeamInTournament(torneo.getId(), visitor);
+            service.registerTeamInTournament(torneo.getId().toString(), local);
+            service.registerTeamInTournament(torneo.getId().toString(), visitor);
 
             Match match = buildPartido(local, visitor, 2, 0);
             service.updateFromMatch(match);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             var localRow = resp.standings().stream()
                     .filter(s -> s.teamName().equals("Local Win")).findFirst().orElseThrow();
             assertEquals(3, localRow.points());
@@ -84,15 +84,15 @@ class StandingsServiceImplTest {
             Tournament torneo = buildTorneo("T004");
             Team local   = buildEquipo("Empate Local");
             Team visitor = buildEquipo("Empate Visitor");
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            service.registerTeamInTournament(torneo.getId(), local);
-            service.registerTeamInTournament(torneo.getId(), visitor);
+            service.registerTeamInTournament(torneo.getId().toString(), local);
+            service.registerTeamInTournament(torneo.getId().toString(), visitor);
 
             Match match = buildPartido(local, visitor, 1, 1);
             service.updateFromMatch(match);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             resp.standings().forEach(s -> assertEquals(1, s.points()));
         }
 
@@ -102,15 +102,15 @@ class StandingsServiceImplTest {
             Tournament torneo = buildTorneo("T005");
             Team local   = buildEquipo("Ganador");
             Team visitor = buildEquipo("Perdedor");
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            service.registerTeamInTournament(torneo.getId(), local);
-            service.registerTeamInTournament(torneo.getId(), visitor);
+            service.registerTeamInTournament(torneo.getId().toString(), local);
+            service.registerTeamInTournament(torneo.getId().toString(), visitor);
 
             Match match = buildPartido(local, visitor, 3, 1);
             service.updateFromMatch(match);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             var perdedor = resp.standings().stream()
                     .filter(s -> s.teamName().equals("Perdedor")).findFirst().orElseThrow();
             assertEquals(0, perdedor.points());
@@ -121,9 +121,9 @@ class StandingsServiceImplTest {
         @DisplayName("HP-STD-06: findByTournamentId() retorna torneo con nombre correcto")
         void findByTournamentIdRetornaCorrectamente() {
             Tournament torneo = buildTorneo("T006");
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             assertEquals(torneo.getId(), resp.tournamentId());
             assertEquals(torneo.getName(), resp.tournamentName());
         }
@@ -132,9 +132,9 @@ class StandingsServiceImplTest {
         @DisplayName("HP-STD-07: findByTournamentId() retorna tabla vacía si no se registraron equipos")
         void findByTournamentIdTablaVacia() {
             Tournament torneo = buildTorneo("T007");
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             assertTrue(resp.standings().isEmpty());
         }
 
@@ -144,15 +144,15 @@ class StandingsServiceImplTest {
             Tournament torneo = buildTorneo("T008");
             Team local   = buildEquipo("Goleador");
             Team visitor = buildEquipo("Goleado");
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            service.registerTeamInTournament(torneo.getId(), local);
-            service.registerTeamInTournament(torneo.getId(), visitor);
+            service.registerTeamInTournament(torneo.getId().toString(), local);
+            service.registerTeamInTournament(torneo.getId().toString(), visitor);
 
             Match match = buildPartido(local, visitor, 4, 1);
             service.updateFromMatch(match);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             var goleador = resp.standings().stream()
                     .filter(s -> s.teamName().equals("Goleador")).findFirst().orElseThrow();
             assertEquals(4, goleador.goalsFor());
@@ -197,16 +197,16 @@ class StandingsServiceImplTest {
         void standingsOrdenadosPorPuntos() {
             Tournament torneo = buildTorneo("T010");
             Team a = buildEquipo("A"); Team b = buildEquipo("B"); Team c = buildEquipo("C");
-            DataStore.torneos.put(torneo.getId(), torneo);
-            service.registerTeamInTournament(torneo.getId(), a);
-            service.registerTeamInTournament(torneo.getId(), b);
-            service.registerTeamInTournament(torneo.getId(), c);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
+            service.registerTeamInTournament(torneo.getId().toString(), a);
+            service.registerTeamInTournament(torneo.getId().toString(), b);
+            service.registerTeamInTournament(torneo.getId().toString(), c);
 
             service.updateFromMatch(buildPartido(a, b, 2, 0)); // A gana 3 pts
             service.updateFromMatch(buildPartido(b, c, 1, 0)); // B gana 3 pts
             service.updateFromMatch(buildPartido(a, c, 1, 1)); // A y C 1 pt
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             // A=4pts, B=3pts, C=1pt
             assertEquals("A", resp.standings().get(0).teamName());
         }
@@ -217,14 +217,14 @@ class StandingsServiceImplTest {
             Tournament torneo = buildTorneo("T011");
             Team equipo = buildEquipo("Acumulador");
             Team rival  = buildEquipo("Rival");
-            DataStore.torneos.put(torneo.getId(), torneo);
-            service.registerTeamInTournament(torneo.getId(), equipo);
-            service.registerTeamInTournament(torneo.getId(), rival);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
+            service.registerTeamInTournament(torneo.getId().toString(), equipo);
+            service.registerTeamInTournament(torneo.getId().toString(), rival);
 
             service.updateFromMatch(buildPartido(equipo, rival, 1, 0));
             service.updateFromMatch(buildPartido(rival, equipo, 0, 2));
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             var acum = resp.standings().stream()
                     .filter(s -> s.teamName().equals("Acumulador")).findFirst().orElseThrow();
             assertEquals(2, acum.matchesPlayed());
@@ -235,12 +235,12 @@ class StandingsServiceImplTest {
         @DisplayName("CS-STD-03: registerTeamInTournament() puede registrar múltiples equipos en un torneo")
         void registerMultiplesEquipos() {
             Tournament torneo = buildTorneo("T012");
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
             for (int i = 1; i <= 4; i++) {
-                service.registerTeamInTournament(torneo.getId(), buildEquipo("Equipo " + i));
+                service.registerTeamInTournament(torneo.getId().toString(), buildEquipo("Equipo " + i));
             }
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId());
+            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
             assertEquals(4, resp.standings().size());
         }
     }
@@ -249,7 +249,7 @@ class StandingsServiceImplTest {
 
     private Tournament buildTorneo(String id) {
         Tournament t = new Tournament();
-        t.setId(id);
+        t.setId(UUID.fromString(id));
         t.setName("Torneo " + id);
         t.setStartDate(LocalDateTime.now().plusDays(5));
         t.setEndDate(LocalDateTime.now().plusDays(30));

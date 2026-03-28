@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @DiscriminatorColumn(name ="player_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Player {
 
+    @Id
     private String id;
 
     @Column(nullable = false)

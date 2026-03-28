@@ -14,7 +14,7 @@ public class TournamentMapper {
 
         Tournament tournament = new Tournament();
 
-        if (dto.getId() != null && !dto.getId().isBlank()){
+        if (dto.getId() != null){
             tournament.setId(UUID.fromString(dto.getId()));
         }
         tournament.setName(dto.getName());

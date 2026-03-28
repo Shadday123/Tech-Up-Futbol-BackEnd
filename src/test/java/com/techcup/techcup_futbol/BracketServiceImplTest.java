@@ -44,9 +44,9 @@ class BracketServiceImplTest {
         void generateDosEquiposFaseFinal() {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse resp = service.generate(torneo.getId(),
+            BracketResponse resp = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(2));
 
             assertEquals(1, resp.phases().size());
@@ -59,9 +59,9 @@ class BracketServiceImplTest {
         void generateCuatroEquiposSemifinales() {
             Tournament torneo = buildTorneo();
             addTeams(4);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse resp = service.generate(torneo.getId(),
+            BracketResponse resp = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(4));
 
             assertEquals("SEMI_FINALS", resp.phases().get(0).phase());
@@ -73,9 +73,9 @@ class BracketServiceImplTest {
         void generateOchoEquiposCuartos() {
             Tournament torneo = buildTorneo();
             addTeams(8);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse resp = service.generate(torneo.getId(),
+            BracketResponse resp = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(8));
 
             assertEquals("QUARTER_FINALS", resp.phases().get(0).phase());
@@ -87,9 +87,9 @@ class BracketServiceImplTest {
         void generateRetornaDatosCorrectos() {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse resp = service.generate(torneo.getId(),
+            BracketResponse resp = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(2));
 
             assertEquals(torneo.getId(), resp.tournamentId());
@@ -101,10 +101,10 @@ class BracketServiceImplTest {
         void findByTournamentIdRetornaLlaves() {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            service.generate(torneo.getId(), new GenerateBracketRequest(2));
-            BracketResponse resp = service.findByTournamentId(torneo.getId());
+            service.generate(torneo.getId().toString(), new GenerateBracketRequest(2));
+            BracketResponse resp = service.findByTournamentId(torneo.getId().toString());
 
             assertNotNull(resp);
             assertFalse(resp.phases().isEmpty());
@@ -115,16 +115,16 @@ class BracketServiceImplTest {
         void advanceWinnerLocalGana() throws Exception {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse bracket = service.generate(torneo.getId(),
+            BracketResponse bracket = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(2));
             String matchId = bracket.phases().get(0).matches().get(0).matchId();
 
             setMatchScore(matchId, 2, 0);
             when(matchService.isResultRegistered(matchId)).thenReturn(true);
 
-            BracketResponse resp = service.advanceWinner(torneo.getId(), matchId);
+            BracketResponse resp = service.advanceWinner(torneo.getId().toString(), matchId);
 
             BracketMatchDTO matchDTO = resp.phases().get(0).matches().get(0);
             assertNotNull(matchDTO.winnerId());
@@ -136,9 +136,9 @@ class BracketServiceImplTest {
         void generateInvocaRegisterMatch() {
             Tournament torneo = buildTorneo();
             addTeams(4);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            service.generate(torneo.getId(), new GenerateBracketRequest(4));
+            service.generate(torneo.getId().toString(), new GenerateBracketRequest(4));
 
             verify(matchService, times(2)).registerMatch(any(Match.class));
         }
@@ -148,12 +148,12 @@ class BracketServiceImplTest {
         void generatePuedeRegenerarSinResultados() {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            service.generate(torneo.getId(), new GenerateBracketRequest(2));
+            service.generate(torneo.getId().toString(), new GenerateBracketRequest(2));
 
             assertDoesNotThrow(() ->
-                    service.generate(torneo.getId(), new GenerateBracketRequest(2)));
+                    service.generate(torneo.getId().toString(), new GenerateBracketRequest(2)));
         }
 
         @Test
@@ -161,16 +161,16 @@ class BracketServiceImplTest {
         void advanceWinnerVisitanteGana() throws Exception {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse bracket = service.generate(torneo.getId(),
+            BracketResponse bracket = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(2));
             String matchId = bracket.phases().get(0).matches().get(0).matchId();
 
             setMatchScore(matchId, 0, 3);
             when(matchService.isResultRegistered(matchId)).thenReturn(true);
 
-            BracketResponse resp = service.advanceWinner(torneo.getId(), matchId);
+            BracketResponse resp = service.advanceWinner(torneo.getId().toString(), matchId);
 
             BracketMatchDTO matchDTO = resp.phases().get(0).matches().get(0);
             // El ganador debe ser el visitante
@@ -198,10 +198,10 @@ class BracketServiceImplTest {
         void generatePocoEquiposLanza() {
             Tournament torneo = buildTorneo();
             addTeams(1);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
             BracketException ex = assertThrows(BracketException.class,
-                    () -> service.generate(torneo.getId(), new GenerateBracketRequest(4)));
+                    () -> service.generate(torneo.getId().toString(), new GenerateBracketRequest(4)));
             assertEquals("teams", ex.getField());
         }
 
@@ -210,10 +210,10 @@ class BracketServiceImplTest {
         void generateNoPotenciaDeDosLanza() {
             Tournament torneo = buildTorneo();
             addTeams(6);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
             BracketException ex = assertThrows(BracketException.class,
-                    () -> service.generate(torneo.getId(), new GenerateBracketRequest(6)));
+                    () -> service.generate(torneo.getId().toString(), new GenerateBracketRequest(6)));
             assertEquals("teams", ex.getField());
         }
 
@@ -229,10 +229,10 @@ class BracketServiceImplTest {
         @DisplayName("EP-BRK-05: findByTournamentId() lanza BracketException si no hay llaves generadas")
         void findByTournamentIdSinLlavesLanza() {
             Tournament torneo = buildTorneo();
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
             BracketException ex = assertThrows(BracketException.class,
-                    () -> service.findByTournamentId(torneo.getId()));
+                    () -> service.findByTournamentId(torneo.getId().toString()));
             assertEquals("bracket", ex.getField());
         }
 
@@ -248,11 +248,11 @@ class BracketServiceImplTest {
         void advanceWinnerPartidoNoExisteLanza() {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
-            service.generate(torneo.getId(), new GenerateBracketRequest(2));
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
+            service.generate(torneo.getId().toString(), new GenerateBracketRequest(2));
 
             BracketException ex = assertThrows(BracketException.class,
-                    () -> service.advanceWinner(torneo.getId(), "NO-EXISTE-MATCH"));
+                    () -> service.advanceWinner(torneo.getId().toString(), "NO-EXISTE-MATCH"));
             assertEquals("matchId", ex.getField());
         }
 
@@ -261,16 +261,16 @@ class BracketServiceImplTest {
         void advanceWinnerSinResultadoLanza() {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse bracket = service.generate(torneo.getId(),
+            BracketResponse bracket = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(2));
             String matchId = bracket.phases().get(0).matches().get(0).matchId();
 
             when(matchService.isResultRegistered(matchId)).thenReturn(false);
 
             BracketException ex = assertThrows(BracketException.class,
-                    () -> service.advanceWinner(torneo.getId(), matchId));
+                    () -> service.advanceWinner(torneo.getId().toString(), matchId));
             assertEquals("matchId", ex.getField());
         }
 
@@ -279,9 +279,9 @@ class BracketServiceImplTest {
         void advanceWinnerEmpateNoTieneGanadorLanza() throws Exception {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse bracket = service.generate(torneo.getId(),
+            BracketResponse bracket = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(2));
             String matchId = bracket.phases().get(0).matches().get(0).matchId();
 
@@ -289,7 +289,7 @@ class BracketServiceImplTest {
             when(matchService.isResultRegistered(matchId)).thenReturn(true);
 
             BracketException ex = assertThrows(BracketException.class,
-                    () -> service.advanceWinner(torneo.getId(), matchId));
+                    () -> service.advanceWinner(torneo.getId().toString(), matchId));
             assertEquals("match", ex.getField());
         }
     }
@@ -305,9 +305,9 @@ class BracketServiceImplTest {
         void generatePartidosInicialesScheduled() {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse resp = service.generate(torneo.getId(),
+            BracketResponse resp = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(2));
 
             resp.phases().get(0).matches()
@@ -319,9 +319,9 @@ class BracketServiceImplTest {
         void generateIdsPartidosUnicos() {
             Tournament torneo = buildTorneo();
             addTeams(4);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            BracketResponse resp = service.generate(torneo.getId(),
+            BracketResponse resp = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(4));
 
             List<String> ids = resp.phases().get(0).matches()
@@ -334,10 +334,10 @@ class BracketServiceImplTest {
         void generateUsaMaxEquiposDisponibles() {
             Tournament torneo = buildTorneo();
             addTeams(2);
-            DataStore.torneos.put(torneo.getId(), torneo);
+            DataStore.torneos.put(torneo.getId().toString(), torneo);
 
             // Pedimos 4 pero solo hay 2 → debe usar min(4,2)=2 (FINAL)
-            BracketResponse resp = service.generate(torneo.getId(),
+            BracketResponse resp = service.generate(torneo.getId().toString(),
                     new GenerateBracketRequest(4));
 
             assertEquals("FINAL", resp.phases().get(0).phase());
@@ -348,7 +348,7 @@ class BracketServiceImplTest {
 
     private Tournament buildTorneo() {
         Tournament t = new Tournament();
-        t.setId(UUID.randomUUID().toString());
+        t.setId(UUID.fromString("Test"));
         t.setName("Torneo Test");
         t.setStartDate(LocalDateTime.now().plusDays(5));
         t.setEndDate(LocalDateTime.now().plusDays(30));

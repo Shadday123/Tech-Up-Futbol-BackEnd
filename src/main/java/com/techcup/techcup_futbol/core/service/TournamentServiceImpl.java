@@ -3,7 +3,6 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
 import com.techcup.techcup_futbol.Controller.dto.TournamentConfigDTOs.*;
-import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
@@ -20,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +29,7 @@ public class TournamentServiceImpl implements TournamentService {
     private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     @Autowired
     private TournamentRepository tournamentRepository;
+
 
     // ── CREATE
 
@@ -45,7 +46,7 @@ public class TournamentServiceImpl implements TournamentService {
         String id = IdGenerator.generateId();
 
         Tournament nuevoTorneo = new Tournament();
-        nuevoTorneo.setId(id);
+        nuevoTorneo.setId(UUID.fromString(id));
         nuevoTorneo.setName(request.name());
         nuevoTorneo.setStartDate(request.startDate());
         nuevoTorneo.setEndDate(request.endDate());
@@ -67,7 +68,7 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentResponse updateStatus(String id, String nextStateName) {
         log.info("Actualizando estado del torneo ID: {} → '{}'", id, nextStateName);
 
-        Tournament torneo = DataStore.torneos.get(id);
+        Tournament torneo = obtenerTorneo(id);
         if (torneo == null) {
             throw new TournamentException("id",
                     String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
@@ -86,6 +87,7 @@ public class TournamentServiceImpl implements TournamentService {
 
         torneo.setCurrentState(next);
         log.info("Estado del torneo '{}' actualizado a {}", id, next);
+        Tournament actualizado = tournamentRepository.save(torneo);
 
         return mapToResponse(torneo);
     }
@@ -96,7 +98,7 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentResponse findById(String id) {
         log.info("Buscando torneo con ID: {}", id);
 
-        Tournament torneo = DataStore.torneos.get(id);
+        Tournament torneo = obtenerTorneo(id);
         if (torneo == null) {
             throw new TournamentException("id",
                     String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
@@ -109,11 +111,13 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public List<TournamentResponse> findAll() {
-        List<TournamentResponse> torneos = DataStore.torneos.values().stream()
+        List<TournamentResponse> torneos = tournamentRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
         log.info("Total torneos listados: {}", torneos.size());
         return torneos;
+
+
     }
 
     // ── CONFIG — CREATE / UPDATE
@@ -184,17 +188,14 @@ public class TournamentServiceImpl implements TournamentService {
     // ── HELPERS PRIVADOS
 
     private Tournament obtenerTorneo(String id) {
-        Tournament t = DataStore.torneos.get(id);
-        if (t == null) {
-            throw new TournamentException("id",
-                    String.format(TournamentException.TOURNAMENT_NOT_FOUND, id));
-        }
-        return t;
+        return tournamentRepository.findById(UUID.fromString(id))
+                .orElseThrow(()-> new TournamentException("id",
+                        String.format(TournamentException.TOURNAMENT_NOT_FOUND,id)));
     }
 
     private TournamentResponse mapToResponse(Tournament t) {
         return new TournamentResponse(
-                t.getId(),
+                t.getId().toString(),
                 t.getName(),
                 t.getStartDate(),
                 t.getEndDate(),
@@ -229,7 +230,7 @@ public class TournamentServiceImpl implements TournamentService {
         }).toList();
 
         return new TournamentConfigResponse(
-                t.getConfigId(), t.getId(),
+                t.getConfigId(), t.getId().toString(),
                 t.getRules(), t.getRegistrationDeadline(),
                 dates, schedules, fields, t.getSanctions()
         );

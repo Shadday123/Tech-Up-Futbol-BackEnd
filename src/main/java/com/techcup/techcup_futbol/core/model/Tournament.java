@@ -1,13 +1,8 @@
 package com.techcup.techcup_futbol.core.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
-
+import java.util.UUID;
 import com.techcup.techcup_futbol.util.IdGenerator;
 
 import java.security.SecureRandom;
@@ -22,7 +17,8 @@ import java.util.List;
 public class Tournament {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @Column(nullable = false)
     private String name;

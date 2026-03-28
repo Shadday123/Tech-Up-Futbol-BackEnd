@@ -1084,3 +1084,502 @@ java.lang.IllegalStateException: ApplicationContext failure threshold (1) exceed
 2026-03-27T15:43:16.153-05:00  INFO 13640 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Total torneos listados: 0
 2026-03-27T15:43:16.154-05:00  INFO 13640 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Campos'
 2026-03-27T15:43:16.156-05:00  INFO 13640 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Find'
+2026-03-27T19:00:06.116-05:00  INFO 952 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 952 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T19:00:06.131-05:00 DEBUG 952 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T19:00:06.134-05:00  INFO 952 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T19:00:08.861-05:00  INFO 952 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T19:00:08.883-05:00  INFO 952 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T19:00:08.883-05:00  INFO 952 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T19:00:09.018-05:00  INFO 952 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T19:00:09.019-05:00  INFO 952 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2799 ms
+2026-03-27T19:00:09.113-05:00 DEBUG 952 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T19:00:09.258-05:00  WARN 952 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\PlayerController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T19:00:09.261-05:00  INFO 952 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T19:00:09.283-05:00  INFO 952 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T19:00:09.313-05:00 ERROR 952 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field playerRepository in com.techcup.techcup_futbol.core.service.PlayerServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' in your configuration.
+
+2026-03-27T19:08:43.615-05:00  INFO 12884 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 12884 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T19:08:43.624-05:00 DEBUG 12884 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T19:08:43.629-05:00  INFO 12884 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T19:08:50.263-05:00  INFO 12884 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T19:08:50.383-05:00  INFO 12884 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T19:08:50.384-05:00  INFO 12884 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T19:08:50.580-05:00  INFO 12884 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T19:08:50.581-05:00  INFO 12884 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 6722 ms
+2026-03-27T19:08:50.677-05:00 DEBUG 12884 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T19:08:50.855-05:00  WARN 12884 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\PlayerController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T19:08:50.861-05:00  INFO 12884 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T19:08:50.891-05:00  INFO 12884 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T19:08:50.933-05:00 ERROR 12884 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field playerRepository in com.techcup.techcup_futbol.core.service.PlayerServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' in your configuration.
+
+2026-03-27T19:17:14.020-05:00  INFO 23484 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 23484 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T19:17:14.023-05:00 DEBUG 23484 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T19:17:14.023-05:00  INFO 23484 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T19:17:16.349-05:00  INFO 23484 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T19:17:16.374-05:00  INFO 23484 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T19:17:16.374-05:00  INFO 23484 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T19:17:16.500-05:00  INFO 23484 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T19:17:16.500-05:00  INFO 23484 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2376 ms
+2026-03-27T19:17:16.590-05:00 DEBUG 23484 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T19:17:16.736-05:00  WARN 23484 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\PlayerController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T19:17:16.743-05:00  INFO 23484 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T19:17:16.774-05:00  INFO 23484 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T19:17:16.810-05:00 ERROR 23484 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field playerRepository in com.techcup.techcup_futbol.core.service.PlayerServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' in your configuration.
+
+2026-03-27T19:23:11.579-05:00  INFO 4876 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 4876 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T19:23:11.590-05:00 DEBUG 4876 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T19:23:11.590-05:00  INFO 4876 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T19:23:13.963-05:00  INFO 4876 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T19:23:13.994-05:00  INFO 4876 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T19:23:13.994-05:00  INFO 4876 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T19:23:14.152-05:00  INFO 4876 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T19:23:14.153-05:00  INFO 4876 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2485 ms
+2026-03-27T19:23:14.271-05:00 DEBUG 4876 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T19:23:14.507-05:00  WARN 4876 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\PlayerController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T19:23:14.513-05:00  INFO 4876 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T19:23:14.545-05:00  INFO 4876 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T19:23:14.578-05:00 ERROR 4876 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field playerRepository in com.techcup.techcup_futbol.core.service.PlayerServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' in your configuration.
+
+2026-03-27T19:30:32.706-05:00  INFO 18548 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.9 with PID 18548 (C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T19:30:32.711-05:00 DEBUG 18548 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T19:30:32.714-05:00  INFO 18548 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T19:30:36.441-05:00  INFO 18548 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-27T19:30:36.485-05:00  INFO 18548 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-27T19:30:36.488-05:00  INFO 18548 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-27T19:30:36.689-05:00  INFO 18548 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-27T19:30:36.689-05:00  INFO 18548 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3865 ms
+2026-03-27T19:30:36.812-05:00 DEBUG 18548 --- [techcup-futbol] [main] c.t.techcup_futbol.security.JwtFilter    : Filter 'jwtFilter' configured for use
+2026-03-27T19:30:37.033-05:00  WARN 18548 --- [techcup-futbol] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\PlayerController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T19:30:37.036-05:00  INFO 18548 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-03-27T19:30:37.073-05:00  INFO 18548 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T19:30:37.125-05:00 ERROR 18548 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field playerRepository in com.techcup.techcup_futbol.core.service.PlayerServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' in your configuration.
+
+2026-03-27T19:34:28.605-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : Starting TechcupFutbolApplicationTests using Java 21.0.9 with PID 24884 (started by juane in C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd)
+2026-03-27T19:34:28.623-05:00 DEBUG 24884 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-27T19:34:28.626-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplicationTests      : No active profile set, falling back to 1 default profile: "default"
+2026-03-27T19:34:34.780-05:00  WARN 24884 --- [techcup-futbol] [main] o.s.w.c.s.GenericWebApplicationContext   : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\PlayerController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-03-27T19:34:34.802-05:00  INFO 24884 --- [techcup-futbol] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27T19:34:34.866-05:00 ERROR 24884 --- [techcup-futbol] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field playerRepository in com.techcup.techcup_futbol.core.service.PlayerServiceImpl required a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' in your configuration.
+
+2026-03-27T19:34:34.885-05:00  WARN 24884 --- [techcup-futbol] [main] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener] to prepare test instance [com.techcup.techcup_futbol.TechcupFutbolApplicationTests@230d0018]
+
+java.lang.IllegalStateException: Failed to load ApplicationContext for [WebMergedContextConfiguration@3c403b36 testClass = com.techcup.techcup_futbol.TechcupFutbolApplicationTests, locations = [], classes = [com.techcup.techcup_futbol.TechcupFutbolApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@6dcbbb49, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@64c95480, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@7c956dda, org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@1f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizer@9bf63d2, org.springframework.boot.test.context.SpringBootTestAnnotation@ebaabfe5], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:180) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:130) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:191) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:130) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:163) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$10(ClassBasedTestDescriptor.java:378) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:383) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$11(ClassBasedTestDescriptor.java:378) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[na:na]
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[na:na]
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:310) ~[na:na]
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735) ~[na:na]
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:377) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$6(ClassBasedTestDescriptor.java:290) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:289) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$4(ClassBasedTestDescriptor.java:279) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at java.base/java.util.Optional.orElseGet(Optional.java:364) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$5(ClassBasedTestDescriptor.java:278) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:106) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:105) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:69) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$2(NodeTestTask.java:123) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:123) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:90) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.1.2.jar:3.1.2]
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerController' defined in file [C:\Users\juane\Documents\DOSW\Tech-Up-Futbol-BackEnd\target\classes\com\techcup\techcup_futbol\Controller\PlayerController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$3(SpringBootContextLoader.java:137) ~[spring-boot-test-3.2.5.jar:3.2.5]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:58) ~[spring-core-6.1.6.jar:6.1.6]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:46) ~[spring-core-6.1.6.jar:6.1.6]
+	at org.springframework.boot.SpringApplication.withHook(SpringApplication.java:1454) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.test.context.SpringBootContextLoader$ContextLoaderHook.run(SpringBootContextLoader.java:553) ~[spring-boot-test-3.2.5.jar:3.2.5]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:137) ~[spring-boot-test-3.2.5.jar:3.2.5]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:108) ~[spring-boot-test-3.2.5.jar:3.2.5]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:225) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:152) ~[spring-test-6.1.6.jar:6.1.6]
+	... 73 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'playerServiceImpl': Unsatisfied dependency expressed through field 'playerRepository': No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:787) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:145) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:508) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1419) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782) ~[spring-beans-6.1.6.jar:6.1.6]
+	... 97 common frames omitted
+Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.techcup.techcup_futbol.repository.PlayerRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.raiseNoMatchingBeanFound(DefaultListableBeanFactory.java:1880) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1406) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784) ~[spring-beans-6.1.6.jar:6.1.6]
+	... 112 common frames omitted
+
+2026-03-27T19:34:34.922-05:00  WARN 24884 --- [techcup-futbol] [main] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener] to prepare test instance [com.techcup.techcup_futbol.TechcupFutbolApplicationTests@5c97c816]
+
+java.lang.IllegalStateException: ApplicationContext failure threshold (1) exceeded: skipping repeated attempt to load context for [WebMergedContextConfiguration@3c403b36 testClass = com.techcup.techcup_futbol.TechcupFutbolApplicationTests, locations = [], classes = [com.techcup.techcup_futbol.TechcupFutbolApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@6dcbbb49, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@64c95480, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@7c956dda, org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@1f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizer@9bf63d2, org.springframework.boot.test.context.SpringBootTestAnnotation@ebaabfe5], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:145) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:130) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:191) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:130) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:163) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$10(ClassBasedTestDescriptor.java:378) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:383) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$11(ClassBasedTestDescriptor.java:378) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[na:na]
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[na:na]
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:310) ~[na:na]
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735) ~[na:na]
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:377) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$6(ClassBasedTestDescriptor.java:290) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:289) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$4(ClassBasedTestDescriptor.java:279) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at java.base/java.util.Optional.orElseGet(Optional.java:364) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$5(ClassBasedTestDescriptor.java:278) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:106) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:105) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:69) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$2(NodeTestTask.java:123) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:123) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:90) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.1.2.jar:3.1.2]
+
+2026-03-27T19:34:34.927-05:00  WARN 24884 --- [techcup-futbol] [main] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener] to prepare test instance [com.techcup.techcup_futbol.TechcupFutbolApplicationTests@7c69c582]
+
+java.lang.IllegalStateException: ApplicationContext failure threshold (1) exceeded: skipping repeated attempt to load context for [WebMergedContextConfiguration@3c403b36 testClass = com.techcup.techcup_futbol.TechcupFutbolApplicationTests, locations = [], classes = [com.techcup.techcup_futbol.TechcupFutbolApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@6dcbbb49, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@64c95480, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@7c956dda, org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@1f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizer@9bf63d2, org.springframework.boot.test.context.SpringBootTestAnnotation@ebaabfe5], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:145) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:130) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:191) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:130) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:163) ~[spring-test-6.1.6.jar:6.1.6]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$10(ClassBasedTestDescriptor.java:378) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:383) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$11(ClassBasedTestDescriptor.java:378) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[na:na]
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[na:na]
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:310) ~[na:na]
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735) ~[na:na]
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:377) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$6(ClassBasedTestDescriptor.java:290) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:289) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$4(ClassBasedTestDescriptor.java:279) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at java.base/java.util.Optional.orElseGet(Optional.java:364) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$5(ClassBasedTestDescriptor.java:278) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:106) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:105) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:69) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$2(NodeTestTask.java:123) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:123) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:90) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.1.2.jar:3.1.2]
+
+2026-03-27T19:34:35.141-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : POST /api/tournaments — nombre: Torneo Exacto
+2026-03-27T19:34:35.147-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/progress
+2026-03-27T19:34:35.153-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/start
+2026-03-27T19:34:35.161-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/finish
+2026-03-27T19:34:35.170-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/delete
+2026-03-27T19:34:35.183-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : GET /api/tournaments
+2026-03-27T19:34:35.198-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/NO-EXISTE/start
+2026-03-27T19:34:35.211-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : POST /api/tournaments — nombre: 
+2026-03-27T19:34:35.238-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/delete
+2026-03-27T19:34:35.260-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/finish
+2026-03-27T19:34:35.267-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : GET /api/tournaments/T999
+2026-03-27T19:34:35.289-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/progress
+2026-03-27T19:34:35.305-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/start
+2026-03-27T19:34:35.317-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/delete
+2026-03-27T19:34:35.330-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : GET /api/tournaments
+2026-03-27T19:34:35.336-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/finish
+2026-03-27T19:34:35.343-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : POST /api/tournaments — nombre: Torneo HP2
+2026-03-27T19:34:35.353-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : GET /api/tournaments/T001
+2026-03-27T19:34:35.363-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : PUT /api/tournaments/T001/progress
+2026-03-27T19:34:35.372-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.Controller.TournamentController    : POST /api/tournaments — nombre: Torneo HP
+2026-03-27T19:34:35.430-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Min Teams'
+2026-03-27T19:34:35.443-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Deleted'
+2026-03-27T19:34:35.448-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 1'
+2026-03-27T19:34:35.455-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Impar'
+2026-03-27T19:34:35.461-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Minus'
+2026-03-27T19:34:35.467-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Reflect'
+2026-03-27T19:34:35.473-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Flujo Completo'
+2026-03-27T19:34:35.477-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Gratis'
+2026-03-27T19:34:35.491-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: ''
+2026-03-27T19:34:35.500-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Buscando torneo con ID: T999
+2026-03-27T19:34:35.506-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo'
+2026-03-27T19:34:35.509-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Invalido'
+2026-03-27T19:34:35.515-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Actualizando estado del torneo ID: NO-EXISTE → 'ACTIVE'
+2026-03-27T19:34:35.519-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo'
+2026-03-27T19:34:35.522-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo'
+2026-03-27T19:34:35.527-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Trans'
+2026-03-27T19:34:35.532-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Comp'
+2026-03-27T19:34:35.543-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Primer Torneo'
+2026-03-27T19:34:35.548-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Delete'
+2026-03-27T19:34:35.635-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo HP'
+2026-03-27T19:34:35.643-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Progress'
+2026-03-27T19:34:35.646-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Complete'
+2026-03-27T19:34:35.649-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo 1'
+2026-03-27T19:34:35.653-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Update'
+2026-03-27T19:34:35.656-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'T-A'
+2026-03-27T19:34:35.663-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Campos'
+2026-03-27T19:34:35.667-05:00  INFO 24884 --- [techcup-futbol] [main] c.t.t.c.service.TournamentServiceImpl    : Creando torneo: 'Torneo Find'

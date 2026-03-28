@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 class TournamentMapperTest {
 
@@ -28,7 +29,7 @@ class TournamentMapperTest {
 
 
         torneoCompleto = new Tournament();
-        torneoCompleto.setId("T003");
+        torneoCompleto.setId(UUID.fromString("T003"));
         torneoCompleto.setName("TechCup Relampago 2026-1");
         torneoCompleto.setStartDate(LocalDateTime.of(2026, 4, 18, 8, 00));
         torneoCompleto.setEndDate(LocalDateTime.of(2026, 5, 16, 17, 00));

@@ -1,6 +1,7 @@
 package com.techcup.techcup_futbol.core.model;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -203,7 +204,7 @@ public class DataStore {
 
     private static void inicializarTorneos() {
         Tournament t1 = new Tournament();
-        t1.setId("T001");
+        t1.setId(UUID.fromString("T001"));
         t1.setName("Torneo de Verano 2024");
         t1.setStartDate(LocalDateTime.of(2024, 6, 1, 9, 0));
         t1.setEndDate(LocalDateTime.of(2024, 8, 31, 18, 0));
@@ -211,10 +212,10 @@ public class DataStore {
         t1.setMaxTeams(8);
         t1.setRules("Reglas estándar de fútbol 11");
         t1.setCurrentState(TournamentState.ACTIVE);
-        torneos.put(t1.getId(), t1);
+        torneos.put(t1.getId().toString(), t1);
 
         Tournament t2 = new Tournament();
-        t2.setId("T002");
+        t2.setId(UUID.fromString("T002"));
         t2.setName("Torneo de Invierno 2024");
         t2.setStartDate(LocalDateTime.of(2024, 12, 1, 9, 0));
         t2.setEndDate(LocalDateTime.of(2025, 1, 31, 18, 0));
@@ -222,10 +223,10 @@ public class DataStore {
         t2.setMaxTeams(10);
         t2.setRules("Reglas estándar de fútbol 11");
         t2.setCurrentState(TournamentState.DELETED);
-        torneos.put(t2.getId(), t2);
+        torneos.put(t2.getId().toString(), t2);
 
         Tournament t3 = new Tournament();
-        t3.setId("T003");
+        t3.setId(UUID.fromString("TO03"));
         t3.setName("Torneo Relámpago");
         t3.setStartDate(LocalDateTime.of(2024, 3, 1, 10, 0));
         t3.setEndDate(LocalDateTime.of(2024, 3, 30, 18, 0));
@@ -233,7 +234,7 @@ public class DataStore {
         t3.setMaxTeams(6);
         t3.setRules("Formato de eliminación directa");
         t3.setCurrentState(TournamentState.IN_PROGRESS);
-        torneos.put(t3.getId(), t3);
+        torneos.put(t3.getId().toString(), t3);
     }
 
 
