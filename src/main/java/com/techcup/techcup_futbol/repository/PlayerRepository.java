@@ -3,6 +3,7 @@ package com.techcup.techcup_futbol.repository;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.core.model.PositionEnum;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.*;
 import org.springframework.stereotype.Repository;
