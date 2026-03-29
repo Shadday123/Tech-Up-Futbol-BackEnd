@@ -2,7 +2,9 @@ package com.techcup.techcup_futbol.exception;
 
 import com.techcup.techcup_futbol.core.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.MatchException;
@@ -52,6 +54,31 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RefereeException.class)
     public ErrorResponse handleRefereeException(RefereeException ex, HttpServletRequest req) {
         return buildResponse(resolveStatus(ex.getMessage()), ex.getMessage(), req.getRequestURI());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest req) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), req.getRequestURI());
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ErrorResponse handleDuplicateResourceException(DuplicateResourceException ex, HttpServletRequest req) {
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), req.getRequestURI());
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ErrorResponse handleDatabaseException(DatabaseException ex, HttpServletRequest req) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), req.getRequestURI());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ErrorResponse handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest req) {
+        return buildResponse(HttpStatus.CONFLICT, "Ya existe un recurso con esos datos", req.getRequestURI());
+    }
+
+    @ExceptionHandler(JpaSystemException.class)
+    public ErrorResponse handleJpaSystemException(JpaSystemException ex, HttpServletRequest req) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno de base de datos", req.getRequestURI());
     }
 
     @ExceptionHandler(RuntimeException.class)

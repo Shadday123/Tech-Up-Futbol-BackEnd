@@ -7,6 +7,7 @@ import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
+import com.techcup.techcup_futbol.exception.ResourceNotFoundException;
 import com.techcup.techcup_futbol.repository.TournamentRepository;
 import com.techcup.techcup_futbol.util.IdGenerator;
 import org.slf4j.Logger;
@@ -177,7 +178,7 @@ public class TournamentServiceImpl implements TournamentService {
 
     private Tournament obtenerTorneo(String id) {
         return tournamentRepository.findById(id)
-                .orElseThrow(() -> new TournamentException("id",
+                .orElseThrow(() -> new ResourceNotFoundException(
                         String.format(TournamentException.TOURNAMENT_NOT_FOUND, id)));
     }
 
