@@ -37,7 +37,7 @@ public class TournamentValidator {
         }
     }
 
-    public static void validateRegistrationFee(double fee) {
+        public static void validateRegistrationFee(double fee) {
         if (fee < 0) {
             throw new TournamentException("registrationFee",
                     String.format(TournamentException.REGISTRATION_FEE_NEGATIVE, fee));
