@@ -1,7 +1,7 @@
 package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.Controller.RefereeController;
-import com.techcup.techcup_futbol.Controller.dto.RefereeDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.*;
 import com.techcup.techcup_futbol.core.exception.RefereeException;
 import com.techcup.techcup_futbol.core.service.RefereeService;
 import org.junit.jupiter.api.*;

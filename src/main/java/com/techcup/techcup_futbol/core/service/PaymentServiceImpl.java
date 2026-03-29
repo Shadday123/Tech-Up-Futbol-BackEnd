@@ -1,7 +1,8 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.PaymentResponse;
-import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.UploadReceiptRequest;
+import com.techcup.techcup_futbol.Controller.dto.PaymentResponse;
+import com.techcup.techcup_futbol.Controller.dto.UploadReceiptRequest;
+import com.techcup.techcup_futbol.Controller.mapper.PaymentMapper;
 import com.techcup.techcup_futbol.core.model.Payment;
 import com.techcup.techcup_futbol.core.model.PaymentStatus;
 import com.techcup.techcup_futbol.core.model.Team;
@@ -59,7 +60,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
 
         log.info("Comprobante subido — pago ID: {} | estado: {}", payment.getId(), payment.getCurrentStatus());
-        return toResponse(payment, team);
+        return PaymentMapper.toResponse(payment, team);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class PaymentServiceImpl implements PaymentService {
                 ? teamRepository.findById(payment.getTeamId()).orElse(null)
                 : null;
 
-        return toResponse(payment, team);
+        return PaymentMapper.toResponse(payment, team);
     }
 
     @Override
@@ -102,7 +103,7 @@ public class PaymentServiceImpl implements PaymentService {
                 ? teamRepository.findById(payment.getTeamId()).orElse(null)
                 : null;
 
-        return toResponse(payment, team);
+        return PaymentMapper.toResponse(payment, team);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class PaymentServiceImpl implements PaymentService {
             Team team = p.getTeamId() != null
                     ? teamRepository.findById(p.getTeamId()).orElse(null)
                     : null;
-            return toResponse(p, team);
+            return PaymentMapper.toResponse(p, team);
         }).toList();
     }
 
@@ -122,7 +123,7 @@ public class PaymentServiceImpl implements PaymentService {
                         String.format(PaymentException.PAYMENT_NOT_FOUND, teamId)));
 
         Team team = teamRepository.findById(teamId).orElse(null);
-        return toResponse(payment, team);
+        return PaymentMapper.toResponse(payment, team);
     }
 
     private void validateStatusTransition(PaymentStatus current, PaymentStatus next) {
@@ -136,16 +137,5 @@ public class PaymentServiceImpl implements PaymentService {
             throw new PaymentException("status",
                     String.format(PaymentException.INVALID_TRANSITION, current, next));
         }
-    }
-
-    private PaymentResponse toResponse(Payment p, Team team) {
-        return new PaymentResponse(
-                p.getId(),
-                team != null ? team.getId() : null,
-                team != null ? team.getTeamName() : null,
-                p.getReceiptUrl(),
-                p.getAmount(),
-                p.getCurrentStatus()
-        );
     }
 }

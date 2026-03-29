@@ -1,6 +1,8 @@
 package com.techcup.techcup_futbol.Controller;
 
-import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.PaymentResponse;
+import com.techcup.techcup_futbol.Controller.dto.UpdatePaymentStatusRequest;
+import com.techcup.techcup_futbol.Controller.dto.UploadReceiptRequest;
 import com.techcup.techcup_futbol.core.service.PaymentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

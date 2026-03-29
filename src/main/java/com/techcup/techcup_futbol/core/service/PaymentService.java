@@ -1,7 +1,7 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.PaymentResponse;
-import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.UploadReceiptRequest;
+import com.techcup.techcup_futbol.Controller.dto.PaymentResponse;
+import com.techcup.techcup_futbol.Controller.dto.UploadReceiptRequest;
 
 import java.util.List;
 

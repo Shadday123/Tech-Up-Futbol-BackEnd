@@ -1,6 +1,9 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.RefereeDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.AssignRefereeRequest;
+import com.techcup.techcup_futbol.Controller.dto.CreateRefereeRequest;
+import com.techcup.techcup_futbol.Controller.dto.RefereeResponse;
+import com.techcup.techcup_futbol.Controller.mapper.RefereeMapper;
 import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.Referee;
 import java.util.ArrayList;
@@ -44,7 +47,7 @@ public class RefereeServiceImpl implements RefereeService {
 
         refereeRepository.save(referee);
         log.info("Árbitro registrado ID: {}", referee.getId());
-        return toResponse(referee);
+        return RefereeMapper.toResponse(referee);
     }
 
     @Override
@@ -73,7 +76,7 @@ public class RefereeServiceImpl implements RefereeService {
         referee.getAssignedMatches().add(match);
 
         log.info("Árbitro '{}' asignado al partido {}", referee.getFullname(), matchId);
-        return toResponse(referee);
+        return RefereeMapper.toResponse(referee);
     }
 
     @Override
@@ -81,24 +84,11 @@ public class RefereeServiceImpl implements RefereeService {
         Referee referee = refereeRepository.findById(refereeId)
                 .orElseThrow(() -> new RefereeException("id",
                         String.format(RefereeException.REFEREE_NOT_FOUND, refereeId)));
-        return toResponse(referee);
+        return RefereeMapper.toResponse(referee);
     }
 
     @Override
     public List<RefereeResponse> findAll() {
-        return refereeRepository.findAll().stream().map(this::toResponse).toList();
-    }
-
-    private RefereeResponse toResponse(Referee r) {
-        List<AssignedMatchDTO> assignedMatches = r.getAssignedMatches() == null ? List.of()
-                : r.getAssignedMatches().stream().map(m -> new AssignedMatchDTO(
-                        m.getId(),
-                        m.getLocalTeam().getTeamName(),
-                        m.getVisitorTeam().getTeamName(),
-                        m.getDateTime(),
-                        String.valueOf(m.getField())
-                )).toList();
-
-        return new RefereeResponse(r.getId(), r.getFullname(), r.getEmail(), assignedMatches);
+        return refereeRepository.findAll().stream().map(RefereeMapper::toResponse).toList();
     }
 }

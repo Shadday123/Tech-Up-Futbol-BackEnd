@@ -1,7 +1,7 @@
 package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.Controller.LineupController;
-import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.*;
 import com.techcup.techcup_futbol.core.exception.LineupException;
 import com.techcup.techcup_futbol.core.service.LineupService;
 import org.junit.jupiter.api.*;

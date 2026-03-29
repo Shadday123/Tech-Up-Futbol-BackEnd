@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.Controller.dto.RefereeDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.*;
 import com.techcup.techcup_futbol.core.exception.RefereeException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.RefereeServiceImpl;

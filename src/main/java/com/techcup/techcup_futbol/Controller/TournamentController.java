@@ -2,8 +2,8 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
-import com.techcup.techcup_futbol.Controller.dto.TournamentConfigDTOs.CreateTournamentConfigRequest;
-import com.techcup.techcup_futbol.Controller.dto.TournamentConfigDTOs.TournamentConfigResponse;
+import com.techcup.techcup_futbol.Controller.dto.CreateTournamentConfigRequest;
+import com.techcup.techcup_futbol.Controller.dto.TournamentConfigResponse;
 import com.techcup.techcup_futbol.core.service.TournamentService;
 
 import io.swagger.v3.oas.annotations.Operation;

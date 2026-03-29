@@ -1,8 +1,10 @@
 package com.techcup.techcup_futbol.core.service;
 
+import com.techcup.techcup_futbol.Controller.dto.CreateTournamentConfigRequest;
 import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
+import com.techcup.techcup_futbol.Controller.dto.TournamentConfigResponse;
 import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
-import com.techcup.techcup_futbol.Controller.dto.TournamentConfigDTOs.*;
+import com.techcup.techcup_futbol.Controller.mapper.TournamentMapper;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
@@ -16,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 public class TournamentServiceImpl implements TournamentService {
 
     private static final Logger log = LoggerFactory.getLogger(TournamentServiceImpl.class);
-    private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     @Autowired
     private TournamentRepository tournamentRepository;
@@ -58,7 +57,7 @@ public class TournamentServiceImpl implements TournamentService {
         log.info("Torneo creado — ID: {} | Estado: DRAFT | MaxEquipos: {}",
                 nuevoTorneo.getId(), request.maxTeams());
 
-        return mapToResponse(nuevoTorneo);
+        return TournamentMapper.toResponse(nuevoTorneo);
     }
 
     // ── UPDATE STATE
@@ -85,7 +84,7 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentRepository.save(torneo);
         log.info("Estado del torneo '{}' actualizado a {}", id, next);
 
-        return mapToResponse(torneo);
+        return TournamentMapper.toResponse(torneo);
     }
 
     // ── READ — POR ID
@@ -93,7 +92,7 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public TournamentResponse findById(String id) {
         log.info("Buscando torneo con ID: {}", id);
-        return mapToResponse(obtenerTorneo(id));
+        return TournamentMapper.toResponse(obtenerTorneo(id));
     }
 
     // ── READ — TODOS
@@ -101,7 +100,7 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public List<TournamentResponse> findAll() {
         List<TournamentResponse> torneos = tournamentRepository.findAll().stream()
-                .map(this::mapToResponse)
+                .map(TournamentMapper::toResponse)
                 .collect(Collectors.toList());
         log.info("Total torneos listados: {}", torneos.size());
         return torneos;
@@ -141,7 +140,7 @@ public class TournamentServiceImpl implements TournamentService {
         if (request.importantDates() != null) {
             tournament.setImportantDates(request.importantDates().stream()
                     .map(d -> d.description() + "|"
-                            + (d.date() != null ? d.date().format(FMT) : ""))
+                            + (d.date() != null ? d.date().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : ""))
                     .toList());
         }
         if (request.matchSchedules() != null) {
@@ -157,7 +156,7 @@ public class TournamentServiceImpl implements TournamentService {
 
         tournamentRepository.save(tournament);
         log.info("Configuración guardada para torneo ID: {}", tournamentId);
-        return toConfigResponse(tournament);
+        return TournamentMapper.toConfigResponse(tournament);
     }
 
     // ── CONFIG — READ
@@ -171,7 +170,7 @@ public class TournamentServiceImpl implements TournamentService {
                     String.format(TournamentException.CONFIG_NOT_FOUND, tournamentId));
         }
 
-        return toConfigResponse(tournament);
+        return TournamentMapper.toConfigResponse(tournament);
     }
 
     // ── HELPERS PRIVADOS
@@ -180,48 +179,5 @@ public class TournamentServiceImpl implements TournamentService {
         return tournamentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format(TournamentException.TOURNAMENT_NOT_FOUND, id)));
-    }
-
-    private TournamentResponse mapToResponse(Tournament t) {
-        return new TournamentResponse(
-                t.getId(),
-                t.getName(),
-                t.getStartDate(),
-                t.getEndDate(),
-                t.getRegistrationFee(),
-                t.getMaxTeams(),
-                t.getRules(),
-                t.getCurrentState().name()
-        );
-    }
-
-    private TournamentConfigResponse toConfigResponse(Tournament t) {
-        List<ImportantDateDTO> dates = t.getImportantDates() == null ? List.of()
-                : t.getImportantDates().stream().map(s -> {
-            String[] parts = s.split("\\|", 2);
-            return new ImportantDateDTO(parts[0],
-                    parts.length > 1 && !parts[1].isBlank()
-                            ? LocalDateTime.parse(parts[1], FMT) : null);
-        }).toList();
-
-        List<MatchScheduleDTO> schedules = t.getMatchSchedules() == null ? List.of()
-                : t.getMatchSchedules().stream().map(s -> {
-            String[] p = s.split("\\|", 3);
-            return new MatchScheduleDTO(p[0],
-                    p.length > 1 ? p[1] : "",
-                    p.length > 2 ? p[2] : "");
-        }).toList();
-
-        List<FieldDTO> fields = t.getFields() == null ? List.of()
-                : t.getFields().stream().map(s -> {
-            String[] p = s.split("\\|", 2);
-            return new FieldDTO(p[0], p.length > 1 ? p[1] : "");
-        }).toList();
-
-        return new TournamentConfigResponse(
-                t.getConfigId(), t.getId(),
-                t.getRules(), t.getRegistrationDeadline(),
-                dates, schedules, fields, t.getSanctions()
-        );
     }
 }

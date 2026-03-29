@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.Controller.dto.StandingsDTOs.StandingsResponse;
+import com.techcup.techcup_futbol.Controller.dto.StandingsResponse;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.StandingsServiceImpl;

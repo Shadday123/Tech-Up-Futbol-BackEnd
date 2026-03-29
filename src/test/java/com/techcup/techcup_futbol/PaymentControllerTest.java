@@ -1,7 +1,7 @@
 package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.Controller.PaymentController;
-import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.*;
 import com.techcup.techcup_futbol.core.exception.PaymentException;
 import com.techcup.techcup_futbol.core.model.PaymentStatus;
 import com.techcup.techcup_futbol.core.service.PaymentService;

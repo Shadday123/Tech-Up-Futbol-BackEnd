@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.RefereeDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.*;
 
 import java.util.List;
 

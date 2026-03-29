@@ -1,6 +1,8 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.CreateLineupRequest;
+import com.techcup.techcup_futbol.Controller.dto.LineupResponse;
+import com.techcup.techcup_futbol.Controller.mapper.LineupMapper;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.LineupException;
 import com.techcup.techcup_futbol.repository.LineupRepository;
@@ -104,7 +106,7 @@ public class LineupServiceImpl implements LineupService {
 
         lineupRepository.save(lineup);
         log.info("Alineación creada ID: {} para equipo '{}'", lineup.getId(), team.getTeamName());
-        return toResponse(lineup);
+        return LineupMapper.toResponse(lineup);
     }
 
     @Override
@@ -112,7 +114,7 @@ public class LineupServiceImpl implements LineupService {
         Lineup lineup = lineupRepository.findByMatchIdAndTeamId(matchId, teamId)
                 .orElseThrow(() -> new LineupException("lineup",
                         String.format(LineupException.LINEUP_NOT_FOUND, matchId, teamId)));
-        return toResponse(lineup);
+        return LineupMapper.toResponse(lineup);
     }
 
     @Override
@@ -127,39 +129,6 @@ public class LineupServiceImpl implements LineupService {
 
         Lineup rivalLineup = lineupRepository.findByMatchIdAndTeamId(matchId, rivalId)
                 .orElseThrow(() -> new LineupException("lineup", LineupException.RIVAL_LINEUP_NOT_PUBLISHED));
-        return toResponse(rivalLineup);
-    }
-
-    private LineupResponse toResponse(Lineup l) {
-        List<LineupPlayerDTO> starters = l.getStarters() == null ? List.of()
-                : l.getStarters().stream().map(this::toPlayerDTO).toList();
-
-        List<LineupPlayerDTO> subs = l.getSubstitutes() == null ? List.of()
-                : l.getSubstitutes().stream().map(this::toPlayerDTO).toList();
-
-        List<PlayerPositionDTO> positions = l.getFieldPositions() == null ? List.of()
-                : l.getFieldPositions().stream().map(s -> {
-                    String[] p = s.split("\\|", 3);
-                    return new PlayerPositionDTO(p[0],
-                            p.length > 1 ? Double.parseDouble(p[1]) : 0,
-                            p.length > 2 ? Double.parseDouble(p[2]) : 0);
-                }).toList();
-
-        return new LineupResponse(
-                l.getId(),
-                l.getMatch().getId(),
-                l.getTeam().getId(),
-                l.getTeam().getTeamName(),
-                l.getFormation(),
-                starters, subs, positions
-        );
-    }
-
-    private LineupPlayerDTO toPlayerDTO(Player p) {
-        return new LineupPlayerDTO(
-                p.getId(), p.getFullname(),
-                p.getPosition() != null ? p.getPosition().name() : null,
-                p.getDorsalNumber(), p.getPhotoUrl()
-        );
+        return LineupMapper.toResponse(rivalLineup);
     }
 }

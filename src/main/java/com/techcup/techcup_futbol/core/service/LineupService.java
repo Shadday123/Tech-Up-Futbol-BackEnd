@@ -1,7 +1,7 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.CreateLineupRequest;
-import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.LineupResponse;
+import com.techcup.techcup_futbol.Controller.dto.CreateLineupRequest;
+import com.techcup.techcup_futbol.Controller.dto.LineupResponse;
 import com.techcup.techcup_futbol.core.model.Match;
 
 public interface LineupService {

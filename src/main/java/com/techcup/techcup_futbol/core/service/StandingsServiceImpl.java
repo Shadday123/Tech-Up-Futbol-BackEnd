@@ -1,6 +1,7 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.StandingsDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.StandingsResponse;
+import com.techcup.techcup_futbol.Controller.mapper.StandingsMapper;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.repository.StandingsRepository;
@@ -77,22 +78,7 @@ public class StandingsServiceImpl implements StandingsService {
                         .thenComparingInt(Standings::getGoalsFor).reversed())
                 .toList();
 
-        List<TeamStandingDTO> dtos = new ArrayList<>();
-        for (int i = 0; i < sorted.size(); i++) {
-            Standings s = sorted.get(i);
-            dtos.add(new TeamStandingDTO(
-                    i + 1,
-                    s.getTeam().getId(),
-                    s.getTeam().getTeamName(),
-                    s.getTeam().getShieldUrl(),
-                    s.getMatchesPlayed(), s.getMatchesWon(),
-                    s.getMatchesDrawn(), s.getMatchesLost(),
-                    s.getGoalsFor(), s.getGoalsAgainst(),
-                    s.getGoalsDifference(), s.getPoints()
-            ));
-        }
-
-        return new StandingsResponse(tournamentId, tournament.getName(), dtos);
+        return StandingsMapper.toResponse(tournamentId, tournament.getName(), sorted);
     }
 
     private void updateTeamStandings(String tournamentId, Team team, int goalsFor, int goalsAgainst) {

@@ -1,6 +1,10 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.CreateMatchRequest;
+import com.techcup.techcup_futbol.Controller.dto.MatchEventRequest;
+import com.techcup.techcup_futbol.Controller.dto.MatchResponse;
+import com.techcup.techcup_futbol.Controller.dto.RegisterResultRequest;
+import com.techcup.techcup_futbol.Controller.mapper.MatchMapper;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
 import com.techcup.techcup_futbol.repository.MatchEventRepository;
@@ -74,7 +78,7 @@ public class MatchServiceImpl implements MatchService {
 
         log.info("Partido creado ID: {} — {} vs {}", match.getId(),
                 local.getTeamName(), visitor.getTeamName());
-        return toResponse(match);
+        return MatchMapper.toResponse(match, matchEventRepository.findByMatchId(match.getId()));
     }
 
     // ── REGISTER RESULT
@@ -148,7 +152,7 @@ public class MatchServiceImpl implements MatchService {
         log.info("Resultado registrado — {} {} : {} {}",
                 match.getLocalTeam().getTeamName(), match.getScoreLocal(),
                 match.getScoreVisitor(), match.getVisitorTeam().getTeamName());
-        return toResponse(match);
+        return MatchMapper.toResponse(match, matchEventRepository.findByMatchId(matchId));
     }
 
     // ── READ
@@ -158,18 +162,22 @@ public class MatchServiceImpl implements MatchService {
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchException("matchId",
                         String.format(MatchException.MATCH_NOT_FOUND, matchId)));
-        return toResponse(match);
+        return MatchMapper.toResponse(match, matchEventRepository.findByMatchId(matchId));
     }
 
     @Override
     public List<MatchResponse> findAll() {
-        return matchRepository.findAll().stream().map(this::toResponse).toList();
+        return matchRepository.findAll().stream()
+                .map(m -> MatchMapper.toResponse(m, matchEventRepository.findByMatchId(m.getId())))
+                .toList();
     }
 
     @Override
     public List<MatchResponse> findByTeamId(String teamId) {
         return matchRepository.findByLocalTeamIdOrVisitorTeamId(teamId, teamId)
-                .stream().map(this::toResponse).toList();
+                .stream()
+                .map(m -> MatchMapper.toResponse(m, matchEventRepository.findByMatchId(m.getId())))
+                .toList();
     }
 
     @Override
@@ -196,24 +204,5 @@ public class MatchServiceImpl implements MatchService {
     private boolean isPlayerInTeam(String playerId, Team team) {
         if (team.getPlayers() == null) return false;
         return team.getPlayers().stream().anyMatch(p -> p.getId().equals(playerId));
-    }
-
-    private MatchResponse toResponse(Match m) {
-        List<MatchEventResponse> events = matchEventRepository.findByMatchId(m.getId())
-                .stream().map(e -> new MatchEventResponse(
-                        e.getId(), e.getType(), e.getMinute(),
-                        e.getPlayer() != null ? e.getPlayer().getId() : null,
-                        e.getPlayer() != null ? e.getPlayer().getFullname() : null
-                )).toList();
-
-        return new MatchResponse(
-                m.getId(),
-                m.getLocalTeam().getId(),  m.getLocalTeam().getTeamName(),
-                m.getVisitorTeam().getId(), m.getVisitorTeam().getTeamName(),
-                m.getDateTime(),
-                m.getScoreLocal(), m.getScoreVisitor(),
-                m.getYellowCards(), m.getRedCards(),
-                m.getField(), m.getStatus().name(), events
-        );
     }
 }

@@ -1,6 +1,8 @@
 package com.techcup.techcup_futbol.Controller;
 
-import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.CreateMatchRequest;
+import com.techcup.techcup_futbol.Controller.dto.MatchResponse;
+import com.techcup.techcup_futbol.Controller.dto.RegisterResultRequest;
 import com.techcup.techcup_futbol.core.service.MatchService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

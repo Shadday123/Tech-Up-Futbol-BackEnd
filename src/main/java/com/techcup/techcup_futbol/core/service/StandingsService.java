@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.StandingsDTOs.StandingsResponse;
+import com.techcup.techcup_futbol.Controller.dto.StandingsResponse;
 import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.Team;
 

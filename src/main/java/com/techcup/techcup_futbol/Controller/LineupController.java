@@ -1,6 +1,7 @@
 package com.techcup.techcup_futbol.Controller;
 
-import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.CreateLineupRequest;
+import com.techcup.techcup_futbol.Controller.dto.LineupResponse;
 import com.techcup.techcup_futbol.core.service.LineupService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

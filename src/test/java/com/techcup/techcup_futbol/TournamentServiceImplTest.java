@@ -7,6 +7,7 @@ import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.service.TournamentServiceImpl;
+import com.techcup.techcup_futbol.exception.ResourceNotFoundException;
 import com.techcup.techcup_futbol.repository.TournamentRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,6 +52,12 @@ class TournamentServiceImplTest {
                 .thenAnswer(inv -> java.util.Optional.ofNullable(DataStore.torneos.get(inv.getArgument(0))));
         when(tournamentRepository.findAll())
                 .thenAnswer(inv -> new ArrayList<>(DataStore.torneos.values()));
+    }
+
+    // ── Helpers
+
+    private CreateTournamentRequest buildRequest(String name, int maxTeams) {
+        return new CreateTournamentRequest(name, START, END, 150.0, maxTeams, "Reglas estándar");
     }
 
     // ── Happy Path
@@ -173,6 +180,13 @@ class TournamentServiceImplTest {
     class ErrorPath {
 
         @Test
+        @DisplayName("EP-TOS-01: findById() con ID inexistente lanza ResourceNotFoundException")
+        void findByIdInexistenteLanzaResourceNotFoundException() {
+            assertThrows(ResourceNotFoundException.class,
+                    () -> service.findById("id-que-no-existe"));
+        }
+
+        @Test
         @DisplayName("EP-TOS-02: create() lanza TournamentException si nombre vacío")
         void createNombreVacioLanzaExcepcion() {
             TournamentException ex = assertThrows(TournamentException.class,
@@ -205,12 +219,11 @@ class TournamentServiceImplTest {
         }
 
         @Test
-        @DisplayName("EP-TOS-06: updateStatus() lanza TournamentException si torneo no existe")
-        void updateStatusTorneoNoExisteLanzaExcepcion() {
+        @DisplayName("EP-TOS-06: create() lanza TournamentException si maxTeams es impar")
+        void createMaxTeamsImparLanzaExcepcion() {
             TournamentException ex = assertThrows(TournamentException.class,
-                    () -> service.updateStatus("NO-EXISTE", "ACTIVE"));
-            assertEquals("id", ex.getField());
-            assertTrue(ex.getMessage().contains("NO-EXISTE"));
+                    () -> service.create(new CreateTournamentRequest("Torneo", START, END, 100.0, 5, "Reglas")));
+            assertEquals("maxTeams", ex.getField());
         }
 
         @Test
@@ -241,15 +254,6 @@ class TournamentServiceImplTest {
 
             assertThrows(TournamentException.class,
                     () -> service.updateStatus(id, "DRAFT"));
-        }
-
-        @Test
-        @DisplayName("EP-TOS-10: findById() lanza TournamentException si torneo no existe")
-        void findByIdNoExisteLanzaExcepcion() {
-            TournamentException ex = assertThrows(TournamentException.class,
-                    () -> service.findById("T999"));
-            assertEquals("id", ex.getField());
-            assertTrue(ex.getMessage().contains("T999"));
         }
     }
 
@@ -333,11 +337,5 @@ class TournamentServiceImplTest {
                         "Debería fallar la transición DELETED → " + next);
             }
         }
-    }
-
-    // ── Helpers
-
-    private CreateTournamentRequest buildRequest(String name, int maxTeams) {
-        return new CreateTournamentRequest(name, START, END, 150.0, maxTeams, "Reglas estándar");
     }
 }

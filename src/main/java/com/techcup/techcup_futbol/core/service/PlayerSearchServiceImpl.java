@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.Controller.dto.PlayerSearchRequest;
 import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
+import com.techcup.techcup_futbol.Controller.mapper.PlayerSearchMapper;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.repository.PlayerRepository;
@@ -52,31 +53,8 @@ public class PlayerSearchServiceImpl implements PlayerSearchService {
                     && s.getSemester() == f.semester());
         }
 
-        List<PlayerSearchResult> results = stream.map(this::toResult).toList();
+        List<PlayerSearchResult> results = stream.map(PlayerSearchMapper::toResult).toList();
         log.info("Jugadores encontrados: {}", results.size());
         return results;
-    }
-
-    private PlayerSearchResult toResult(Player p) {
-        String type = "INSTITUTIONAL";
-        Integer semester = null;
-        if (p instanceof StudentPlayer s) {
-            type = "STUDENT";
-            semester = s.getSemester();
-        } else if (p.getClass().getSimpleName().equals("RelativePlayer")) {
-            type = "RELATIVE";
-        }
-        return new PlayerSearchResult(
-                p.getId(),
-                p.getFullname(),
-                p.getPosition(),
-                p.getDorsalNumber(),
-                p.getPhotoUrl(),
-                type,
-                semester,
-                p.getAge(),
-                p.getGender(),
-                !p.isHaveTeam()
-        );
     }
 }

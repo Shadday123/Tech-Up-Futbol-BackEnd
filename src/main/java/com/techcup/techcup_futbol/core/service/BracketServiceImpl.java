@@ -1,6 +1,8 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.BracketDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.BracketResponse;
+import com.techcup.techcup_futbol.Controller.dto.GenerateBracketRequest;
+import com.techcup.techcup_futbol.Controller.mapper.BracketMapper;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.BracketException;
 import com.techcup.techcup_futbol.repository.MatchRepository;
@@ -95,7 +97,7 @@ public class BracketServiceImpl implements BracketService {
 
         List<TournamentBrackets> phases = List.of(bracket);
         log.info("Llaves generadas: {} partidos en fase {}", roundMatches.size(), phase);
-        return toResponse(tournamentId, tournament, phases);
+        return BracketMapper.toResponse(tournamentId, tournament, phases);
     }
 
     // ── FIND
@@ -111,7 +113,7 @@ public class BracketServiceImpl implements BracketService {
             throw new BracketException("bracket",
                     String.format(BracketException.BRACKET_NOT_FOUND, tournament.getName()));
         }
-        return toResponse(tournamentId, tournament, phases);
+        return BracketMapper.toResponse(tournamentId, tournament, phases);
     }
 
     // ── ADVANCE WINNER
@@ -177,7 +179,7 @@ public class BracketServiceImpl implements BracketService {
             log.info("Fase {} generada con {} partidos", nextPhase, nextMatches.size());
         }
 
-        return toResponse(tournamentId, tournament, phases);
+        return BracketMapper.toResponse(tournamentId, tournament, phases);
     }
 
     // ── HELPERS
@@ -211,29 +213,5 @@ public class BracketServiceImpl implements BracketService {
             case SEMI_FINALS    -> PhaseEnum.FINAL;
             default             -> PhaseEnum.FINAL;
         };
-    }
-
-    private BracketResponse toResponse(String tournamentId, Tournament tournament,
-                                       List<TournamentBrackets> phases) {
-        List<PhaseDTO> phaseDTOs = phases.stream().map(b -> {
-            List<BracketMatchDTO> matchDTOs = b.getMatches() == null ? List.of()
-                    : b.getMatches().stream().map(m -> {
-                Team w = m.getWinner();
-                MatchStatus st = m.getStatus() != null ? m.getStatus() : MatchStatus.SCHEDULED;
-                return new BracketMatchDTO(
-                        m.getId(),
-                        m.getLocalTeam().getId(),   m.getLocalTeam().getTeamName(),
-                        m.getVisitorTeam().getId(), m.getVisitorTeam().getTeamName(),
-                        st == MatchStatus.FINISHED ? m.getScoreLocal()   : null,
-                        st == MatchStatus.FINISHED ? m.getScoreVisitor() : null,
-                        w != null ? w.getId()       : null,
-                        w != null ? w.getTeamName() : null,
-                        st.name()
-                );
-            }).toList();
-            return new PhaseDTO(b.getPhase().name(), matchDTOs);
-        }).toList();
-
-        return new BracketResponse(tournamentId, tournament.getName(), phaseDTOs);
     }
 }

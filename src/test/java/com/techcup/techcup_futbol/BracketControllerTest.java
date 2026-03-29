@@ -1,7 +1,7 @@
 package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.Controller.BracketController;
-import com.techcup.techcup_futbol.Controller.dto.BracketDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.*;
 import com.techcup.techcup_futbol.core.exception.BracketException;
 import com.techcup.techcup_futbol.core.service.BracketService;
 import org.junit.jupiter.api.*;

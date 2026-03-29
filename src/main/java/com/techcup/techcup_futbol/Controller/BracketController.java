@@ -1,6 +1,7 @@
 package com.techcup.techcup_futbol.Controller;
 
-import com.techcup.techcup_futbol.Controller.dto.BracketDTOs.*;
+import com.techcup.techcup_futbol.Controller.dto.BracketResponse;
+import com.techcup.techcup_futbol.Controller.dto.GenerateBracketRequest;
 import com.techcup.techcup_futbol.core.service.BracketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
