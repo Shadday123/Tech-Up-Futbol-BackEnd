@@ -165,7 +165,7 @@ public class DataStore {
         e1.setId("E001");
         e1.setTeamName("Los Galácticos");
         e1.setShieldUrl("galacticos_escudo.png");
-        e1.setUniformColors("Blanco y Dorado");
+        e1.setUniformColors(List.of("#FFFFFF", "#FFD700", "#C0C0C0"));
         e1.setCaptain(jugadores.get("J001"));
         List<Player> pe1 = new ArrayList<>();
         pe1.add(jugadores.get("J001"));
@@ -179,7 +179,7 @@ public class DataStore {
         e2.setId("E002");
         e2.setTeamName("Los Titanes");
         e2.setShieldUrl("titanes_escudo.png");
-        e2.setUniformColors("Azul y Blanco");
+        e2.setUniformColors(List.of("#0057A8", "#FFFFFF", "#003F7F"));
         e2.setCaptain(jugadores.get("J004"));
         List<Player> pe2 = new ArrayList<>();
         pe2.add(jugadores.get("J004"));
@@ -191,7 +191,7 @@ public class DataStore {
         e3.setId("E003");
         e3.setTeamName("Los Guerreros");
         e3.setShieldUrl("guerreros_escudo.png");
-        e3.setUniformColors("Verde y Negro");
+        e3.setUniformColors(List.of("#228B22", "#000000", "#32CD32"));
         e3.setCaptain(jugadores.get("J006"));
         List<Player> pe3 = new ArrayList<>();
         pe3.add(jugadores.get("J006"));

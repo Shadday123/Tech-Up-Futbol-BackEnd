@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -166,7 +167,7 @@ class StandingsControllerTest {
         team.setId(UUID.randomUUID().toString());
         team.setTeamName(name);
         team.setShieldUrl("shield.png");
-        team.setUniformColors("Azul");
+        team.setUniformColors(Collections.singletonList("Azul"));
         team.setPlayers(new ArrayList<>());
         return team;
     }

@@ -3,6 +3,7 @@ package com.techcup.techcup_futbol.Controller.dto;
 import com.techcup.techcup_futbol.core.model.Player;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class TeamDTO {
     @NotBlank(message = "La imagen del equipo es obligatoria ")
     private String shieldUrl;
 
-    @NotBlank(message = "Los colores son obligatorios")
-    private String uniformColors;
+    @NotEmpty(message = "Los colores son obligatorios")
+    private List<String> uniformColors;
 
     @NotBlank(message = "Debe haber un capitan")
     private Player captain;

@@ -6,6 +6,7 @@ import com.techcup.techcup_futbol.core.exception.TeamException;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ class TeamValidatorTest {
         validTeam.setId(UUID.randomUUID().toString());
         validTeam.setTeamName("Equipo Test");
         validTeam.setShieldUrl("shield.png");
-        validTeam.setUniformColors("Rojo");
+        validTeam.setUniformColors(Collections.singletonList("Rojo"));
         validTeam.setCaptain(captain);
         validTeam.setPlayers(buildStudentList(7));
     }

@@ -422,7 +422,7 @@ class BracketServiceImplTest {
             t.setId(UUID.randomUUID().toString());
             t.setTeamName("Equipo " + (i + 1));
             t.setShieldUrl("shield.png");
-            t.setUniformColors("Rojo");
+            t.setUniformColors(Collections.singletonList("#R5645"));
             t.setPlayers(new ArrayList<>());
             DataStore.equipos.put(t.getId(), t);
         }

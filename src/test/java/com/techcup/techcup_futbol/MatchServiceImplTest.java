@@ -458,7 +458,7 @@ class MatchServiceImplTest {
         t.setId(UUID.randomUUID().toString());
         t.setTeamName(name);
         t.setShieldUrl("shield.png");
-        t.setUniformColors("Rojo");
+        t.setUniformColors(Collections.singletonList("Rojo"));
         t.setPlayers(new ArrayList<>());
         return t;
     }

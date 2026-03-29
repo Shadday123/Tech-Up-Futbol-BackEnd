@@ -13,10 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -412,7 +409,7 @@ class TeamServiceImplTest {
         team.setId(UUID.randomUUID().toString());
         team.setTeamName(name);
         team.setShieldUrl("shield.png");
-        team.setUniformColors("Rojo y Blanco");
+        team.setUniformColors(Collections.singletonList("Rojo y Blanco"));
         team.setCaptain(captain);
         team.setPlayers(new ArrayList<>());
         return team;

@@ -331,7 +331,7 @@ class PaymentServiceImplTest {
         team.setId(UUID.randomUUID().toString());
         team.setTeamName(name);
         team.setShieldUrl("shield.png");
-        team.setUniformColors("Rojo");
+        team.setUniformColors(Collections.singletonList("Rojo"));
         team.setPlayers(new ArrayList<>());
         return team;
     }

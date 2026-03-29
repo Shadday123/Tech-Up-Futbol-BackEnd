@@ -18,7 +18,10 @@ public class Team {
 
     private String shieldUrl;
 
-    private String uniformColors;
+    @ElementCollection
+    @CollectionTable(name = "team_uniform_colors", joinColumns = @JoinColumn(name = "team_id"))
+    @Column(name = "hex_color", length = 7)
+    private List<String> uniformColors;
 
     @ManyToOne
     @JoinColumn(name = "captain_id")

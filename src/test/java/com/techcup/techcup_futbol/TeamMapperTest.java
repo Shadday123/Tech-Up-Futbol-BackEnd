@@ -7,6 +7,8 @@ import com.techcup.techcup_futbol.Controller.mapper.TeamMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Collections;
 import java.util.List;
 
 class TeamMapperTest {
@@ -25,7 +27,7 @@ class TeamMapperTest {
         dtoEquipo.setId("E001");
         dtoEquipo.setTeamName("Los Asgardianos");
         dtoEquipo.setShieldUrl("asgard.jpg");
-        dtoEquipo.setUniformColors("Negro");
+        dtoEquipo.setUniformColors(Collections.singletonList("Negro"));
         dtoEquipo.setCaptain(captainDTO);
         dtoEquipo.setPlayers(List.of(captainDTO,p1,p2));
 
@@ -39,7 +41,7 @@ class TeamMapperTest {
         equipoCompleto.setId("E001");
         equipoCompleto.setTeamName("Los Asgardianos");
         equipoCompleto.setShieldUrl("asgard.jpg");
-        equipoCompleto.setUniformColors("Negro y Blanco");
+        equipoCompleto.setUniformColors(Collections.singletonList("Negro y Blanco"));
         equipoCompleto.setCaptain(captain);
         equipoCompleto.setPlayers(List.of(captain,p1,p2,p3,p4));
     }

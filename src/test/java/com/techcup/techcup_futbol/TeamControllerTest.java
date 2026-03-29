@@ -14,10 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -221,7 +218,7 @@ class TeamControllerTest {
         CreateTeamRequest req = new CreateTeamRequest();
         req.setTeamName(name);
         req.setShieldUrl("shield.png");
-        req.setUniformColors("Rojo");
+        req.setUniformColors(Collections.singletonList("Rojo"));
         req.setCaptainId(captainId);
         return req;
     }
@@ -246,7 +243,7 @@ class TeamControllerTest {
         team.setId(UUID.randomUUID().toString());
         team.setTeamName(name);
         team.setShieldUrl("shield.png");
-        team.setUniformColors("Azul");
+        team.setUniformColors(Collections.singletonList("Azul"));
         team.setCaptain(captain);
         team.setPlayers(new ArrayList<>());
         return team;

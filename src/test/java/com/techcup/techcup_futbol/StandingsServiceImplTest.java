@@ -309,7 +309,7 @@ class StandingsServiceImplTest {
         team.setId(UUID.randomUUID().toString());
         team.setTeamName(name);
         team.setShieldUrl("shield.png");
-        team.setUniformColors("Azul");
+        team.setUniformColors(Collections.singletonList("Azul"));
         team.setPlayers(new ArrayList<>());
         return team;
     }

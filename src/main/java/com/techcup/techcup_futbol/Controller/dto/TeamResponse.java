@@ -14,7 +14,7 @@ public class TeamResponse {
     private String id;
     private String teamName;
     private String shieldUrl;
-    private String uniformColors;
+    private List<String> uniformColors;
     private String captainName;
     private List<String> players;
 }

@@ -16,8 +16,8 @@ public class CreateTeamRequest {
     @NotBlank(message = "La imagen del equipo es necesaria")
     private String shieldUrl;
 
-    @NotBlank(message = "Los colores de los uniformes son necesarios")
-    private String uniformColors;
+    @NotEmpty(message = "Los colores de los uniformes son necesarios")
+    private List<String> uniformColors;
 
     @NotNull(message = "El capitán es necesario")
     private String captainId;

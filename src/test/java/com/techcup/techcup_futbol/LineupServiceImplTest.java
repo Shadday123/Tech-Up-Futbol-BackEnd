@@ -429,7 +429,7 @@ class LineupServiceImplTest {
         t.setId(UUID.randomUUID().toString());
         t.setTeamName(name);
         t.setShieldUrl("shield.png");
-        t.setUniformColors("Azul");
+        t.setUniformColors(Collections.singletonList("Azul"));
         t.setPlayers(new ArrayList<>());
         return t;
     }
