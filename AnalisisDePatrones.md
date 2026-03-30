@@ -141,8 +141,7 @@ Los observers se implementan como listeners independientes:
 
 ## Diagrama de Componentes Especifico
 
-![Diagrama de componentes especifico.png](docs/Images/Diagrama%20de%20componentes%20especifico.png)
-
+![Diagrama sin título.drawio (2).png](docs/Images/Diagrama%20sin%20t%C3%ADtulo.drawio%20%282%29.png)
 ## Diagrama de clases
 <img width="2361" height="1248" alt="TechUp-Page-1 drawio" src="https://github.com/user-attachments/assets/7f84d889-9bbe-4892-960d-284474c17c3a" />
 
