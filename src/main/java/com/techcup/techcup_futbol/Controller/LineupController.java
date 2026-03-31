@@ -2,6 +2,8 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.CreateLineupRequest;
 import com.techcup.techcup_futbol.Controller.dto.LineupResponse;
+import com.techcup.techcup_futbol.Controller.mapper.LineupMapper;
+import com.techcup.techcup_futbol.core.model.Lineup;
 import com.techcup.techcup_futbol.core.service.LineupService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -10,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/lineups")
@@ -27,7 +31,17 @@ public class LineupController {
     @PostMapping
     public ResponseEntity<LineupResponse> create(@Valid @RequestBody CreateLineupRequest request) {
         log.info("POST /api/lineups — partido: {} | equipo: {}", request.matchId(), request.teamId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(lineupService.create(request));
+
+        List<String> fieldPositions = request.fieldPositions() == null ? List.of()
+                : request.fieldPositions().stream()
+                    .map(fp -> fp.playerId() + "|" + fp.x() + "|" + fp.y())
+                    .toList();
+
+        Lineup lineup = lineupService.create(request.matchId(), request.teamId(),
+                request.formation(), request.starterIds(), request.substituteIds(),
+                fieldPositions);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(LineupMapper.toResponse(lineup));
     }
 
     @GetMapping("/match/{matchId}/team/{teamId}")
@@ -35,7 +49,8 @@ public class LineupController {
             @PathVariable String matchId,
             @PathVariable String teamId) {
         log.info("GET /api/lineups/match/{}/team/{}", matchId, teamId);
-        return ResponseEntity.ok(lineupService.findByMatchAndTeam(matchId, teamId));
+        return ResponseEntity.ok(LineupMapper.toResponse(
+                lineupService.findByMatchAndTeam(matchId, teamId)));
     }
 
     @GetMapping("/match/{matchId}/rival")
@@ -43,8 +58,8 @@ public class LineupController {
             @PathVariable String matchId,
             @RequestParam String myTeamId) {
         log.info("GET /api/lineups/match/{}/rival — myTeam: {}", matchId, myTeamId);
-        return ResponseEntity.ok(lineupService.findRivalLineup(matchId, myTeamId));
+        return ResponseEntity.ok(LineupMapper.toResponse(
+                lineupService.findRivalLineup(matchId, myTeamId)));
     }
-
 
 }

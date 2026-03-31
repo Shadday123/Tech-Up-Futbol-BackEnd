@@ -1,12 +1,10 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.StandingsResponse;
-import com.techcup.techcup_futbol.Controller.mapper.StandingsMapper;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.repository.StandingsRepository;
 import com.techcup.techcup_futbol.repository.TournamentRepository;
-import com.techcup.techcup_futbol.util.IdGenerator;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,20 +63,18 @@ public class StandingsServiceImpl implements StandingsService {
     }
 
     @Override
-    public StandingsResponse findByTournamentId(String tournamentId) {
-        Tournament tournament = tournamentRepository.findById(tournamentId)
+    public List<Standings> findByTournamentId(String tournamentId) {
+        tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new TournamentException("id",
                         String.format(TournamentException.TOURNAMENT_NOT_FOUND, tournamentId)));
 
-        List<Standings> sorted = standingsRepository.findByTournamentId(tournamentId)
+        return standingsRepository.findByTournamentId(tournamentId)
                 .stream()
                 .sorted(Comparator
                         .comparingInt(Standings::getPoints).reversed()
                         .thenComparingInt(Standings::getGoalsDifference).reversed()
                         .thenComparingInt(Standings::getGoalsFor).reversed())
                 .toList();
-
-        return StandingsMapper.toResponse(tournamentId, tournament.getName(), sorted);
     }
 
     private void updateTeamStandings(String tournamentId, Team team, int goalsFor, int goalsAgainst) {

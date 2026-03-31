@@ -1,6 +1,5 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.Controller.dto.*;
 import com.techcup.techcup_futbol.core.exception.RefereeException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.RefereeServiceImpl;
@@ -16,7 +15,6 @@ import org.mockito.quality.Strictness;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -81,75 +79,70 @@ class RefereeServiceImplTest {
         @Test
         @DisplayName("HP-REF-01: create() registra árbitro con ID no nulo")
         void createRegistraArbitroConId() {
-            RefereeResponse resp = service.create(new CreateRefereeRequest("Árbitro A", "arbitro@example.com"));
+            Referee resp = service.create("Árbitro A", "arbitro@example.com");
 
-            assertNotNull(resp.id());
-            assertFalse(resp.id().isBlank());
+            assertNotNull(resp.getId());
+            assertFalse(resp.getId().isBlank());
         }
 
         @Test
         @DisplayName("HP-REF-02: create() retorna datos correctos del árbitro")
         void createRetornaDatosCorrectos() {
-            RefereeResponse resp = service.create(new CreateRefereeRequest("Árbitro B", "b@example.com"));
+            Referee resp = service.create("Árbitro B", "b@example.com");
 
-            assertEquals("Árbitro B", resp.fullname());
-            assertEquals("b@example.com", resp.email());
-            assertNotNull(resp.assignedMatches());
-            assertTrue(resp.assignedMatches().isEmpty());
+            assertEquals("Árbitro B", resp.getFullname());
+            assertEquals("b@example.com", resp.getEmail());
+            assertNotNull(resp.getAssignedMatches());
+            assertTrue(resp.getAssignedMatches().isEmpty());
         }
 
         @Test
         @DisplayName("HP-REF-03: findById() retorna árbitro existente")
         void findByIdRetornaArbitro() {
-            RefereeResponse created = service.create(
-                    new CreateRefereeRequest("Árbitro C", "c@example.com"));
+            Referee created = service.create("Árbitro C", "c@example.com");
 
-            RefereeResponse found = service.findById(created.id());
+            Referee found = service.findById(created.getId());
 
-            assertEquals(created.id(), found.id());
-            assertEquals("Árbitro C", found.fullname());
+            assertEquals(created.getId(), found.getId());
+            assertEquals("Árbitro C", found.getFullname());
         }
 
         @Test
         @DisplayName("HP-REF-04: findAll() retorna todos los árbitros registrados")
         void findAllRetornaTodos() {
-            service.create(new CreateRefereeRequest("Ref1", "r1@example.com"));
-            service.create(new CreateRefereeRequest("Ref2", "r2@example.com"));
-            service.create(new CreateRefereeRequest("Ref3", "r3@example.com"));
+            service.create("Ref1", "r1@example.com");
+            service.create("Ref2", "r2@example.com");
+            service.create("Ref3", "r3@example.com");
 
-            List<RefereeResponse> lista = service.findAll();
+            List<Referee> lista = service.findAll();
             assertEquals(3, lista.size());
         }
 
         @Test
         @DisplayName("HP-REF-05: assignToMatch() asigna árbitro a partido sin árbitro previo")
         void assignToMatchAsignaCorrectamente() {
-            RefereeResponse ref = service.create(
-                    new CreateRefereeRequest("Árbitro Asig", "asig@example.com"));
+            Referee ref = service.create("Árbitro Asig", "asig@example.com");
 
             Match match = buildMatch();
 
-            RefereeResponse resp = service.assignToMatch(
-                    match.getId(), new AssignRefereeRequest(ref.id()));
+            Referee resp = service.assignToMatch(match.getId(), ref.getId());
 
-            assertEquals(ref.id(), resp.id());
-            assertEquals(1, resp.assignedMatches().size());
+            assertEquals(ref.getId(), resp.getId());
+            assertEquals(1, resp.getAssignedMatches().size());
         }
 
         @Test
         @DisplayName("HP-REF-06: árbitro puede ser asignado a múltiples partidos distintos")
         void arbitroPuedeAsignarseMúltiplesPartidos() {
-            RefereeResponse ref = service.create(
-                    new CreateRefereeRequest("Multi Ref", "multi@example.com"));
+            Referee ref = service.create("Multi Ref", "multi@example.com");
 
             Match m1 = buildMatch();
             Match m2 = buildMatch();
 
-            service.assignToMatch(m1.getId(), new AssignRefereeRequest(ref.id()));
-            RefereeResponse resp = service.assignToMatch(m2.getId(),
-                    new AssignRefereeRequest(ref.id()));
+            service.assignToMatch(m1.getId(), ref.getId());
+            Referee resp = service.assignToMatch(m2.getId(), ref.getId());
 
-            assertEquals(2, resp.assignedMatches().size());
+            assertEquals(2, resp.getAssignedMatches().size());
         }
     }
 
@@ -162,21 +155,20 @@ class RefereeServiceImplTest {
         @Test
         @DisplayName("EP-REF-01: create() lanza RefereeException si email ya está registrado")
         void createEmailDuplicadoLanza() {
-            service.create(new CreateRefereeRequest("Ref Original", "dup@example.com"));
+            service.create("Ref Original", "dup@example.com");
 
             RefereeException ex = assertThrows(RefereeException.class,
-                    () -> service.create(new CreateRefereeRequest("Ref Dup", "dup@example.com")));
+                    () -> service.create("Ref Dup", "dup@example.com"));
             assertEquals("email", ex.getField());
         }
 
         @Test
         @DisplayName("EP-REF-02: create() email case-insensitive detecta duplicado")
         void createEmailDuplicadoCaseInsensitiveLanza() {
-            service.create(new CreateRefereeRequest("Original", "ref@example.com"));
+            service.create("Original", "ref@example.com");
 
             assertThrows(RefereeException.class,
-                    () -> service.create(new CreateRefereeRequest("Dup Upper",
-                            "REF@EXAMPLE.COM")));
+                    () -> service.create("Dup Upper", "REF@EXAMPLE.COM"));
         }
 
         @Test
@@ -185,38 +177,32 @@ class RefereeServiceImplTest {
             Match match = buildMatch();
 
             RefereeException ex = assertThrows(RefereeException.class,
-                    () -> service.assignToMatch(match.getId(),
-                            new AssignRefereeRequest("NO-EXISTE")));
+                    () -> service.assignToMatch(match.getId(), "NO-EXISTE"));
             assertEquals("refereeId", ex.getField());
         }
 
         @Test
         @DisplayName("EP-REF-04: assignToMatch() lanza RefereeException si partido no existe")
         void assignToMatchPartidoNoExisteLanza() {
-            RefereeResponse ref = service.create(
-                    new CreateRefereeRequest("Ref Sin Partido", "sin@example.com"));
+            Referee ref = service.create("Ref Sin Partido", "sin@example.com");
 
             RefereeException ex = assertThrows(RefereeException.class,
-                    () -> service.assignToMatch("NO-EXISTE",
-                            new AssignRefereeRequest(ref.id())));
+                    () -> service.assignToMatch("NO-EXISTE", ref.getId()));
             assertEquals("matchId", ex.getField());
         }
 
         @Test
         @DisplayName("EP-REF-05: assignToMatch() lanza RefereeException si partido ya tiene árbitro")
         void assignToMatchPartidoYaTieneArbitroLanza() {
-            RefereeResponse ref1 = service.create(
-                    new CreateRefereeRequest("Ref1 Ya", "ya1@example.com"));
-            RefereeResponse ref2 = service.create(
-                    new CreateRefereeRequest("Ref2 Ya", "ya2@example.com"));
+            Referee ref1 = service.create("Ref1 Ya", "ya1@example.com");
+            Referee ref2 = service.create("Ref2 Ya", "ya2@example.com");
 
             Match match = buildMatch();
 
-            service.assignToMatch(match.getId(), new AssignRefereeRequest(ref1.id()));
+            service.assignToMatch(match.getId(), ref1.getId());
 
             RefereeException ex = assertThrows(RefereeException.class,
-                    () -> service.assignToMatch(match.getId(),
-                            new AssignRefereeRequest(ref2.id())));
+                    () -> service.assignToMatch(match.getId(), ref2.getId()));
             assertEquals("match", ex.getField());
         }
 
@@ -244,12 +230,9 @@ class RefereeServiceImplTest {
         @Test
         @DisplayName("CS-REF-02: múltiples árbitros tienen IDs únicos")
         void multiplesArbitrosIdsUnicos() {
-            String id1 = service.create(
-                    new CreateRefereeRequest("R1", "uniq1@example.com")).id();
-            String id2 = service.create(
-                    new CreateRefereeRequest("R2", "uniq2@example.com")).id();
-            String id3 = service.create(
-                    new CreateRefereeRequest("R3", "uniq3@example.com")).id();
+            String id1 = service.create("R1", "uniq1@example.com").getId();
+            String id2 = service.create("R2", "uniq2@example.com").getId();
+            String id3 = service.create("R3", "uniq3@example.com").getId();
 
             assertNotEquals(id1, id2);
             assertNotEquals(id2, id3);
@@ -259,15 +242,14 @@ class RefereeServiceImplTest {
         @Test
         @DisplayName("CS-REF-03: assignToMatch() modifica la lista de partidos asignados del árbitro")
         void assignToMatchActualizaListaAsignados() {
-            RefereeResponse ref = service.create(
-                    new CreateRefereeRequest("Lista Ref", "lista@example.com"));
+            Referee ref = service.create("Lista Ref", "lista@example.com");
 
-            assertEquals(0, service.findById(ref.id()).assignedMatches().size());
+            assertEquals(0, service.findById(ref.getId()).getAssignedMatches().size());
 
             Match match = buildMatch();
-            service.assignToMatch(match.getId(), new AssignRefereeRequest(ref.id()));
+            service.assignToMatch(match.getId(), ref.getId());
 
-            assertEquals(1, service.findById(ref.id()).assignedMatches().size());
+            assertEquals(1, service.findById(ref.getId()).getAssignedMatches().size());
         }
     }
 

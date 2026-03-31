@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol.core.validator;
 
-import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
+import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 
@@ -10,14 +10,14 @@ public class TournamentValidator {
 
     private TournamentValidator() {}
 
-    public static void validate(CreateTournamentRequest request) {
-        if (request == null) {
+    public static void validate(Tournament tournament) {
+        if (tournament == null) {
             throw new TournamentException(TournamentException.REQUEST_NULL);
         }
-        validateName(request.name());
-        validateDates(request.startDate().toLocalDate(), request.endDate().toLocalDate());
-        validateRegistrationFee(request.registrationFee());
-        validateMaxTeams(request.maxTeams());
+        validateName(tournament.getName());
+        validateDates(tournament.getStartDate().toLocalDate(), tournament.getEndDate().toLocalDate());
+        validateRegistrationFee(tournament.getRegistrationFee());
+        validateMaxTeams(tournament.getMaxTeams());
     }
 
     public static void validateName(String name) {

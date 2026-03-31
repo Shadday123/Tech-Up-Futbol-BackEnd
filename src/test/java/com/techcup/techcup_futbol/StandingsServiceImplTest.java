@@ -1,6 +1,5 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.Controller.dto.StandingsResponse;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.StandingsServiceImpl;
@@ -83,10 +82,10 @@ class StandingsServiceImplTest {
             DataStore.torneos.put(torneo.getId().toString(), torneo);
 
             service.registerTeamInTournament(torneo.getId().toString(), equipo);
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
 
-            assertEquals(1, resp.standings().size());
-            assertEquals("Equipo A", resp.standings().get(0).teamName());
+            assertEquals(1, standings.size());
+            assertEquals("Equipo A", standings.get(0).getTeam().getTeamName());
         }
 
         @Test
@@ -99,8 +98,8 @@ class StandingsServiceImplTest {
             service.registerTeamInTournament(torneo.getId().toString(), equipo);
             service.registerTeamInTournament(torneo.getId().toString(), equipo); // segunda vez
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
-            assertEquals(1, resp.standings().size());
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
+            assertEquals(1, standings.size());
         }
 
         @Test
@@ -117,11 +116,11 @@ class StandingsServiceImplTest {
             Match match = buildPartido(local, visitor, 2, 0);
             service.updateFromMatch(match);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
-            var localRow = resp.standings().stream()
-                    .filter(s -> s.teamName().equals("Local Win")).findFirst().orElseThrow();
-            assertEquals(3, localRow.points());
-            assertEquals(1, localRow.matchesWon());
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
+            var localRow = standings.stream()
+                    .filter(s -> s.getTeam().getTeamName().equals("Local Win")).findFirst().orElseThrow();
+            assertEquals(3, localRow.getPoints());
+            assertEquals(1, localRow.getMatchesWon());
         }
 
         @Test
@@ -138,8 +137,8 @@ class StandingsServiceImplTest {
             Match match = buildPartido(local, visitor, 1, 1);
             service.updateFromMatch(match);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
-            resp.standings().forEach(s -> assertEquals(1, s.points()));
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
+            standings.forEach(s -> assertEquals(1, s.getPoints()));
         }
 
         @Test
@@ -156,22 +155,26 @@ class StandingsServiceImplTest {
             Match match = buildPartido(local, visitor, 3, 1);
             service.updateFromMatch(match);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
-            var perdedor = resp.standings().stream()
-                    .filter(s -> s.teamName().equals("Perdedor")).findFirst().orElseThrow();
-            assertEquals(0, perdedor.points());
-            assertEquals(1, perdedor.matchesLost());
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
+            var perdedor = standings.stream()
+                    .filter(s -> s.getTeam().getTeamName().equals("Perdedor")).findFirst().orElseThrow();
+            assertEquals(0, perdedor.getPoints());
+            assertEquals(1, perdedor.getMatchesLost());
         }
 
         @Test
-        @DisplayName("HP-STD-06: findByTournamentId() retorna torneo con nombre correcto")
+        @DisplayName("HP-STD-06: findByTournamentId() retorna lista de standings correctamente")
         void findByTournamentIdRetornaCorrectamente() {
             Tournament torneo = buildTorneo("T006");
+            Team equipo = buildEquipo("Equipo Test");
             DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
-            assertEquals(torneo.getId(), resp.tournamentId());
-            assertEquals(torneo.getName(), resp.tournamentName());
+            service.registerTeamInTournament(torneo.getId().toString(), equipo);
+
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
+            assertNotNull(standings);
+            assertEquals(1, standings.size());
+            assertEquals(torneo.getId(), standings.get(0).getTournamentId());
         }
 
         @Test
@@ -180,8 +183,8 @@ class StandingsServiceImplTest {
             Tournament torneo = buildTorneo("T007");
             DataStore.torneos.put(torneo.getId().toString(), torneo);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
-            assertTrue(resp.standings().isEmpty());
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
+            assertTrue(standings.isEmpty());
         }
 
         @Test
@@ -198,12 +201,12 @@ class StandingsServiceImplTest {
             Match match = buildPartido(local, visitor, 4, 1);
             service.updateFromMatch(match);
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
-            var goleador = resp.standings().stream()
-                    .filter(s -> s.teamName().equals("Goleador")).findFirst().orElseThrow();
-            assertEquals(4, goleador.goalsFor());
-            assertEquals(1, goleador.goalsAgainst());
-            assertEquals(3, goleador.goalsDifference());
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
+            var goleador = standings.stream()
+                    .filter(s -> s.getTeam().getTeamName().equals("Goleador")).findFirst().orElseThrow();
+            assertEquals(4, goleador.getGoalsFor());
+            assertEquals(1, goleador.getGoalsAgainst());
+            assertEquals(3, goleador.getGoalsDifference());
         }
     }
 
@@ -252,9 +255,9 @@ class StandingsServiceImplTest {
             service.updateFromMatch(buildPartido(b, c, 1, 0)); // B gana 3 pts
             service.updateFromMatch(buildPartido(a, c, 1, 1)); // A y C 1 pt
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
             // A=4pts, B=3pts, C=1pt
-            assertEquals("A", resp.standings().get(0).teamName());
+            assertEquals("A", standings.get(0).getTeam().getTeamName());
         }
 
         @Test
@@ -270,11 +273,11 @@ class StandingsServiceImplTest {
             service.updateFromMatch(buildPartido(equipo, rival, 1, 0));
             service.updateFromMatch(buildPartido(rival, equipo, 0, 2));
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
-            var acum = resp.standings().stream()
-                    .filter(s -> s.teamName().equals("Acumulador")).findFirst().orElseThrow();
-            assertEquals(2, acum.matchesPlayed());
-            assertEquals(6, acum.points());
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
+            var acum = standings.stream()
+                    .filter(s -> s.getTeam().getTeamName().equals("Acumulador")).findFirst().orElseThrow();
+            assertEquals(2, acum.getMatchesPlayed());
+            assertEquals(6, acum.getPoints());
         }
 
         @Test
@@ -286,8 +289,8 @@ class StandingsServiceImplTest {
                 service.registerTeamInTournament(torneo.getId().toString(), buildEquipo("Equipo " + i));
             }
 
-            StandingsResponse resp = service.findByTournamentId(torneo.getId().toString());
-            assertEquals(4, resp.standings().size());
+            List<Standings> standings = service.findByTournamentId(torneo.getId().toString());
+            assertEquals(4, standings.size());
         }
     }
 

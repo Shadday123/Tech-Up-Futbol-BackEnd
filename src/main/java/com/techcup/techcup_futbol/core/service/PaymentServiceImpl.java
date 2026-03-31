@@ -1,15 +1,12 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.PaymentResponse;
-import com.techcup.techcup_futbol.Controller.dto.UploadReceiptRequest;
-import com.techcup.techcup_futbol.Controller.mapper.PaymentMapper;
 import com.techcup.techcup_futbol.core.model.Payment;
 import com.techcup.techcup_futbol.core.model.PaymentStatus;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.exception.PaymentException;
 import com.techcup.techcup_futbol.repository.PaymentRepository;
 import com.techcup.techcup_futbol.repository.TeamRepository;
-import com.techcup.techcup_futbol.util.IdGenerator;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,22 +28,22 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public PaymentResponse uploadReceipt(UploadReceiptRequest request) {
-        log.info("Subiendo comprobante para equipo ID: {}", request.teamId());
+    public Payment uploadReceipt(String teamId, String receiptUrl) {
+        log.info("Subiendo comprobante para equipo ID: {}", teamId);
 
-        Team team = teamRepository.findById(request.teamId())
+        Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new PaymentException("teamId",
-                        String.format(PaymentException.TEAM_NOT_FOUND, request.teamId())));
+                        String.format(PaymentException.TEAM_NOT_FOUND, teamId)));
 
-        if (request.receiptUrl() == null || request.receiptUrl().isBlank()) {
+        if (receiptUrl == null || receiptUrl.isBlank()) {
             throw new PaymentException("receiptUrl", PaymentException.RECEIPT_URL_EMPTY);
         }
 
-        Payment payment = paymentRepository.findByTeamId(request.teamId())
+        Payment payment = paymentRepository.findByTeamId(teamId)
                 .orElseGet(() -> {
                     Payment p = new Payment();
                     p.setId(IdGenerator.generateId());
-                    p.setTeamId(request.teamId());
+                    p.setTeamId(teamId);
                     p.setAmount(team.getPlayers() != null ? team.getPlayers().size() * 50.0 : 0.0);
                     p.setCurrentStatus(PaymentStatus.PENDING);
                     return p;
@@ -56,16 +53,16 @@ public class PaymentServiceImpl implements PaymentService {
             throw new PaymentException("status", PaymentException.PAYMENT_ALREADY_APPROVED);
         }
 
-        payment.uploadReceipt(request.receiptUrl());
+        payment.uploadReceipt(receiptUrl);
         paymentRepository.save(payment);
 
         log.info("Comprobante subido — pago ID: {} | estado: {}", payment.getId(), payment.getCurrentStatus());
-        return PaymentMapper.toResponse(payment, team);
+        return payment;
     }
 
     @Override
     @Transactional
-    public PaymentResponse updateStatus(String paymentId, String newStatus) {
+    public Payment updateStatus(String paymentId, String newStatus) {
         log.info("Actualizando estado del pago ID: {} → {}", paymentId, newStatus);
 
         Payment payment = paymentRepository.findById(paymentId)
@@ -85,45 +82,26 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
 
         log.info("Estado actualizado — pago ID: {} | nuevo estado: {}", paymentId, next);
-
-        Team team = payment.getTeamId() != null
-                ? teamRepository.findById(payment.getTeamId()).orElse(null)
-                : null;
-
-        return PaymentMapper.toResponse(payment, team);
+        return payment;
     }
 
     @Override
-    public PaymentResponse findById(String paymentId) {
-        Payment payment = paymentRepository.findById(paymentId)
+    public Payment findById(String paymentId) {
+        return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentException("id",
                         String.format(PaymentException.PAYMENT_NOT_FOUND, paymentId)));
-
-        Team team = payment.getTeamId() != null
-                ? teamRepository.findById(payment.getTeamId()).orElse(null)
-                : null;
-
-        return PaymentMapper.toResponse(payment, team);
     }
 
     @Override
-    public List<PaymentResponse> findAll() {
-        return paymentRepository.findAll().stream().map(p -> {
-            Team team = p.getTeamId() != null
-                    ? teamRepository.findById(p.getTeamId()).orElse(null)
-                    : null;
-            return PaymentMapper.toResponse(p, team);
-        }).toList();
+    public List<Payment> findAll() {
+        return paymentRepository.findAll();
     }
 
     @Override
-    public PaymentResponse findByTeamId(String teamId) {
-        Payment payment = paymentRepository.findByTeamId(teamId)
+    public Payment findByTeamId(String teamId) {
+        return paymentRepository.findByTeamId(teamId)
                 .orElseThrow(() -> new PaymentException("teamId",
                         String.format(PaymentException.PAYMENT_NOT_FOUND, teamId)));
-
-        Team team = teamRepository.findById(teamId).orElse(null);
-        return PaymentMapper.toResponse(payment, team);
     }
 
     private void validateStatusTransition(PaymentStatus current, PaymentStatus next) {

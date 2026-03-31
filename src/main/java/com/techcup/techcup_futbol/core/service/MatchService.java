@@ -1,26 +1,29 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.*;
 import com.techcup.techcup_futbol.core.model.Match;
+import com.techcup.techcup_futbol.core.model.MatchEventInput;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface MatchService {
 
-    MatchResponse create(CreateMatchRequest request);
+    Match create(String localTeamId, String visitorTeamId, LocalDateTime dateTime,
+                 String refereeId, int field);
 
-    MatchResponse registerResult(String matchId, RegisterResultRequest request);
+    Match registerResult(String matchId, int scoreLocal, int scoreVisitor,
+                         List<MatchEventInput> events);
 
-    MatchResponse findById(String matchId);
+    Match findById(String matchId);
 
-    List<MatchResponse> findAll();
+    List<Match> findAll();
 
-    List<MatchResponse> findByTeamId(String teamId);
+    List<Match> findByTeamId(String teamId);
 
     boolean isResultRegistered(String matchId);
 
     void registerMatch(Match match);
 
-    // Expone el mapa interno de partidos para RefereeService y BracketService
-    java.util.Map<String, com.techcup.techcup_futbol.core.model.Match> getMatches();
+    Map<String, Match> getMatches();
 }

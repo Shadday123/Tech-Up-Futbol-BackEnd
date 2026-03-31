@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.Controller.dto.*;
+import com.techcup.techcup_futbol.Controller.dto.UploadReceiptRequest;
 import com.techcup.techcup_futbol.core.exception.PaymentException;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.PaymentServiceImpl;
@@ -73,12 +73,11 @@ class PaymentServiceImplTest {
             Team team = buildTeam("Pagadores");
             DataStore.equipos.put(team.getId(), team);
 
-            UploadReceiptRequest req = new UploadReceiptRequest(team.getId(), "http://comprobante.com/pago.pdf");
-            PaymentResponse resp = service.uploadReceipt(req);
+            Payment resp = service.uploadReceipt(team.getId(), "http://comprobante.com/pago.pdf");
 
-            assertNotNull(resp.id());
-            assertEquals(PaymentStatus.UNDER_REVIEW, resp.currentStatus());
-            assertEquals(team.getId(), resp.teamId());
+            assertNotNull(resp.getId());
+            assertEquals(PaymentStatus.UNDER_REVIEW, resp.getCurrentStatus());
+            assertEquals(team.getId(), resp.getTeamId());
         }
 
         @Test
@@ -87,17 +86,15 @@ class PaymentServiceImplTest {
             Team team = buildTeam("Resubida");
             DataStore.equipos.put(team.getId(), team);
 
-            UploadReceiptRequest req1 = new UploadReceiptRequest(team.getId(), "http://v1.pdf");
-            PaymentResponse r1 = service.uploadReceipt(req1);
+            Payment r1 = service.uploadReceipt(team.getId(), "http://v1.pdf");
 
-            service.updateStatus(r1.id(), "REJECTED");
-            service.updateStatus(r1.id(), "PENDING");
+            service.updateStatus(r1.getId(), "REJECTED");
+            service.updateStatus(r1.getId(), "PENDING");
 
-            UploadReceiptRequest req2 = new UploadReceiptRequest(team.getId(), "http://v2.pdf");
-            PaymentResponse r2 = service.uploadReceipt(req2);
+            Payment r2 = service.uploadReceipt(team.getId(), "http://v2.pdf");
 
-            assertEquals(PaymentStatus.UNDER_REVIEW, r2.currentStatus());
-            assertEquals("http://v2.pdf", r2.receiptUrl());
+            assertEquals(PaymentStatus.UNDER_REVIEW, r2.getCurrentStatus());
+            assertEquals("http://v2.pdf", r2.getReceiptUrl());
         }
 
         @Test
@@ -107,24 +104,24 @@ class PaymentServiceImplTest {
             service.updateStatus(paymentId, "REJECTED");
             service.updateStatus(paymentId, "PENDING");
 
-            PaymentResponse resp = service.updateStatus(paymentId, "UNDER_REVIEW");
-            assertEquals(PaymentStatus.UNDER_REVIEW, resp.currentStatus());
+            Payment resp = service.updateStatus(paymentId, "UNDER_REVIEW");
+            assertEquals(PaymentStatus.UNDER_REVIEW, resp.getCurrentStatus());
         }
 
         @Test
         @DisplayName("HP-PAY-04: updateStatus() UNDER_REVIEW → APPROVED")
         void updateStatusUnderReviewAApproved() {
             String paymentId = crearPagoConEstado("Equipo B");
-            PaymentResponse resp = service.updateStatus(paymentId, "APPROVED");
-            assertEquals(PaymentStatus.APPROVED, resp.currentStatus());
+            Payment resp = service.updateStatus(paymentId, "APPROVED");
+            assertEquals(PaymentStatus.APPROVED, resp.getCurrentStatus());
         }
 
         @Test
         @DisplayName("HP-PAY-05: updateStatus() UNDER_REVIEW → REJECTED")
         void updateStatusUnderReviewARejected() {
             String paymentId = crearPagoConEstado("Equipo C");
-            PaymentResponse resp = service.updateStatus(paymentId, "REJECTED");
-            assertEquals(PaymentStatus.REJECTED, resp.currentStatus());
+            Payment resp = service.updateStatus(paymentId, "REJECTED");
+            assertEquals(PaymentStatus.REJECTED, resp.getCurrentStatus());
         }
 
         @Test
@@ -132,17 +129,17 @@ class PaymentServiceImplTest {
         void updateStatusRejectedAPending() {
             String paymentId = crearPagoConEstado("Equipo D");
             service.updateStatus(paymentId, "REJECTED");
-            PaymentResponse resp = service.updateStatus(paymentId, "PENDING");
-            assertEquals(PaymentStatus.PENDING, resp.currentStatus());
+            Payment resp = service.updateStatus(paymentId, "PENDING");
+            assertEquals(PaymentStatus.PENDING, resp.getCurrentStatus());
         }
 
         @Test
         @DisplayName("HP-PAY-07: findById() retorna el pago si existe")
         void findByIdRetornaPago() {
             String paymentId = crearPagoConEstado("Equipo E");
-            PaymentResponse resp = service.findById(paymentId);
+            Payment resp = service.findById(paymentId);
             assertNotNull(resp);
-            assertEquals(paymentId, resp.id());
+            assertEquals(paymentId, resp.getId());
         }
 
         @Test
@@ -150,7 +147,7 @@ class PaymentServiceImplTest {
         void findAllRetornaTodos() {
             crearPagoConEstado("Equipo F");
             crearPagoConEstado("Equipo G");
-            List<PaymentResponse> lista = service.findAll();
+            List<Payment> lista = service.findAll();
             assertEquals(2, lista.size());
         }
 
@@ -159,11 +156,11 @@ class PaymentServiceImplTest {
         void findByTeamIdRetornaPago() {
             Team team = buildTeam("Equipo H");
             DataStore.equipos.put(team.getId(), team);
-            service.uploadReceipt(new UploadReceiptRequest(team.getId(), "http://h.pdf"));
+            service.uploadReceipt(team.getId(), "http://h.pdf");
 
-            PaymentResponse resp = service.findByTeamId(team.getId());
+            Payment resp = service.findByTeamId(team.getId());
             assertNotNull(resp);
-            assertEquals(team.getId(), resp.teamId());
+            assertEquals(team.getId(), resp.getTeamId());
         }
     }
 
@@ -198,9 +195,9 @@ class PaymentServiceImplTest {
         void uploadReceiptPagoAprobadoLanza() {
             Team team = buildTeam("Equipo Aprobado");
             DataStore.equipos.put(team.getId(), team);
-            PaymentResponse r1 = service.uploadReceipt(
+            Payment r1 = service.uploadReceipt(
                     new UploadReceiptRequest(team.getId(), "http://pago.pdf"));
-            service.updateStatus(r1.id(), "APPROVED");
+            service.updateStatus(r1.getId(), "APPROVED");
 
             UploadReceiptRequest req = new UploadReceiptRequest(team.getId(), "http://nuevo.pdf");
             PaymentException ex = assertThrows(PaymentException.class,
@@ -282,8 +279,8 @@ class PaymentServiceImplTest {
         @DisplayName("CS-PAY-02: flujo completo PENDING→UNDER_REVIEW→APPROVED")
         void flujoCompletoAprobacion() {
             String paymentId = crearPagoConEstado("Flujo Completo");
-            PaymentResponse resp = service.updateStatus(paymentId, "APPROVED");
-            assertEquals(PaymentStatus.APPROVED, resp.currentStatus());
+            Payment resp = service.updateStatus(paymentId, "APPROVED");
+            assertEquals(PaymentStatus.APPROVED, resp.getCurrentStatus());
         }
 
         @Test
@@ -291,11 +288,11 @@ class PaymentServiceImplTest {
         void flujoConRechazoYResubida() {
             Team team = buildTeam("Reintento");
             DataStore.equipos.put(team.getId(), team);
-            PaymentResponse r1 = service.uploadReceipt(new UploadReceiptRequest(team.getId(), "v1.pdf"));
-            service.updateStatus(r1.id(), "REJECTED");
-            service.updateStatus(r1.id(), "PENDING");
-            PaymentResponse r2 = service.uploadReceipt(new UploadReceiptRequest(team.getId(), "v2.pdf"));
-            assertEquals(PaymentStatus.UNDER_REVIEW, r2.currentStatus());
+            Payment r1 = service.uploadReceipt(new UploadReceiptRequest(team.getId(), "v1.pdf"));
+            service.updateStatus(r1.getId(), "REJECTED");
+            service.updateStatus(r1.getId(), "PENDING");
+            Payment r2 = service.uploadReceipt(new UploadReceiptRequest(team.getId(), "v2.pdf"));
+            assertEquals(PaymentStatus.UNDER_REVIEW, r2.getCurrentStatus());
         }
 
         @Test
@@ -305,10 +302,10 @@ class PaymentServiceImplTest {
             team.setPlayers(buildJugadores(4));
             DataStore.equipos.put(team.getId(), team);
 
-            PaymentResponse resp = service.uploadReceipt(
+            Payment resp = service.uploadReceipt(
                     new UploadReceiptRequest(team.getId(), "http://r.pdf"));
 
-            assertEquals(200.0, resp.amount()); // 4 jugadores * 50.0
+            assertEquals(200.0, resp.getAmount()); // 4 jugadores * 50.0
         }
 
         @Test
@@ -349,8 +346,8 @@ class PaymentServiceImplTest {
     private String crearPagoConEstado(String teamName) {
         Team team = buildTeam(teamName);
         DataStore.equipos.put(team.getId(), team);
-        PaymentResponse resp = service.uploadReceipt(
+        Payment resp = service.uploadReceipt(
                 new UploadReceiptRequest(team.getId(), "http://comprobante.pdf"));
-        return resp.id();
+        return resp.getId();
     }
 }

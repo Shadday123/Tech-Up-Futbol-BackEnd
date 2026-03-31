@@ -1,17 +1,12 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.CreateMatchRequest;
-import com.techcup.techcup_futbol.Controller.dto.MatchEventRequest;
-import com.techcup.techcup_futbol.Controller.dto.MatchResponse;
-import com.techcup.techcup_futbol.Controller.dto.RegisterResultRequest;
-import com.techcup.techcup_futbol.Controller.mapper.MatchMapper;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
 import com.techcup.techcup_futbol.repository.MatchEventRepository;
 import com.techcup.techcup_futbol.repository.MatchRepository;
 import com.techcup.techcup_futbol.repository.PlayerRepository;
 import com.techcup.techcup_futbol.repository.TeamRepository;
-import com.techcup.techcup_futbol.util.IdGenerator;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +14,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,18 +46,19 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @Transactional
-    public MatchResponse create(CreateMatchRequest request) {
-        log.info("Creando partido: {} vs {}", request.localTeamId(), request.visitorTeamId());
+    public Match create(String localTeamId, String visitorTeamId, LocalDateTime dateTime,
+                        String refereeId, int field) {
+        log.info("Creando partido: {} vs {}", localTeamId, visitorTeamId);
 
-        Team local = teamRepository.findById(request.localTeamId())
+        Team local = teamRepository.findById(localTeamId)
                 .orElseThrow(() -> new MatchException("localTeamId",
-                        String.format(MatchException.TEAM_NOT_FOUND, request.localTeamId())));
+                        String.format(MatchException.TEAM_NOT_FOUND, localTeamId)));
 
-        Team visitor = teamRepository.findById(request.visitorTeamId())
+        Team visitor = teamRepository.findById(visitorTeamId)
                 .orElseThrow(() -> new MatchException("visitorTeamId",
-                        String.format(MatchException.TEAM_NOT_FOUND, request.visitorTeamId())));
+                        String.format(MatchException.TEAM_NOT_FOUND, visitorTeamId)));
 
-        if (request.localTeamId().equals(request.visitorTeamId())) {
+        if (localTeamId.equals(visitorTeamId)) {
             throw new MatchException("teams", MatchException.SAME_TEAM);
         }
 
@@ -69,8 +66,8 @@ public class MatchServiceImpl implements MatchService {
         match.setId(IdGenerator.generateId());
         match.setLocalTeam(local);
         match.setVisitorTeam(visitor);
-        match.setDateTime(request.dateTime());
-        match.setField(request.field());
+        match.setDateTime(dateTime);
+        match.setField(field);
         match.setStatus(MatchStatus.SCHEDULED);
 
         matchRepository.save(match);
@@ -78,14 +75,15 @@ public class MatchServiceImpl implements MatchService {
 
         log.info("Partido creado ID: {} — {} vs {}", match.getId(),
                 local.getTeamName(), visitor.getTeamName());
-        return MatchMapper.toResponse(match, matchEventRepository.findByMatchId(match.getId()));
+        return match;
     }
 
     // ── REGISTER RESULT
 
     @Override
     @Transactional
-    public MatchResponse registerResult(String matchId, RegisterResultRequest request) {
+    public Match registerResult(String matchId, int scoreLocal, int scoreVisitor,
+                                List<MatchEventInput> events) {
         log.info("Registrando resultado del partido ID: {}", matchId);
 
         Match match = matchRepository.findById(matchId)
@@ -96,33 +94,33 @@ public class MatchServiceImpl implements MatchService {
             throw new MatchException("status", MatchException.RESULT_ALREADY_REGISTERED);
         }
 
-        if (request.events() != null) {
-            long localGoals = request.events().stream()
+        if (events != null) {
+            long localGoals = events.stream()
                     .filter(e -> "GOAL".equalsIgnoreCase(e.type()))
                     .filter(e -> isPlayerInTeam(e.playerId(), match.getLocalTeam()))
                     .count();
-            long visitorGoals = request.events().stream()
+            long visitorGoals = events.stream()
                     .filter(e -> "GOAL".equalsIgnoreCase(e.type()))
                     .filter(e -> isPlayerInTeam(e.playerId(), match.getVisitorTeam()))
                     .count();
 
-            if (localGoals != request.scoreLocal()) {
+            if (localGoals != scoreLocal) {
                 throw new MatchException("events",
                         String.format(MatchException.GOALS_MISMATCH,
                                 match.getLocalTeam().getTeamName(),
-                                localGoals, request.scoreLocal()));
+                                localGoals, scoreLocal));
             }
-            if (visitorGoals != request.scoreVisitor()) {
+            if (visitorGoals != scoreVisitor) {
                 throw new MatchException("events",
                         String.format(MatchException.GOALS_MISMATCH,
                                 match.getVisitorTeam().getTeamName(),
-                                visitorGoals, request.scoreVisitor()));
+                                visitorGoals, scoreVisitor));
             }
 
             matchEventRepository.deleteByMatchId(matchId);
 
             int yellowCount = 0, redCount = 0;
-            for (MatchEventRequest er : request.events()) {
+            for (MatchEventInput er : events) {
                 Player player = playerRepository.findById(er.playerId())
                         .orElseThrow(() -> new MatchException("events",
                                 String.format(MatchException.PLAYER_NOT_IN_LINEUP, er.playerId())));
@@ -142,8 +140,8 @@ public class MatchServiceImpl implements MatchService {
             match.setRedCards(redCount);
         }
 
-        match.setScoreLocal(request.scoreLocal());
-        match.setScoreVisitor(request.scoreVisitor());
+        match.setScoreLocal(scoreLocal);
+        match.setScoreVisitor(scoreVisitor);
         match.setStatus(MatchStatus.FINISHED);
         matchRepository.save(match);
 
@@ -152,32 +150,26 @@ public class MatchServiceImpl implements MatchService {
         log.info("Resultado registrado — {} {} : {} {}",
                 match.getLocalTeam().getTeamName(), match.getScoreLocal(),
                 match.getScoreVisitor(), match.getVisitorTeam().getTeamName());
-        return MatchMapper.toResponse(match, matchEventRepository.findByMatchId(matchId));
+        return match;
     }
 
     // ── READ
 
     @Override
-    public MatchResponse findById(String matchId) {
-        Match match = matchRepository.findById(matchId)
+    public Match findById(String matchId) {
+        return matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchException("matchId",
                         String.format(MatchException.MATCH_NOT_FOUND, matchId)));
-        return MatchMapper.toResponse(match, matchEventRepository.findByMatchId(matchId));
     }
 
     @Override
-    public List<MatchResponse> findAll() {
-        return matchRepository.findAll().stream()
-                .map(m -> MatchMapper.toResponse(m, matchEventRepository.findByMatchId(m.getId())))
-                .toList();
+    public List<Match> findAll() {
+        return matchRepository.findAll();
     }
 
     @Override
-    public List<MatchResponse> findByTeamId(String teamId) {
-        return matchRepository.findByLocalTeamIdOrVisitorTeamId(teamId, teamId)
-                .stream()
-                .map(m -> MatchMapper.toResponse(m, matchEventRepository.findByMatchId(m.getId())))
-                .toList();
+    public List<Match> findByTeamId(String teamId) {
+        return matchRepository.findByLocalTeamIdOrVisitorTeamId(teamId, teamId);
     }
 
     @Override

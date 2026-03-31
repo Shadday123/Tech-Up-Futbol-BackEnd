@@ -1,13 +1,11 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
-import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.service.TournamentServiceImpl;
-import com.techcup.techcup_futbol.exception.ResourceNotFoundException;
+import com.techcup.techcup_futbol.core.exception.ResourceNotFoundException;
 import com.techcup.techcup_futbol.repository.TournamentRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,8 +54,15 @@ class TournamentServiceImplTest {
 
     // ── Helpers
 
-    private CreateTournamentRequest buildRequest(String name, int maxTeams) {
-        return new CreateTournamentRequest(name, START, END, 150.0, maxTeams, "Reglas estándar");
+    private Tournament buildTournament(String name, int maxTeams) {
+        Tournament t = new Tournament();
+        t.setName(name);
+        t.setStartDate(START);
+        t.setEndDate(END);
+        t.setRegistrationFee(150.0);
+        t.setMaxTeams(maxTeams);
+        t.setRules("Reglas estándar");
+        return t;
     }
 
     // ── Happy Path
@@ -69,26 +74,26 @@ class TournamentServiceImplTest {
         @Test
         @DisplayName("HP-TOS-01: create() guarda el torneo en DataStore con estado DRAFT")
         void createGuardaTorneoEnDraft() {
-            TournamentResponse resp = service.create(buildRequest("Torneo HP", 8));
+            Tournament resp = service.create(buildTournament("Torneo HP", 8));
 
             assertEquals(1, DataStore.torneos.size());
-            assertEquals("DRAFT", resp.currentState());
+            assertEquals(TournamentState.DRAFT, resp.getCurrentState());
         }
 
         @Test
         @DisplayName("HP-TOS-02: create() genera un ID no nulo y no vacío")
         void createGeneraIdNoNulo() {
-            TournamentResponse resp = service.create(buildRequest("Primer Torneo", 4));
-            assertNotNull(resp.id());
-            assertFalse(resp.id().isBlank());
+            Tournament resp = service.create(buildTournament("Primer Torneo", 4));
+            assertNotNull(resp.getId());
+            assertFalse(resp.getId().isBlank());
         }
 
         @Test
         @DisplayName("HP-TOS-03: create() genera IDs únicos para torneos distintos")
         void createGeneraIdsUnicos() {
-            String id1 = service.create(buildRequest("Torneo 1", 4)).id();
-            String id2 = service.create(buildRequest("Torneo 2", 6)).id();
-            String id3 = service.create(buildRequest("Torneo 3", 8)).id();
+            String id1 = service.create(buildTournament("Torneo 1", 4)).getId();
+            String id2 = service.create(buildTournament("Torneo 2", 6)).getId();
+            String id3 = service.create(buildTournament("Torneo 3", 8)).getId();
 
             assertNotEquals(id1, id2);
             assertNotEquals(id2, id3);
@@ -98,71 +103,71 @@ class TournamentServiceImplTest {
         @Test
         @DisplayName("HP-TOS-04: create() persiste todos los campos del request")
         void createPersisteCampos() {
-            TournamentResponse resp = service.create(buildRequest("Torneo Campos", 10));
+            Tournament resp = service.create(buildTournament("Torneo Campos", 10));
 
-            assertEquals("Torneo Campos", resp.name());
-            assertEquals(10, resp.maxTeams());
-            assertEquals(150.0, resp.registrationFee());
+            assertEquals("Torneo Campos", resp.getName());
+            assertEquals(10, resp.getMaxTeams());
+            assertEquals(150.0, resp.getRegistrationFee());
         }
 
         @Test
         @DisplayName("HP-TOS-05: updateStatus() DRAFT → ACTIVE actualiza el estado")
         void updateStatusDraftAActive() {
-            String id = service.create(buildRequest("Torneo Update", 4)).id();
-            TournamentResponse resp = service.updateStatus(id, "ACTIVE");
+            String id = service.create(buildTournament("Torneo Update", 4)).getId();
+            Tournament resp = service.updateStatus(id, "ACTIVE");
 
-            assertEquals("ACTIVE", resp.currentState());
+            assertEquals(TournamentState.ACTIVE, resp.getCurrentState());
             assertEquals(TournamentState.ACTIVE, DataStore.torneos.get(id).getCurrentState());
         }
 
         @Test
         @DisplayName("HP-TOS-06: updateStatus() ACTIVE → IN_PROGRESS")
         void updateStatusActiveAInProgress() {
-            String id = service.create(buildRequest("Torneo Progress", 4)).id();
+            String id = service.create(buildTournament("Torneo Progress", 4)).getId();
             service.updateStatus(id, "ACTIVE");
-            TournamentResponse resp = service.updateStatus(id, "IN_PROGRESS");
+            Tournament resp = service.updateStatus(id, "IN_PROGRESS");
 
-            assertEquals("IN_PROGRESS", resp.currentState());
+            assertEquals(TournamentState.IN_PROGRESS, resp.getCurrentState());
         }
 
         @Test
         @DisplayName("HP-TOS-07: updateStatus() IN_PROGRESS → COMPLETED")
         void updateStatusInProgressACompleted() {
-            String id = service.create(buildRequest("Torneo Complete", 4)).id();
+            String id = service.create(buildTournament("Torneo Complete", 4)).getId();
             service.updateStatus(id, "ACTIVE");
             service.updateStatus(id, "IN_PROGRESS");
-            TournamentResponse resp = service.updateStatus(id, "COMPLETED");
+            Tournament resp = service.updateStatus(id, "COMPLETED");
 
-            assertEquals("COMPLETED", resp.currentState());
+            assertEquals(TournamentState.COMPLETED, resp.getCurrentState());
         }
 
         @Test
         @DisplayName("HP-TOS-08: updateStatus() DRAFT → DELETED")
         void updateStatusDraftADeleted() {
-            String id = service.create(buildRequest("Torneo Delete", 4)).id();
-            TournamentResponse resp = service.updateStatus(id, "DELETED");
+            String id = service.create(buildTournament("Torneo Delete", 4)).getId();
+            Tournament resp = service.updateStatus(id, "DELETED");
 
-            assertEquals("DELETED", resp.currentState());
+            assertEquals(TournamentState.DELETED, resp.getCurrentState());
         }
 
         @Test
-        @DisplayName("HP-TOS-09: findById() retorna TournamentResponse si existe")
+        @DisplayName("HP-TOS-09: findById() retorna Tournament si existe")
         void findByIdRetornaRespuesta() {
-            String id = service.create(buildRequest("Torneo Find", 6)).id();
-            TournamentResponse resp = service.findById(id);
+            String id = service.create(buildTournament("Torneo Find", 6)).getId();
+            Tournament resp = service.findById(id);
 
             assertNotNull(resp);
-            assertEquals("Torneo Find", resp.name());
+            assertEquals("Torneo Find", resp.getName());
         }
 
         @Test
         @DisplayName("HP-TOS-10: findAll() retorna todos los torneos")
         void findAllRetornaTodos() {
-            service.create(buildRequest("T-A", 4));
-            service.create(buildRequest("T-B", 6));
-            service.create(buildRequest("T-C", 8));
+            service.create(buildTournament("T-A", 4));
+            service.create(buildTournament("T-B", 6));
+            service.create(buildTournament("T-C", 8));
 
-            List<TournamentResponse> lista = service.findAll();
+            List<Tournament> lista = service.findAll();
             assertEquals(3, lista.size());
         }
 
@@ -190,23 +195,28 @@ class TournamentServiceImplTest {
         @DisplayName("EP-TOS-02: create() lanza TournamentException si nombre vacío")
         void createNombreVacioLanzaExcepcion() {
             TournamentException ex = assertThrows(TournamentException.class,
-                    () -> service.create(new CreateTournamentRequest("", START, END, 100.0, 4, "Reglas")));
+                    () -> service.create(buildTournament("", 4)));
             assertEquals("name", ex.getField());
         }
 
         @Test
         @DisplayName("EP-TOS-03: create() lanza TournamentException si fechas inválidas")
         void createFechasInvalidasLanzaExcepcion() {
+            Tournament t = buildTournament("Torneo", 4);
+            t.setStartDate(END);
+            t.setEndDate(START);
             TournamentException ex = assertThrows(TournamentException.class,
-                    () -> service.create(new CreateTournamentRequest("Torneo", END, START, 100.0, 4, "Reglas")));
+                    () -> service.create(t));
             assertEquals("dates", ex.getField());
         }
 
         @Test
         @DisplayName("EP-TOS-04: create() lanza TournamentException si cuota negativa")
         void createCuotaNegativaLanzaExcepcion() {
+            Tournament t = buildTournament("Torneo", 4);
+            t.setRegistrationFee(-50.0);
             TournamentException ex = assertThrows(TournamentException.class,
-                    () -> service.create(new CreateTournamentRequest("Torneo", START, END, -50.0, 4, "Reglas")));
+                    () -> service.create(t));
             assertEquals("registrationFee", ex.getField());
         }
 
@@ -214,7 +224,7 @@ class TournamentServiceImplTest {
         @DisplayName("EP-TOS-05: create() lanza TournamentException si maxTeams < 2")
         void createMaxTeamsBajoLanzaExcepcion() {
             TournamentException ex = assertThrows(TournamentException.class,
-                    () -> service.create(new CreateTournamentRequest("Torneo", START, END, 100.0, 1, "Reglas")));
+                    () -> service.create(buildTournament("Torneo", 1)));
             assertEquals("maxTeams", ex.getField());
         }
 
@@ -222,14 +232,14 @@ class TournamentServiceImplTest {
         @DisplayName("EP-TOS-06: create() lanza TournamentException si maxTeams es impar")
         void createMaxTeamsImparLanzaExcepcion() {
             TournamentException ex = assertThrows(TournamentException.class,
-                    () -> service.create(new CreateTournamentRequest("Torneo", START, END, 100.0, 5, "Reglas")));
+                    () -> service.create(buildTournament("Torneo", 5)));
             assertEquals("maxTeams", ex.getField());
         }
 
         @Test
         @DisplayName("EP-TOS-07: updateStatus() lanza TournamentException si nombre de estado inválido")
         void updateStatusEstadoInvalidoLanzaExcepcion() {
-            String id = service.create(buildRequest("Torneo Invalido", 4)).id();
+            String id = service.create(buildTournament("Torneo Invalido", 4)).getId();
             TournamentException ex = assertThrows(TournamentException.class,
                     () -> service.updateStatus(id, "ESTADO_INEXISTENTE"));
             assertEquals("state", ex.getField());
@@ -238,7 +248,7 @@ class TournamentServiceImplTest {
         @Test
         @DisplayName("EP-TOS-08: updateStatus() lanza TournamentException en transición inválida DRAFT → IN_PROGRESS")
         void updateStatusTransicionInvalidaLanzaExcepcion() {
-            String id = service.create(buildRequest("Torneo Trans", 4)).id();
+            String id = service.create(buildTournament("Torneo Trans", 4)).getId();
             TournamentException ex = assertThrows(TournamentException.class,
                     () -> service.updateStatus(id, "IN_PROGRESS"));
             assertEquals("state", ex.getField());
@@ -247,7 +257,7 @@ class TournamentServiceImplTest {
         @Test
         @DisplayName("EP-TOS-09: updateStatus() lanza TournamentException en COMPLETED → cualquier estado")
         void updateStatusCompletedEsTerminal() {
-            String id = service.create(buildRequest("Torneo Comp", 4)).id();
+            String id = service.create(buildTournament("Torneo Comp", 4)).getId();
             service.updateStatus(id, "ACTIVE");
             service.updateStatus(id, "IN_PROGRESS");
             service.updateStatus(id, "COMPLETED");
@@ -266,7 +276,7 @@ class TournamentServiceImplTest {
         @Test
         @DisplayName("CS-TOS-01: flujo completo DRAFT→ACTIVE→IN_PROGRESS→COMPLETED sin errores")
         void flujoCompletoSinErrores() {
-            String id = service.create(buildRequest("Flujo Completo", 8)).id();
+            String id = service.create(buildTournament("Flujo Completo", 8)).getId();
             assertDoesNotThrow(() -> {
                 service.updateStatus(id, "ACTIVE");
                 service.updateStatus(id, "IN_PROGRESS");
@@ -278,21 +288,22 @@ class TournamentServiceImplTest {
         @Test
         @DisplayName("CS-TOS-02: create() con cuota 0.0 es válido (límite inferior)")
         void createCuotaCeroEsValido() {
-            assertDoesNotThrow(() ->
-                    service.create(new CreateTournamentRequest("Torneo Gratis", START, END, 0.0, 4, "Reglas")));
+            Tournament t = buildTournament("Torneo Gratis", 4);
+            t.setRegistrationFee(0.0);
+            assertDoesNotThrow(() -> service.create(t));
         }
 
         @Test
         @DisplayName("CS-TOS-03: create() con maxTeams impar es inválido")
         void createMaxTeamsImparInvalido() {
             assertThrows(TournamentException.class, () ->
-                    service.create(new CreateTournamentRequest("Torneo Impar", START, END, 100.0, 5, "Reglas")));
+                    service.create(buildTournament("Torneo Impar", 5)));
         }
 
         @Test
         @DisplayName("CS-TOS-04: updateStatus() acepta nombre de estado en minúsculas")
         void updateStatusAceptaMinusculas() {
-            String id = service.create(buildRequest("Torneo Minus", 4)).id();
+            String id = service.create(buildTournament("Torneo Minus", 4)).getId();
             assertDoesNotThrow(() -> service.updateStatus(id, "active"));
             assertEquals(TournamentState.ACTIVE, DataStore.torneos.get(id).getCurrentState());
         }
@@ -300,26 +311,25 @@ class TournamentServiceImplTest {
         @Test
         @DisplayName("CS-TOS-05: findAll() refleja estado actualizado después de updateStatus")
         void findAllReflejaEstadoActualizado() {
-            String id = service.create(buildRequest("Torneo Reflect", 4)).id();
+            String id = service.create(buildTournament("Torneo Reflect", 4)).getId();
             service.updateStatus(id, "ACTIVE");
 
-            List<TournamentResponse> lista = service.findAll();
+            List<Tournament> lista = service.findAll();
             assertEquals(1, lista.size());
-            assertEquals("ACTIVE", lista.get(0).currentState());
+            assertEquals(TournamentState.ACTIVE, lista.get(0).getCurrentState());
         }
 
         @Test
         @DisplayName("CS-TOS-06: create() con maxTeams 4 (mínimo válido par) no lanza excepción")
         void createMaxTeamsCuatroEsValido() {
-            assertDoesNotThrow(() ->
-                    service.create(new CreateTournamentRequest("Min Teams", START, END, 100.0, 4, "Reglas")));
+            assertDoesNotThrow(() -> service.create(buildTournament("Min Teams", 4)));
         }
 
         @Test
         @DisplayName("CS-TOS-07: create() genera IDs no repetidos con múltiples torneos")
         void createIdsUnicoMultiples() {
             for (int i = 1; i <= 5; i++) {
-                service.create(buildRequest("Torneo " + i, 4));
+                service.create(buildTournament("Torneo " + i, 4));
             }
             assertEquals(5, DataStore.torneos.size());
             assertEquals(5, DataStore.torneos.keySet().stream().distinct().count());
@@ -328,7 +338,7 @@ class TournamentServiceImplTest {
         @Test
         @DisplayName("CS-TOS-08: DELETED es terminal — no permite ninguna transición posterior")
         void deletedEsTerminalNoPermiteTransicion() {
-            String id = service.create(buildRequest("Torneo Deleted", 4)).id();
+            String id = service.create(buildTournament("Torneo Deleted", 4)).getId();
             service.updateStatus(id, "DELETED");
 
             for (TournamentState next : TournamentState.values()) {

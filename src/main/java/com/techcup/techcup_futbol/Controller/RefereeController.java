@@ -3,6 +3,7 @@ package com.techcup.techcup_futbol.Controller;
 import com.techcup.techcup_futbol.Controller.dto.AssignRefereeRequest;
 import com.techcup.techcup_futbol.Controller.dto.CreateRefereeRequest;
 import com.techcup.techcup_futbol.Controller.dto.RefereeResponse;
+import com.techcup.techcup_futbol.Controller.mapper.RefereeMapper;
 import com.techcup.techcup_futbol.core.service.RefereeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,7 +31,9 @@ public class RefereeController {
     @PostMapping
     public ResponseEntity<RefereeResponse> create(@Valid @RequestBody CreateRefereeRequest request) {
         log.info("POST /api/referees — nombre: {}", request.fullname());
-        return ResponseEntity.status(HttpStatus.CREATED).body(refereeService.create(request));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(RefereeMapper.toResponse(
+                        refereeService.create(request.fullname(), request.email())));
     }
 
     @PostMapping("/match/{matchId}/assign")
@@ -38,20 +41,23 @@ public class RefereeController {
             @PathVariable String matchId,
             @Valid @RequestBody AssignRefereeRequest request) {
         log.info("POST /api/referees/match/{}/assign — árbitro: {}", matchId, request.refereeId());
-        return ResponseEntity.ok(refereeService.assignToMatch(matchId, request));
+        return ResponseEntity.ok(RefereeMapper.toResponse(
+                refereeService.assignToMatch(matchId, request.refereeId())));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RefereeResponse> findById(@PathVariable String id) {
         log.info("GET /api/referees/{}", id);
-        return ResponseEntity.ok(refereeService.findById(id));
+        return ResponseEntity.ok(RefereeMapper.toResponse(refereeService.findById(id)));
     }
 
     @GetMapping
     public ResponseEntity<List<RefereeResponse>> findAll() {
         log.info("GET /api/referees");
-        return ResponseEntity.ok(refereeService.findAll());
+        List<RefereeResponse> responses = refereeService.findAll().stream()
+                .map(RefereeMapper::toResponse)
+                .toList();
+        return ResponseEntity.ok(responses);
     }
-
 
 }

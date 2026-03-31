@@ -1,7 +1,5 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchRequest;
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.PlayerSearchServiceImpl;
 import com.techcup.techcup_futbol.repository.PlayerRepository;
@@ -50,11 +48,11 @@ class PlayerSearchServiceImplTest {
             registrar(buildStudent("a@escuelaing.edu.co", 1001, "Disponible A", 20, PositionEnum.Midfielder, false, 3));
             registrar(buildStudent("b@escuelaing.edu.co", 1002, "Con Equipo B",  21, PositionEnum.Defender,   true,  4));
 
-            List<PlayerSearchResult> result = service.search(filtroVacio());
+            List<Player> result = service.search(null, null, null, null, null, null, null);
 
             assertEquals(1, result.size());
-            assertEquals("Disponible A", result.get(0).fullname());
-            assertTrue(result.get(0).available());
+            assertEquals("Disponible A", result.get(0).getFullname());
+            assertFalse(result.get(0).isHaveTeam());
         }
 
         @Test
@@ -63,11 +61,10 @@ class PlayerSearchServiceImplTest {
             registrar(buildStudent("c@escuelaing.edu.co", 1003, "Portero",    20, PositionEnum.GoalKeeper, false, 3));
             registrar(buildStudent("d@escuelaing.edu.co", 1004, "Defensa",    21, PositionEnum.Defender,   false, 4));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(PositionEnum.GoalKeeper, null, null, null, null, null, null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(PositionEnum.GoalKeeper, null, null, null, null, null, null);
 
             assertEquals(1, result.size());
-            assertEquals(PositionEnum.GoalKeeper, result.get(0).position());
+            assertEquals(PositionEnum.GoalKeeper, result.get(0).getPosition());
         }
 
         @Test
@@ -76,11 +73,10 @@ class PlayerSearchServiceImplTest {
             registrar(buildStudentConGenero("e@escuelaing.edu.co", 1005, "Masculino Uno", false, "Masculino"));
             registrar(buildStudentConGenero("f@escuelaing.edu.co", 1006, "Femenino Uno",  false, "Femenino"));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(null, null, null, null, "Femenino", null, null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(null, null, null, null, "Femenino", null, null);
 
             assertEquals(1, result.size());
-            assertEquals("Femenino", result.get(0).gender());
+            assertEquals("Femenino", result.get(0).getGender());
         }
 
         @Test
@@ -89,11 +85,10 @@ class PlayerSearchServiceImplTest {
             registrar(buildStudent("g@escuelaing.edu.co", 1007, "Joven 18", 18, PositionEnum.Winger, false, 2));
             registrar(buildStudent("h@escuelaing.edu.co", 1008, "Mayor 25", 25, PositionEnum.Winger, false, 6));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(null, null, 20, null, null, null, null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(null, null, 20, null, null, null, null);
 
             assertEquals(1, result.size());
-            assertEquals("Mayor 25", result.get(0).fullname());
+            assertEquals("Mayor 25", result.get(0).getFullname());
         }
 
         @Test
@@ -102,11 +97,10 @@ class PlayerSearchServiceImplTest {
             registrar(buildStudent("i@escuelaing.edu.co", 1009, "Joven 18", 18, PositionEnum.Winger, false, 2));
             registrar(buildStudent("j@escuelaing.edu.co", 1010, "Mayor 30", 30, PositionEnum.Winger, false, 6));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(null, null, null, 25, null, null, null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(null, null, null, 25, null, null, null);
 
             assertEquals(1, result.size());
-            assertEquals("Joven 18", result.get(0).fullname());
+            assertEquals("Joven 18", result.get(0).getFullname());
         }
 
         @Test
@@ -115,11 +109,10 @@ class PlayerSearchServiceImplTest {
             registrar(buildStudent("k@escuelaing.edu.co", 1011, "Carlos Andrés",  22, PositionEnum.Midfielder, false, 4));
             registrar(buildStudent("l@escuelaing.edu.co", 1012, "Pedro González", 23, PositionEnum.Defender,   false, 5));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(null, null, null, null, null, "carlos", null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(null, null, null, null, null, "carlos", null);
 
             assertEquals(1, result.size());
-            assertTrue(result.get(0).fullname().toLowerCase().contains("carlos"));
+            assertTrue(result.get(0).getFullname().toLowerCase().contains("carlos"));
         }
 
         @Test
@@ -128,11 +121,10 @@ class PlayerSearchServiceImplTest {
             registrar(buildStudent("m@escuelaing.edu.co", 1013, "Sem 3", 20, PositionEnum.Defender, false, 3));
             registrar(buildStudent("n@escuelaing.edu.co", 1014, "Sem 7", 22, PositionEnum.Defender, false, 7));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(null, 3, null, null, null, null, null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(null, 3, null, null, null, null, null);
 
             assertEquals(1, result.size());
-            assertEquals(3, result.get(0).semester());
+            assertTrue(result.get(0) instanceof StudentPlayer s && s.getSemester() == 3);
         }
 
         @Test
@@ -141,11 +133,10 @@ class PlayerSearchServiceImplTest {
             registrar(buildStudent("o@escuelaing.edu.co", 1015, "ID Exacto", 20, PositionEnum.Midfielder, false, 4));
             registrar(buildStudent("p@escuelaing.edu.co", 1016, "ID Otro",   21, PositionEnum.Midfielder, false, 4));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(null, null, null, null, null, null, 1015);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(null, null, null, null, null, null, 1015);
 
             assertEquals(1, result.size());
-            assertEquals("ID Exacto", result.get(0).fullname());
+            assertEquals("ID Exacto", result.get(0).getFullname());
         }
 
         @Test
@@ -153,8 +144,7 @@ class PlayerSearchServiceImplTest {
         void searchRetornaVacioSiNadieCoincide() {
             registrar(buildStudent("q@escuelaing.edu.co", 1017, "No Coincide", 20, PositionEnum.Defender, false, 3));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(PositionEnum.GoalKeeper, null, null, null, null, null, null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(PositionEnum.GoalKeeper, null, null, null, null, null, null);
 
             assertTrue(result.isEmpty());
         }
@@ -170,7 +160,7 @@ class PlayerSearchServiceImplTest {
         @DisplayName("EP-PSS-01: search() con DataStore vacío retorna lista vacía sin excepción")
         void searchDataStoreVacioRetornaVacio() {
             assertDoesNotThrow(() -> {
-                List<PlayerSearchResult> result = service.search(filtroVacio());
+                List<Player> result = service.search(null, null, null, null, null, null, null);
                 assertTrue(result.isEmpty());
             });
         }
@@ -180,7 +170,7 @@ class PlayerSearchServiceImplTest {
         void searchNoRetornaJugadoresConEquipo() {
             registrar(buildStudent("r@escuelaing.edu.co", 1018, "Con Equipo", 22, PositionEnum.Midfielder, true, 4));
 
-            List<PlayerSearchResult> result = service.search(filtroVacio());
+            List<Player> result = service.search(null, null, null, null, null, null, null);
             assertTrue(result.isEmpty());
         }
 
@@ -198,8 +188,7 @@ class PlayerSearchServiceImplTest {
             inst.setPosition(PositionEnum.Defender);
             DataStore.jugadores.put(inst.getId(), inst);
 
-            PlayerSearchRequest req = new PlayerSearchRequest(null, 3, null, null, null, null, null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(null, 3, null, null, null, null, null);
             assertTrue(result.isEmpty());
         }
     }
@@ -217,12 +206,10 @@ class PlayerSearchServiceImplTest {
             registrar(buildStudent("t@escuelaing.edu.co", 1020, "Wrong Age",    30, PositionEnum.Midfielder, false, 4));
             registrar(buildStudent("u@escuelaing.edu.co", 1021, "Wrong Pos",    22, PositionEnum.Defender,   false, 4));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(
-                    PositionEnum.Midfielder, null, 20, 25, null, null, null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(PositionEnum.Midfielder, null, 20, 25, null, null, null);
 
             assertEquals(1, result.size());
-            assertEquals("Match All", result.get(0).fullname());
+            assertEquals("Match All", result.get(0).getFullname());
         }
 
         @Test
@@ -230,8 +217,7 @@ class PlayerSearchServiceImplTest {
         void searchNombreCaseInsensitive() {
             registrar(buildStudent("v@escuelaing.edu.co", 1022, "Andrés López", 20, PositionEnum.Defender, false, 3));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(null, null, null, null, null, "ANDRÉS", null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(null, null, null, null, null, "ANDRÉS", null);
             assertEquals(1, result.size());
         }
 
@@ -240,17 +226,16 @@ class PlayerSearchServiceImplTest {
         void searchGeneroCaseInsensitive() {
             registrar(buildStudentConGenero("w@escuelaing.edu.co", 1023, "Género Test", false, "Masculino"));
 
-            PlayerSearchRequest req = new PlayerSearchRequest(null, null, null, null, "masculino", null, null);
-            List<PlayerSearchResult> result = service.search(req);
+            List<Player> result = service.search(null, null, null, null, "masculino", null, null);
             assertEquals(1, result.size());
         }
 
         @Test
-        @DisplayName("CS-PSS-04: search() retorna tipo STUDENT para StudentPlayer")
+        @DisplayName("CS-PSS-04: search() retorna StudentPlayer correctamente")
         void searchRetornaTipoStudent() {
             registrar(buildStudent("x@escuelaing.edu.co", 1024, "Estudiante", 20, PositionEnum.Midfielder, false, 3));
-            List<PlayerSearchResult> result = service.search(filtroVacio());
-            assertEquals("STUDENT", result.get(0).playerType());
+            List<Player> result = service.search(null, null, null, null, null, null, null);
+            assertTrue(result.get(0) instanceof StudentPlayer);
         }
 
         @Test
@@ -262,9 +247,9 @@ class PlayerSearchServiceImplTest {
                 registrar(buildStudent("busy" + i + "@escuelaing.edu.co", 3000 + i,
                         "Busy " + i, 20, PositionEnum.Defender, true, 3));
             }
-            List<PlayerSearchResult> result = service.search(filtroVacio());
+            List<Player> result = service.search(null, null, null, null, null, null, null);
             assertEquals(3, result.size());
-            result.forEach(r -> assertTrue(r.available()));
+            result.forEach(r -> assertFalse(r.isHaveTeam()));
         }
     }
 
@@ -272,10 +257,6 @@ class PlayerSearchServiceImplTest {
 
     private void registrar(Player p) {
         DataStore.jugadores.put(p.getId(), p);
-    }
-
-    private PlayerSearchRequest filtroVacio() {
-        return new PlayerSearchRequest(null, null, null, null, null, null, null);
     }
 
     private StudentPlayer buildStudent(String email, int numberId, String name, int age,

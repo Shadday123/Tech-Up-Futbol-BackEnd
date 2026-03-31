@@ -1,15 +1,12 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.BracketResponse;
-import com.techcup.techcup_futbol.Controller.dto.GenerateBracketRequest;
-import com.techcup.techcup_futbol.Controller.mapper.BracketMapper;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.BracketException;
 import com.techcup.techcup_futbol.repository.MatchRepository;
 import com.techcup.techcup_futbol.repository.TeamRepository;
 import com.techcup.techcup_futbol.repository.TournamentBracketsRepository;
 import com.techcup.techcup_futbol.repository.TournamentRepository;
-import com.techcup.techcup_futbol.util.IdGenerator;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +41,9 @@ public class BracketServiceImpl implements BracketService {
 
     @Override
     @Transactional
-    public BracketResponse generate(String tournamentId, GenerateBracketRequest request) {
+    public List<TournamentBrackets> generate(String tournamentId, int teamsCount) {
         log.info("Generando llaves para torneo ID: {} con {} equipos",
-                tournamentId, request.teamsCount());
+                tournamentId, teamsCount);
 
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new BracketException("tournamentId",
@@ -64,7 +61,7 @@ public class BracketServiceImpl implements BracketService {
         }
 
         List<Team> teams = new ArrayList<>(teamRepository.findAll());
-        int count = Math.min(request.teamsCount(), teams.size());
+        int count = Math.min(teamsCount, teams.size());
 
         if (count < 2) {
             throw new BracketException("teams",
@@ -95,15 +92,14 @@ public class BracketServiceImpl implements BracketService {
         bracket.setMatches(roundMatches);
         tournamentBracketsRepository.save(bracket);
 
-        List<TournamentBrackets> phases = List.of(bracket);
         log.info("Llaves generadas: {} partidos en fase {}", roundMatches.size(), phase);
-        return BracketMapper.toResponse(tournamentId, tournament, phases);
+        return List.of(bracket);
     }
 
     // ── FIND
 
     @Override
-    public BracketResponse findByTournamentId(String tournamentId) {
+    public List<TournamentBrackets> findByTournamentId(String tournamentId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new BracketException("tournamentId",
                         String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId)));
@@ -113,14 +109,14 @@ public class BracketServiceImpl implements BracketService {
             throw new BracketException("bracket",
                     String.format(BracketException.BRACKET_NOT_FOUND, tournament.getName()));
         }
-        return BracketMapper.toResponse(tournamentId, tournament, phases);
+        return phases;
     }
 
     // ── ADVANCE WINNER
 
     @Override
     @Transactional
-    public BracketResponse advanceWinner(String tournamentId, String matchId) {
+    public List<TournamentBrackets> advanceWinner(String tournamentId, String matchId) {
         log.info("Avanzando ganador del partido ID: {}", matchId);
 
         Tournament tournament = tournamentRepository.findById(tournamentId)
@@ -179,7 +175,7 @@ public class BracketServiceImpl implements BracketService {
             log.info("Fase {} generada con {} partidos", nextPhase, nextMatches.size());
         }
 
-        return BracketMapper.toResponse(tournamentId, tournament, phases);
+        return phases;
     }
 
     // ── HELPERS

@@ -1,9 +1,7 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchRequest;
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
-import com.techcup.techcup_futbol.Controller.mapper.PlayerSearchMapper;
 import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.PositionEnum;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.repository.PlayerRepository;
 import org.slf4j.Logger;
@@ -23,37 +21,39 @@ public class PlayerSearchServiceImpl implements PlayerSearchService {
     private PlayerRepository playerRepository;
 
     @Override
-    public List<PlayerSearchResult> search(PlayerSearchRequest f) {
-        log.info("Buscando jugadores con filtros: {}", f);
+    public List<Player> search(PositionEnum position, Integer semester, Integer minAge,
+                               Integer maxAge, String gender, String name, Integer numberID) {
+        log.info("Buscando jugadores con filtros: position={} semester={} age={}-{} gender={} name={} id={}",
+                position, semester, minAge, maxAge, gender, name, numberID);
 
         Stream<Player> stream = playerRepository.findAll().stream()
                 .filter(p -> !p.isHaveTeam() && p.isDisponible());
 
-        if (f.position() != null) {
-            stream = stream.filter(p -> f.position().equals(p.getPosition()));
+        if (position != null) {
+            stream = stream.filter(p -> position.equals(p.getPosition()));
         }
-        if (f.gender() != null && !f.gender().isBlank()) {
-            stream = stream.filter(p -> f.gender().equalsIgnoreCase(p.getGender()));
+        if (gender != null && !gender.isBlank()) {
+            stream = stream.filter(p -> gender.equalsIgnoreCase(p.getGender()));
         }
-        if (f.minAge() != null) {
-            stream = stream.filter(p -> p.getAge() >= f.minAge());
+        if (minAge != null) {
+            stream = stream.filter(p -> p.getAge() >= minAge);
         }
-        if (f.maxAge() != null) {
-            stream = stream.filter(p -> p.getAge() <= f.maxAge());
+        if (maxAge != null) {
+            stream = stream.filter(p -> p.getAge() <= maxAge);
         }
-        if (f.name() != null && !f.name().isBlank()) {
-            String lowerName = f.name().toLowerCase();
+        if (name != null && !name.isBlank()) {
+            String lowerName = name.toLowerCase();
             stream = stream.filter(p -> p.getFullname().toLowerCase().contains(lowerName));
         }
-        if (f.numberID() != null) {
-            stream = stream.filter(p -> p.getNumberID() == f.numberID());
+        if (numberID != null) {
+            stream = stream.filter(p -> p.getNumberID() == numberID);
         }
-        if (f.semester() != null) {
+        if (semester != null) {
             stream = stream.filter(p -> p instanceof StudentPlayer s
-                    && s.getSemester() == f.semester());
+                    && s.getSemester() == semester);
         }
 
-        List<PlayerSearchResult> results = stream.map(PlayerSearchMapper::toResult).toList();
+        List<Player> results = stream.toList();
         log.info("Jugadores encontrados: {}", results.size());
         return results;
     }

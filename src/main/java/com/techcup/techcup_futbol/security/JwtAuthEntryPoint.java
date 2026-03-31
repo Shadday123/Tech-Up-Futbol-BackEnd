@@ -14,7 +14,6 @@ import java.util.Map;
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper mapper = new ObjectMapper();
-
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,

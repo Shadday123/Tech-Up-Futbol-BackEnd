@@ -1,21 +1,23 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
-import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
-import com.techcup.techcup_futbol.Controller.dto.CreateTournamentConfigRequest;
-import com.techcup.techcup_futbol.Controller.dto.TournamentConfigResponse;
+import com.techcup.techcup_futbol.core.model.Tournament;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TournamentService {
 
     // ── Torneo
-    TournamentResponse create(CreateTournamentRequest request);
-    TournamentResponse findById(String id);
-    List<TournamentResponse> findAll();
-    TournamentResponse updateStatus(String id, String nextState);
+    Tournament create(Tournament tournament);
+    Tournament findById(String id);
+    List<Tournament> findAll();
+    Tournament updateStatus(String id, String nextState);
 
     // ── Configuración
-    TournamentConfigResponse createOrUpdateConfig(String tournamentId, CreateTournamentConfigRequest request);
-    TournamentConfigResponse findConfig(String tournamentId);
+    Tournament createOrUpdateConfig(String tournamentId, String rules,
+                                    LocalDateTime registrationDeadline,
+                                    List<String> importantDates,
+                                    List<String> matchSchedules,
+                                    List<String> fields, String sanctions);
+    Tournament findConfig(String tournamentId);
 }

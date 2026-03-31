@@ -1,7 +1,7 @@
 package com.techcup.techcup_futbol.Controller;
 
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchRequest;
 import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
+import com.techcup.techcup_futbol.Controller.mapper.PlayerSearchMapper;
 import com.techcup.techcup_futbol.core.model.PositionEnum;
 import com.techcup.techcup_futbol.core.service.PlayerSearchService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,10 +38,12 @@ public class PlayerSearchController {
         log.info("GET /api/players/search — filtros: position={} semester={} age={}-{} gender={} name={} id={}",
                 position, semester, minAge, maxAge, gender, name, numberID);
 
-        PlayerSearchRequest filters = new PlayerSearchRequest(
-                position, semester, minAge, maxAge, gender, name, numberID);
+        List<PlayerSearchResult> results = playerSearchService
+                .search(position, semester, minAge, maxAge, gender, name, numberID)
+                .stream()
+                .map(PlayerSearchMapper::toResult)
+                .toList();
 
-        List<PlayerSearchResult> results = playerSearchService.search(filters);
         return ResponseEntity.ok(results);
     }
 }

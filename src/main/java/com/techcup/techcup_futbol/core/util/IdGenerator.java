@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.util;
+package com.techcup.techcup_futbol.core.util;
 
 import java.util.UUID;
 

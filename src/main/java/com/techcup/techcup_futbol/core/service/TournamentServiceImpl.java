@@ -1,26 +1,21 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.CreateTournamentConfigRequest;
-import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
-import com.techcup.techcup_futbol.Controller.dto.TournamentConfigResponse;
-import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
-import com.techcup.techcup_futbol.Controller.mapper.TournamentMapper;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
-import com.techcup.techcup_futbol.exception.ResourceNotFoundException;
+import com.techcup.techcup_futbol.core.exception.ResourceNotFoundException;
 import com.techcup.techcup_futbol.repository.TournamentRepository;
-import com.techcup.techcup_futbol.util.IdGenerator;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TournamentServiceImpl implements TournamentService {
@@ -34,37 +29,30 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     @Transactional
-    public TournamentResponse create(CreateTournamentRequest request) {
-        log.info("Creando torneo: '{}'", request.name());
+    public Tournament create(Tournament tournament) {
+        log.info("Creando torneo: '{}'", tournament.getName());
 
-        if (request == null) {
+        if (tournament == null) {
             throw new TournamentException("request", "No puede ser null");
         }
 
-        TournamentValidator.validate(request);
+        TournamentValidator.validate(tournament);
 
-        Tournament nuevoTorneo = new Tournament();
-        nuevoTorneo.setId(IdGenerator.generateId());
-        nuevoTorneo.setName(request.name());
-        nuevoTorneo.setStartDate(request.startDate());
-        nuevoTorneo.setEndDate(request.endDate());
-        nuevoTorneo.setRegistrationFee(request.registrationFee());
-        nuevoTorneo.setMaxTeams(request.maxTeams());
-        nuevoTorneo.setRules(request.rules());
-        nuevoTorneo.setCurrentState(TournamentState.DRAFT);
+        tournament.setId(IdGenerator.generateId());
+        tournament.setCurrentState(TournamentState.DRAFT);
 
-        tournamentRepository.save(nuevoTorneo);
+        tournamentRepository.save(tournament);
         log.info("Torneo creado — ID: {} | Estado: DRAFT | MaxEquipos: {}",
-                nuevoTorneo.getId(), request.maxTeams());
+                tournament.getId(), tournament.getMaxTeams());
 
-        return TournamentMapper.toResponse(nuevoTorneo);
+        return tournament;
     }
 
     // ── UPDATE STATE
 
     @Override
     @Transactional
-    public TournamentResponse updateStatus(String id, String nextStateName) {
+    public Tournament updateStatus(String id, String nextStateName) {
         log.info("Actualizando estado del torneo ID: {} → '{}'", id, nextStateName);
 
         Tournament torneo = obtenerTorneo(id);
@@ -84,24 +72,22 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentRepository.save(torneo);
         log.info("Estado del torneo '{}' actualizado a {}", id, next);
 
-        return TournamentMapper.toResponse(torneo);
+        return torneo;
     }
 
     // ── READ — POR ID
 
     @Override
-    public TournamentResponse findById(String id) {
+    public Tournament findById(String id) {
         log.info("Buscando torneo con ID: {}", id);
-        return TournamentMapper.toResponse(obtenerTorneo(id));
+        return obtenerTorneo(id);
     }
 
     // ── READ — TODOS
 
     @Override
-    public List<TournamentResponse> findAll() {
-        List<TournamentResponse> torneos = tournamentRepository.findAll().stream()
-                .map(TournamentMapper::toResponse)
-                .collect(Collectors.toList());
+    public List<Tournament> findAll() {
+        List<Tournament> torneos = tournamentRepository.findAll();
         log.info("Total torneos listados: {}", torneos.size());
         return torneos;
     }
@@ -110,8 +96,11 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     @Transactional
-    public TournamentConfigResponse createOrUpdateConfig(String tournamentId,
-                                                         CreateTournamentConfigRequest request) {
+    public Tournament createOrUpdateConfig(String tournamentId, String rules,
+                                           LocalDateTime registrationDeadline,
+                                           List<String> importantDates,
+                                           List<String> matchSchedules,
+                                           List<String> fields, String sanctions) {
         log.info("Configurando torneo ID: {}", tournamentId);
 
         Tournament tournament = obtenerTorneo(tournamentId);
@@ -122,8 +111,8 @@ public class TournamentServiceImpl implements TournamentService {
                     "Solo se pueden configurar torneos en estado Borrador o Activo.");
         }
 
-        if (request.registrationDeadline() != null
-                && !request.registrationDeadline().isBefore(tournament.getStartDate())) {
+        if (registrationDeadline != null
+                && !registrationDeadline.isBefore(tournament.getStartDate())) {
             throw new TournamentException("registrationDeadline",
                     "La fecha de cierre de inscripciones debe ser estrictamente anterior "
                             + "a la fecha de inicio del torneo.");
@@ -133,36 +122,22 @@ public class TournamentServiceImpl implements TournamentService {
             tournament.setConfigId(IdGenerator.generateId());
         }
 
-        tournament.setRules(request.rules());
-        tournament.setRegistrationDeadline(request.registrationDeadline());
-        tournament.setSanctions(request.sanctions());
-
-        if (request.importantDates() != null) {
-            tournament.setImportantDates(request.importantDates().stream()
-                    .map(d -> d.description() + "|"
-                            + (d.date() != null ? d.date().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : ""))
-                    .toList());
-        }
-        if (request.matchSchedules() != null) {
-            tournament.setMatchSchedules(request.matchSchedules().stream()
-                    .map(s -> s.dayOfWeek() + "|" + s.startTime() + "|" + s.endTime())
-                    .toList());
-        }
-        if (request.fields() != null) {
-            tournament.setFields(request.fields().stream()
-                    .map(f -> f.name() + "|" + f.location())
-                    .toList());
-        }
+        tournament.setRules(rules);
+        tournament.setRegistrationDeadline(registrationDeadline);
+        tournament.setSanctions(sanctions);
+        tournament.setImportantDates(importantDates);
+        tournament.setMatchSchedules(matchSchedules);
+        tournament.setFields(fields);
 
         tournamentRepository.save(tournament);
         log.info("Configuración guardada para torneo ID: {}", tournamentId);
-        return TournamentMapper.toConfigResponse(tournament);
+        return tournament;
     }
 
     // ── CONFIG — READ
 
     @Override
-    public TournamentConfigResponse findConfig(String tournamentId) {
+    public Tournament findConfig(String tournamentId) {
         Tournament tournament = obtenerTorneo(tournamentId);
 
         if (!tournament.hasConfig()) {
@@ -170,7 +145,7 @@ public class TournamentServiceImpl implements TournamentService {
                     String.format(TournamentException.CONFIG_NOT_FOUND, tournamentId));
         }
 
-        return TournamentMapper.toConfigResponse(tournament);
+        return tournament;
     }
 
     // ── HELPERS PRIVADOS
