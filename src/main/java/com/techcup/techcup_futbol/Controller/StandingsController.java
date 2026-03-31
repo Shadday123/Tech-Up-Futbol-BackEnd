@@ -2,12 +2,12 @@ package com.techcup.techcup_futbol.Controller;
 
 import com.techcup.techcup_futbol.Controller.dto.StandingsResponse;
 import com.techcup.techcup_futbol.Controller.mapper.StandingsMapper;
-import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Standings;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.service.StandingsService;
 import com.techcup.techcup_futbol.core.service.TournamentService;
+import com.techcup.techcup_futbol.repository.TeamRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +25,12 @@ public class StandingsController {
 
     private final StandingsService standingsService;
     private final TournamentService tournamentService;
+    private final TeamRepository teamRepository;
 
-    public StandingsController(StandingsService standingsService, TournamentService tournamentService) {
+    public StandingsController(StandingsService standingsService, TournamentService tournamentService, TeamRepository teamRepository) {
         this.standingsService = standingsService;
         this.tournamentService = tournamentService;
+        this.teamRepository = teamRepository;
     }
 
     @GetMapping("/tournament/{tournamentId}")
@@ -46,7 +48,7 @@ public class StandingsController {
             @PathVariable String teamId) {
         log.info("POST /api/standings/tournament/{}/register-team/{}", tournamentId, teamId);
 
-        Team team = DataStore.equipos.get(teamId);
+        Team team = teamRepository.findById(teamId).orElse(null);
         if (team == null) {
             return ResponseEntity.badRequest()
                     .body("No existe equipo con ID: " + teamId);

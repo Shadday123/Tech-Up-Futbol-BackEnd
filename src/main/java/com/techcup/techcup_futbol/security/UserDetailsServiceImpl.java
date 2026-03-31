@@ -1,8 +1,8 @@
 package com.techcup.techcup_futbol.security;
 
-import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.SystemRole;
+import com.techcup.techcup_futbol.repository.PlayerRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,14 +15,17 @@ import java.util.List;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    private final PlayerRepository playerRepository;
+
+    public UserDetailsServiceImpl(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        Player player = DataStore.jugadores.values().stream()
-                .filter(p -> p.getEmail() != null
-                        && p.getEmail().equalsIgnoreCase(email))
-                .findFirst()
+        Player player = playerRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "No existe usuario con email: " + email));
 

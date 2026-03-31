@@ -7,7 +7,6 @@ import com.techcup.techcup_futbol.core.exception.PlayerException;
 import com.techcup.techcup_futbol.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.techcup.techcup_futbol.core.util.IdGenerator;
@@ -23,8 +22,13 @@ public class PlayerServiceImpl implements PlayerService {
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
+    private final PlayerValidator playerValidator;
+
+    public PlayerServiceImpl(PlayerRepository playerRepository, PlayerValidator playerValidator) {
+        this.playerRepository = playerRepository;
+        this.playerValidator = playerValidator;
+    }
 
     // CREATE
 
@@ -38,7 +42,7 @@ public class PlayerServiceImpl implements PlayerService {
         log.info("[{}] Iniciando registro — jugador: {} | email: {}",
                 ts, jugador.getFullname(), correo);
 
-        PlayerValidator.validate(jugador, correo);
+        playerValidator.validate(jugador, correo);
 
         if (EmailValidator.esCorreoInstitucional(correo)) {
             log.debug("Email institucional detectado: {}", correo);
