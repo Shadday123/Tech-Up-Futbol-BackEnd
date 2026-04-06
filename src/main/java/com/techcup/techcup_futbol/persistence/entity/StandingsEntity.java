@@ -1,25 +1,28 @@
-package com.techcup.techcup_futbol.core.model;
+package com.techcup.techcup_futbol.persistence.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "standings")
+public class StandingsEntity {
 
-public class Standings {
-
-
+    @Id
     private String id;
 
-
+    @Column(name = "tournament_id", nullable = false)
     private String tournamentId;
 
-    private Team team;
+    @ManyToOne
+    @JoinColumn(name = "team_id", nullable = false)
+    private TeamEntity team;
 
     private int matchesPlayed;
     private int matchesWon;
@@ -30,7 +33,7 @@ public class Standings {
     private int goalsDifference;
     private int points;
 
-    public void calculateStatsFromMatch(List<Match> teamMatches) {
+    public void calculateStatsFromMatch(List<MatchEntity> teamMatches) {
         this.matchesPlayed = teamMatches.size();
 
         this.goalsFor = teamMatches.stream()
