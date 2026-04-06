@@ -1,5 +1,8 @@
 package com.techcup.techcup_futbol.config;
 
+import com.techcup.techcup_futbol.security.JwtAuthEntryPoint;
+import com.techcup.techcup_futbol.security.JwtFilter;
+import com.techcup.techcup_futbol.security.OAuthSuccessHandler;
 import com.techcup.techcup_futbol.core.security.JwtAuthEntryPoint;
 import com.techcup.techcup_futbol.core.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
@@ -23,15 +26,18 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final OAuthSuccessHandler oAuthSuccessHandler;
     private final JwtAuthEntryPoint authEntryPoint;
     private final CorsConfigurationSource corsConfigurationSource;
 
     public SecurityConfig(JwtFilter jwtFilter,
                           JwtAuthEntryPoint authEntryPoint,
-                          CorsConfigurationSource corsConfigurationSource) {
+                          CorsConfigurationSource corsConfigurationSource,
+                          OAuthSuccessHandler oAuthSuccessHandler) {
         this.jwtFilter = jwtFilter;
         this.authEntryPoint = authEntryPoint;
         this.corsConfigurationSource = corsConfigurationSource;
+        this.oAuthSuccessHandler = oAuthSuccessHandler;
     }
 
     @Bean
@@ -47,8 +53,7 @@ public class SecurityConfig {
                         ex.authenticationEntryPoint(authEntryPoint))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "v3/api-docs/**").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/api/players/registro").permitAll()
                         .requestMatchers(HttpMethod.GET,
@@ -81,6 +86,8 @@ public class SecurityConfig {
                         .hasAnyRole("ARBITRO", "ORGANIZADOR")
                         .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuthSuccessHandler))
                 .addFilterBefore(jwtFilter,
                         UsernamePasswordAuthenticationFilter.class);
 
