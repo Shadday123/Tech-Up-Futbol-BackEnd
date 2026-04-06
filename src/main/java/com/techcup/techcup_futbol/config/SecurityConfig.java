@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.config;
 
 import com.techcup.techcup_futbol.security.JwtAuthEntryPoint;
 import com.techcup.techcup_futbol.security.JwtFilter;
+import com.techcup.techcup_futbol.security.OAuthSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,15 +24,18 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final OAuthSuccessHandler oAuthSuccessHandler;
     private final JwtAuthEntryPoint authEntryPoint;
     private final CorsConfigurationSource corsConfigurationSource;
 
     public SecurityConfig(JwtFilter jwtFilter,
                           JwtAuthEntryPoint authEntryPoint,
-                          CorsConfigurationSource corsConfigurationSource) {
+                          CorsConfigurationSource corsConfigurationSource,
+                          OAuthSuccessHandler oAuthSuccessHandler) {
         this.jwtFilter = jwtFilter;
         this.authEntryPoint = authEntryPoint;
         this.corsConfigurationSource = corsConfigurationSource;
+        this.oAuthSuccessHandler = oAuthSuccessHandler;
     }
 
     @Bean
@@ -79,9 +83,10 @@ public class SecurityConfig {
                         .hasAnyRole("ARBITRO", "ORGANIZADOR")
                         .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuthSuccessHandler))
                 .addFilterBefore(jwtFilter,
                         UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 
