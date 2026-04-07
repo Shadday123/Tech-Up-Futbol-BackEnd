@@ -1,40 +1,49 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.core.model.*;
+import com.techcup.techcup_futbol.core.model.Lineup;
 import com.techcup.techcup_futbol.core.exception.LineupException;
-import com.techcup.techcup_futbol.persistence.repository.*;
-import com.techcup.techcup_futbol.persistence.entity.*;
 import com.techcup.techcup_futbol.core.util.IdGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import com.techcup.techcup_futbol.persistence.entity.LineUpEntity;
+import com.techcup.techcup_futbol.persistence.entity.MatchEntity;
+import com.techcup.techcup_futbol.persistence.entity.TeamEntity;
+import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
+
+import com.techcup.techcup_futbol.persistence.mapper.LineupPersistenceMapper;
+
+import com.techcup.techcup_futbol.persistence.repository.LineupRepository;
+import com.techcup.techcup_futbol.persistence.repository.MatchRepository;
+import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class LineupServiceImpl implements LineupService {
 
     private static final Logger log = LoggerFactory.getLogger(LineupServiceImpl.class);
 
-    @Autowired
-    private LineupRepository lineupRepository;
+    private final LineupRepository lineupRepository;
+    private final MatchRepository matchRepository;
+    private final TeamRepository teamRepository;
+    private final PlayerRepository playerRepository;
 
-    @Autowired
-    private MatchRepository matchRepository;
-
-    @Autowired
-    private TeamRepository teamRepository;
-
-    @Autowired
-    private PlayerRepository playerRepository;
-
-    @Transactional
-    public void registerMatch(MatchEntity match) {
-        if (match != null && !matchRepository.existsById(match.getId())) {
-            matchRepository.save(match);
-        }
+    public LineupServiceImpl(LineupRepository lineupRepository,
+                             MatchRepository matchRepository,
+                             TeamRepository teamRepository,
+                             PlayerRepository playerRepository) {
+        this.lineupRepository = lineupRepository;
+        this.matchRepository = matchRepository;
+        this.teamRepository = teamRepository;
+        this.playerRepository = playerRepository;
     }
 
     @Override
@@ -42,20 +51,21 @@ public class LineupServiceImpl implements LineupService {
     public Lineup create(String matchId, String teamId, String formation,
                          List<String> starterIds, List<String> substituteIds,
                          List<String> fieldPositions) {
+
         log.info("Creando alineación — partido: {} | equipo: {}", matchId, teamId);
 
-        MatchEntity match = matchRepository.findById(matchId)
+        MatchEntity matchEntity = matchRepository.findById(matchId)
                 .orElseThrow(() -> new LineupException("matchId",
                         String.format(LineupException.MATCH_NOT_FOUND, matchId)));
 
-        Team team = teamRepository.findById(teamId)
+        TeamEntity teamEntity = teamRepository.findById(teamId)
                 .orElseThrow(() -> new LineupException("teamId",
                         String.format(LineupException.TEAM_NOT_FOUND, teamId)));
 
         if (lineupRepository.existsByMatchIdAndTeamId(matchId, teamId)) {
             throw new LineupException("lineup",
                     String.format(LineupException.LINEUP_ALREADY_EXISTS,
-                            matchId, team.getTeamName()));
+                            matchId, teamEntity.getName()));
         }
 
         if (starterIds == null || starterIds.size() != 7) {
@@ -64,52 +74,49 @@ public class LineupServiceImpl implements LineupService {
                             starterIds == null ? 0 : starterIds.size()));
         }
 
-        List<Player> teamPlayers = team.getPlayers() != null ? team.getPlayers() : List.of();
-        Set<String> teamPlayerIds = new HashSet<>();
-        for (Player p : teamPlayers) teamPlayerIds.add(p.getId());
+        List<PlayerEntity> starters = starterIds.stream()
+                .map(id -> playerRepository.findById(id)
+                        .orElseThrow(() -> new LineupException("starters",
+                                String.format(LineupException.PLAYER_NOT_IN_TEAM, id, teamEntity.getName()))))
+                .toList();
 
-        List<Player> starters = new ArrayList<>();
-        for (String sid : starterIds) {
-            if (!teamPlayerIds.contains(sid)) {
-                throw new LineupException("starters",
-                        String.format(LineupException.PLAYER_NOT_IN_TEAM, sid, team.getTeamName()));
-            }
-            starters.add(playerRepository.findById(sid)
-                    .orElseThrow(() -> new LineupException("starters",
-                            String.format(LineupException.PLAYER_NOT_IN_TEAM, sid, team.getTeamName()))));
-        }
-
-        List<Player> substitutes = new ArrayList<>();
+        List<PlayerEntity> substitutes = new ArrayList<>();
         if (substituteIds != null) {
-            for (String sid : substituteIds) {
-                playerRepository.findById(sid).ifPresent(substitutes::add);
-            }
+            substitutes = substituteIds.stream()
+                    .map(id -> playerRepository.findById(id).orElse(null))
+                    .filter(Objects::nonNull)
+                    .toList();
         }
 
-        Lineup lineup = new Lineup();
-        lineup.setId(IdGenerator.generateId());
-        lineup.setMatch(matchEntity);
-        lineup.setTeam(team);
-        lineup.setFormation(formation);
-        lineup.setStarters(starters);
-        lineup.setSubstitutes(substitutes);
-        lineup.setFieldPositions(fieldPositions != null ? fieldPositions : List.of());
+        LineUpEntity entity = new LineUpEntity();
+        entity.setId(IdGenerator.generateId());
+        entity.setMatch(matchEntity);
+        entity.setTeam(teamEntity);
+        entity.setFormation(formation);
+        entity.setFieldPositions(fieldPositions != null ? fieldPositions : List.of());
+        entity.setStarters(starters);
+        entity.setSubstitutes(substitutes);
 
-        lineupRepository.save(lineupEntity);
-        log.info("Alineación creada ID: {} para equipo '{}'", lineup.getId(), team.getTeamName());
-        return lineup;
+        LineUpEntity saved = lineupRepository.save(entity);
+
+        log.info("Alineación creada ID: {} para equipo '{}'", saved.getId(), teamEntity.getName());
+
+        return LineupPersistenceMapper.toDomain(saved);
     }
 
     @Override
     public Lineup findByMatchAndTeam(String matchId, String teamId) {
-        return lineupRepository.findByMatchIdAndTeamId(matchId, teamId)
+        LineUpEntity entity = lineupRepository.findByMatchIdAndTeamId(matchId, teamId)
                 .orElseThrow(() -> new LineupException("lineup",
                         String.format(LineupException.LINEUP_NOT_FOUND, matchId, teamId)));
+
+        return LineupPersistenceMapper.toDomain(entity);
     }
 
     @Override
     public Lineup findRivalLineup(String matchId, String myTeamId) {
-        Match match = matchRepository.findById(matchId)
+
+        MatchEntity match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new LineupException("matchId",
                         String.format(LineupException.MATCH_NOT_FOUND, matchId)));
 
@@ -117,7 +124,10 @@ public class LineupServiceImpl implements LineupService {
                 ? match.getVisitorTeam().getId()
                 : match.getLocalTeam().getId();
 
-        return lineupRepository.findByMatchIdAndTeamId(matchId, rivalId)
-                .orElseThrow(() -> new LineupException("lineup", LineupException.RIVAL_LINEUP_NOT_PUBLISHED));
+        LineUpEntity entity = lineupRepository.findByMatchIdAndTeamId(matchId, rivalId)
+                .orElseThrow(() -> new LineupException("lineup",
+                        LineupException.RIVAL_LINEUP_NOT_PUBLISHED));
+
+        return LineupPersistenceMapper.toDomain(entity);
     }
 }

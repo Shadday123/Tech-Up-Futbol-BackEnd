@@ -1,19 +1,22 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.Referee;
-import java.util.ArrayList;
 import com.techcup.techcup_futbol.core.exception.RefereeException;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
+import com.techcup.techcup_futbol.persistence.entity.MatchEntity;
+import com.techcup.techcup_futbol.persistence.entity.RefereeEntity;
+import com.techcup.techcup_futbol.persistence.mapper.RefereePersistenceMapper;
 import com.techcup.techcup_futbol.persistence.repository.MatchRepository;
 import com.techcup.techcup_futbol.persistence.repository.RefereeRepository;
-import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RefereeServiceImpl implements RefereeService {
@@ -41,7 +44,7 @@ public class RefereeServiceImpl implements RefereeService {
         referee.setFullname(fullname);
         referee.setEmail(email);
 
-        refereeRepository.save(referee);
+        refereeRepository.save(RefereePersistenceMapper.toEntity(referee));
         log.info("Árbitro registrado ID: {}", referee.getId());
         return referee;
     }
@@ -51,39 +54,42 @@ public class RefereeServiceImpl implements RefereeService {
     public Referee assignToMatch(String matchId, String refereeId) {
         log.info("Asignando árbitro ID: {} al partido ID: {}", refereeId, matchId);
 
-        Referee referee = refereeRepository.findById(refereeId)
+        RefereeEntity refereeEntity = refereeRepository.findById(refereeId)
                 .orElseThrow(() -> new RefereeException("refereeId",
                         String.format(RefereeException.REFEREE_NOT_FOUND, refereeId)));
 
-        Match match = matchRepository.findById(matchId)
+        MatchEntity matchEntity = matchRepository.findById(matchId)
                 .orElseThrow(() -> new RefereeException("matchId",
                         String.format(RefereeException.REFEREE_NOT_FOUND, matchId)));
 
-        if (match.getReferee() != null) {
+        if (matchEntity.getReferee() != null) {
             throw new RefereeException("match", RefereeException.MATCH_ALREADY_HAS_REFEREE);
         }
 
-        match.setReferee(referee);
-        matchRepository.save(match);
+        matchEntity.setReferee(refereeEntity);
+        matchRepository.save(matchEntity);
 
-        if (referee.getAssignedMatches() == null) {
-            referee.setAssignedMatches(new ArrayList<>());
+        if (refereeEntity.getAssignedMatches() == null) {
+            refereeEntity.setAssignedMatches(new ArrayList<>());
         }
-        referee.getAssignedMatches().add(match);
+        refereeEntity.getAssignedMatches().add(matchEntity);
 
-        log.info("Árbitro '{}' asignado al partido {}", referee.getFullname(), matchId);
-        return referee;
+        log.info("Árbitro '{}' asignado al partido {}", refereeEntity.getFullname(), matchId);
+        return RefereePersistenceMapper.toDomain(refereeEntity);
     }
 
     @Override
     public Referee findById(String refereeId) {
         return refereeRepository.findById(refereeId)
+                .map(RefereePersistenceMapper::toDomain)
                 .orElseThrow(() -> new RefereeException("id",
                         String.format(RefereeException.REFEREE_NOT_FOUND, refereeId)));
     }
 
     @Override
     public List<Referee> findAll() {
-        return refereeRepository.findAll();
+        return refereeRepository.findAll().stream()
+                .map(RefereePersistenceMapper::toDomain)
+                .collect(Collectors.toList());
     }
 }

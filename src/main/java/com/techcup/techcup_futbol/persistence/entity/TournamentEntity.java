@@ -3,7 +3,7 @@ package com.techcup.techcup_futbol.persistence.entity;
 import jakarta.persistence.*;
 import com.techcup.techcup_futbol.core.model.*;
 import lombok.Data;
-import com.techcup.techcup_futbol.util.IdGenerator;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
