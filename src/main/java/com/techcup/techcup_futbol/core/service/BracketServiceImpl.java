@@ -97,6 +97,10 @@ public class BracketServiceImpl implements BracketService {
         return List.of(bracket);
     }
 
+    private MatchEntity buildMatch(TeamEntity teamEntity, TeamEntity teamEntity1) {
+        return null;
+    }
+
     // ── FIND
 
     @Override
@@ -104,7 +108,7 @@ public class BracketServiceImpl implements BracketService {
         TournamentEntity tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow();
 
-        List<TournamentBrackets> phases = tournamentBracketsRepository.findByTournamentId(tournamentId);
+        List<TournamentBracketsEntity> phases = tournamentBracketsRepository.findByTournamentId(tournamentId);
         if (phases.isEmpty()) {
             throw new BracketException("bracket",
                     String.format(BracketException.BRACKET_NOT_FOUND, tournament.getName()));

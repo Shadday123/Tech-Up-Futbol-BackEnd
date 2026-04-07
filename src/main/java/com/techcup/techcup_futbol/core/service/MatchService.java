@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.MatchEventInput;
+import com.techcup.techcup_futbol.persistence.entity.MatchEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface MatchService {
 
     boolean isResultRegistered(String matchId);
 
-    void registerMatch(Match match);
+    void registerMatch(MatchEntity match);
 
     Map<String, Match> getMatches();
 }

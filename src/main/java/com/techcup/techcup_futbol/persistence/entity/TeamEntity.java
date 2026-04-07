@@ -22,7 +22,7 @@ public class TeamEntity  {
     @ElementCollection
     @CollectionTable(name = "team_uniform_colors", joinColumns = @JoinColumn(name = "team_id"))
     @Column(name = "hex_color", length = 7)
-    private String uniformColors;
+    private List<String> uniformColors;
 
     @ManyToOne
     @JoinColumn(name = "captain_id")

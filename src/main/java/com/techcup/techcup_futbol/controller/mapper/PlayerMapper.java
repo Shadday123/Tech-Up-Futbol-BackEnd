@@ -66,7 +66,7 @@ public class PlayerMapper {
         } else if (player instanceof InstitutionalPlayer) {
             dto.setPlayerType("INSTITUTIONAL");
         } else if (player instanceof ExternalPlayer) {
-            dto.setPlayerType("INTERNAL");
+            dto.setPlayerType("EXTERNAL");
         } else {
             dto.setPlayerType("INSTITUTIONAL");
         }

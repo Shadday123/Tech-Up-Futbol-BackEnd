@@ -4,6 +4,8 @@ import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.validator.TeamValidator;
 import com.techcup.techcup_futbol.core.exception.TeamException;
+import com.techcup.techcup_futbol.persistence.entity.TeamEntity;
+import com.techcup.techcup_futbol.persistence.mapper.TeamPersistenceMapper;
 import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
 import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamServiceImpl implements TeamService {
@@ -25,14 +28,12 @@ public class TeamServiceImpl implements TeamService {
     private static final Logger log = LoggerFactory.getLogger(TeamServiceImpl.class);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-
     @Autowired
     private TeamRepository teamRepository;
 
     @Autowired
     private PlayerRepository playerRepository;
 
-    // CREATE
 
     @Override
     public Team createTeam(Team team) {
@@ -42,32 +43,30 @@ public class TeamServiceImpl implements TeamService {
 
         log.info("[{}] Creando equipo: {} | ID: {}", ts, team.getTeamName(), team.getId());
 
-        // Inicializar lista de jugadores si es nula
         if (team.getPlayers() == null) {
             team.setPlayers(new ArrayList<>());
         }
 
-        // Validar nombre único y capitán
         TeamValidator.validateTeamName(team.getTeamName(), getAllTeams());
         TeamValidator.validateCaptain(team);
 
-        // Marcar a todos los jugadores iniciales como integrantes del equipo
         team.getPlayers().forEach(p -> {
             p.setHaveTeam(true);
             log.debug("Jugador '{}' vinculado al nuevo equipo '{}'.",
                     p.getFullname(), team.getTeamName());
         });
 
-        Team saved = teamRepository.save(team);
+        TeamEntity entity = TeamPersistenceMapper.toEntity(team);
+        teamRepository.save(entity);
 
-        log.info("Equipo creado — ID: {} | Capitán: {} | Jugadores: {} | Total equipos: {}",
-                saved.getId(),
-                saved.getCaptain().getFullname());
+        log.info("Equipo creado — ID: {} | Capitán: {} | Jugadores: {}",
+                team.getId(),
+                team.getCaptain() != null ? team.getCaptain().getFullname() : "N/A",
+                team.getPlayers().size());
 
         return team;
     }
 
-    //  INVITE PLAYER
 
     @Override
     public void invitePlayer(String teamId, Player player) {
@@ -90,11 +89,13 @@ public class TeamServiceImpl implements TeamService {
         team.getPlayers().add(player);
         player.setHaveTeam(true);
 
+        TeamEntity entity = TeamPersistenceMapper.toEntity(team);
+        teamRepository.save(entity);
+
         log.info("Jugador '{}' agregado al equipo '{}' — Total jugadores: {}",
                 player.getFullname(), team.getTeamName(), team.getPlayers().size());
     }
 
-    // REMOVE PLAYER
 
     @Override
     public void removePlayer(String teamId, String playerId) {
@@ -129,11 +130,13 @@ public class TeamServiceImpl implements TeamService {
         team.getPlayers().remove(jugador);
         jugador.setHaveTeam(false);
 
+        TeamEntity entity = TeamPersistenceMapper.toEntity(team);
+        teamRepository.save(entity);
+
         log.info("Jugador '{}' removido del equipo '{}' — Jugadores restantes: {}",
                 jugador.getFullname(), team.getTeamName(), team.getPlayers().size());
     }
 
-    // VALIDATE
 
     @Override
     public void validateTeamForTournament(Team team) {
@@ -142,19 +145,22 @@ public class TeamServiceImpl implements TeamService {
         log.info("Equipo '{}' validado correctamente.", team.getTeamName());
     }
 
-    // READ
 
     @Override
     public List<Team> getAllTeams() {
+        List<Team> equipos = teamRepository.findAll()
+                .stream()
+                .map(TeamPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
         log.info("[{}] Listando todos los equipos — total: {}",
-                LocalDateTime.now().format(FMT));
-        return teamRepository.findAll();
+                LocalDateTime.now().format(FMT), equipos.size());
+        return equipos;
     }
 
     @Override
     public Optional<Team> buscarPorId(String id) {
         log.info("[{}] Buscando equipo con ID: {}", LocalDateTime.now().format(FMT), id);
-        return teamRepository.findById(id);
+        return teamRepository.findById(id).map(TeamPersistenceMapper::toDomain);
     }
 
     @Override
@@ -163,7 +169,6 @@ public class TeamServiceImpl implements TeamService {
                 new TeamException("id", String.format(TeamException.TEAM_NOT_FOUND, id)));
     }
 
-    //DELETE
 
     @Override
     public void deleteTeam(String id) {
@@ -180,6 +185,6 @@ public class TeamServiceImpl implements TeamService {
             log.info("Jugadores desvinculados: {}", equipo.getPlayers().size());
         }
         teamRepository.deleteById(id);
-        log.info("Equipo '{}' eliminado. Total equipos restantes: {}", equipo.getTeamName());
+        log.info("Equipo '{}' eliminado.", equipo.getTeamName());
     }
 }

@@ -4,6 +4,8 @@ import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.validator.EmailValidator;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
+import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
+import com.techcup.techcup_futbol.persistence.mapper.PlayerPersistenceMapper;
 import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -51,9 +54,12 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         jugador.setEmail(correo);
-        playerRepository.save(jugador);
-        log.info("Jugador registrado — ID: {} | Email: {} | Total: {}",
-                jugador.getId(), correo);    }
+
+        PlayerEntity entity = PlayerPersistenceMapper.toEntity(jugador);
+        playerRepository.save(entity);
+
+        log.info("Jugador registrado — ID: {} | Email: {}", jugador.getId(), correo);
+    }
 
     // UPDATE
 
@@ -64,6 +70,10 @@ public class PlayerServiceImpl implements PlayerService {
         Player persistido = obtenerPorId(jugador.getId());
         log.debug("URL anterior: {} | URL nueva: {}", persistido.getPhotoUrl(), foto);
         persistido.setPhotoUrl(foto);
+
+        PlayerEntity entity = PlayerPersistenceMapper.toEntity(persistido);
+        playerRepository.save(entity);
+
         log.info("Foto actualizada para jugador: {}", persistido.getFullname());
     }
 
@@ -83,6 +93,10 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         persistido.setDisponible(disponible);
+
+        PlayerEntity entity = PlayerPersistenceMapper.toEntity(persistido);
+        playerRepository.save(entity);
+
         log.info("Disponibilidad actualizada — jugador: {} | disponible ahora: {}",
                 persistido.getFullname(), disponible);
     }
@@ -92,7 +106,10 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<Player> listarJugadores() {
         log.info("[{}] Listando todos los jugadores del sistema", LocalDateTime.now().format(FMT));
-        List<Player> jugadores = playerRepository.findAll();
+        List<Player> jugadores = playerRepository.findAll()
+                .stream()
+                .map(PlayerPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
         if (jugadores.isEmpty()) {
             log.warn("No hay jugadores registrados en el sistema.");
         } else {
@@ -104,7 +121,8 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Optional<Player> buscarPorId(String id) {
         log.info("[{}] Buscando jugador con ID: {}", LocalDateTime.now().format(FMT), id);
-        Optional<Player> resultado = playerRepository.findById(id);
+        Optional<Player> resultado = playerRepository.findById(id)
+                .map(PlayerPersistenceMapper::toDomain);
         if (resultado.isPresent()) {
             log.info("Jugador encontrado — Nombre: {}", resultado.get().getFullname());
         } else {

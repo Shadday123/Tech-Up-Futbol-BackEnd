@@ -1,7 +1,7 @@
 package com.techcup.techcup_futbol.persistence.repository;
 
-import com.techcup.techcup_futbol.core.model.Player;
-import com.techcup.techcup_futbol.core.model.StudentPlayer;
+import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
+import com.techcup.techcup_futbol.persistence.entity.StudentPlayerEntity;
 import com.techcup.techcup_futbol.core.model.PositionEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 
-public interface PlayerRepository extends JpaRepository<Player, String>{
+public interface PlayerRepository extends JpaRepository<PlayerEntity, String>{
 
-    List<Player> findByHaveTeamFalse();
-    List<Player> findByPosition(PositionEnum position);
-    List<Player> findByEmailContaining(String email);
-    Optional<Player> findByEmailIgnoreCase(String email);
+    List<PlayerEntity> findByHaveTeamFalse();
+    List<PlayerEntity> findByPosition(PositionEnum position);
+    List<PlayerEntity> findByEmailContaining(String email);
+    Optional<PlayerEntity> findByEmailIgnoreCase(String email);
     boolean existsByEmailIgnoreCase(String email);
     boolean existsByNumberID(Integer numberID);
-    List<StudentPlayer> findBySemester(Integer semester);
+    List<StudentPlayerEntity> findBySemester(Integer semester);
 }

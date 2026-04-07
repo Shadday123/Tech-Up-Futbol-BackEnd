@@ -5,6 +5,8 @@ import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.core.exception.ResourceNotFoundException;
+import com.techcup.techcup_futbol.persistence.entity.TournamentEntity;
+import com.techcup.techcup_futbol.persistence.mapper.TournamentPersistenceMapper;
 import com.techcup.techcup_futbol.persistence.repository.TournamentRepository;
 import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TournamentServiceImpl implements TournamentService {
@@ -41,7 +44,9 @@ public class TournamentServiceImpl implements TournamentService {
         tournament.setId(IdGenerator.generateId());
         tournament.setCurrentState(TournamentState.DRAFT);
 
-        tournamentRepository.save(tournament);
+        TournamentEntity entity = TournamentPersistenceMapper.toEntity(tournament);
+        tournamentRepository.save(entity);
+
         log.info("Torneo creado — ID: {} | Estado: DRAFT | MaxEquipos: {}",
                 tournament.getId(), tournament.getMaxTeams());
 
@@ -69,7 +74,8 @@ public class TournamentServiceImpl implements TournamentService {
         TournamentValidator.validateStateTransition(torneo.getCurrentState(), next);
 
         torneo.setCurrentState(next);
-        tournamentRepository.save(torneo);
+        TournamentEntity entity = TournamentPersistenceMapper.toEntity(torneo);
+        tournamentRepository.save(entity);
         log.info("Estado del torneo '{}' actualizado a {}", id, next);
 
         return torneo;
@@ -87,7 +93,10 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public List<Tournament> findAll() {
-        List<Tournament> torneos = tournamentRepository.findAll();
+        List<Tournament> torneos = tournamentRepository.findAll()
+                .stream()
+                .map(TournamentPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
         log.info("Total torneos listados: {}", torneos.size());
         return torneos;
     }
@@ -129,7 +138,8 @@ public class TournamentServiceImpl implements TournamentService {
         tournament.setMatchSchedules(matchSchedules);
         tournament.setFields(fields);
 
-        tournamentRepository.save(tournament);
+        TournamentEntity entity = TournamentPersistenceMapper.toEntity(tournament);
+        tournamentRepository.save(entity);
         log.info("Configuración guardada para torneo ID: {}", tournamentId);
         return tournament;
     }
@@ -152,7 +162,9 @@ public class TournamentServiceImpl implements TournamentService {
 
     private Tournament obtenerTorneo(String id) {
         return tournamentRepository.findById(id)
+                .map(TournamentPersistenceMapper::toDomain)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format(TournamentException.TOURNAMENT_NOT_FOUND, id)));
     }
 }
+

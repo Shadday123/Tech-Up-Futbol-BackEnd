@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
+import com.techcup.techcup_futbol.persistence.entity.MatchEntity;
 import com.techcup.techcup_futbol.persistence.repository.MatchEventRepository;
 import com.techcup.techcup_futbol.persistence.repository.MatchRepository;
 import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
@@ -181,7 +182,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @Transactional
-    public void registerMatch(Match match) {
+    public void registerMatch(@org.checkerframework.checker.nullness.qual.MonotonicNonNull MatchEntity match) {
         if (!matchRepository.existsById(match.getId())) {
             matchRepository.save(match);
         }
