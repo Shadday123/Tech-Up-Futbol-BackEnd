@@ -1,8 +1,8 @@
-package com.techcup.techcup_futbol.Controller;
+package com.techcup.techcup_futbol.controller;
 
-import com.techcup.techcup_futbol.Controller.dto.BracketResponse;
-import com.techcup.techcup_futbol.Controller.dto.GenerateBracketRequest;
-import com.techcup.techcup_futbol.Controller.mapper.BracketMapper;
+import com.techcup.techcup_futbol.controller.dto.BracketResponse;
+import com.techcup.techcup_futbol.controller.dto.GenerateBracketRequest;
+import com.techcup.techcup_futbol.controller.mapper.BracketMapper;
 import com.techcup.techcup_futbol.core.model.TournamentBrackets;
 import com.techcup.techcup_futbol.core.service.BracketService;
 import com.techcup.techcup_futbol.core.service.TournamentService;

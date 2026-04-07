@@ -1,13 +1,13 @@
-package com.techcup.techcup_futbol.Controller;
+package com.techcup.techcup_futbol.controller;
 
-import com.techcup.techcup_futbol.Controller.dto.CreateMatchRequest;
-import com.techcup.techcup_futbol.Controller.dto.MatchResponse;
-import com.techcup.techcup_futbol.Controller.dto.RegisterResultRequest;
-import com.techcup.techcup_futbol.Controller.mapper.MatchMapper;
+import com.techcup.techcup_futbol.controller.dto.CreateMatchRequest;
+import com.techcup.techcup_futbol.controller.dto.MatchResponse;
+import com.techcup.techcup_futbol.controller.dto.RegisterResultRequest;
+import com.techcup.techcup_futbol.controller.mapper.MatchMapper;
 import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.MatchEventInput;
 import com.techcup.techcup_futbol.core.service.MatchService;
-import com.techcup.techcup_futbol.repository.MatchEventRepository;
+import com.techcup.techcup_futbol.persistence.repository.MatchEventRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

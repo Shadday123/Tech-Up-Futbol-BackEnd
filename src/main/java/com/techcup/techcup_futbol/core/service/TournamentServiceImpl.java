@@ -5,7 +5,7 @@ import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.validator.TournamentValidator;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.core.exception.ResourceNotFoundException;
-import com.techcup.techcup_futbol.repository.TournamentRepository;
+import com.techcup.techcup_futbol.persistence.repository.TournamentRepository;
 import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

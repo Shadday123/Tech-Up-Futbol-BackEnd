@@ -1,7 +1,7 @@
-package com.techcup.techcup_futbol.Controller.mapper;
+package com.techcup.techcup_futbol.controller.mapper;
 
-import com.techcup.techcup_futbol.Controller.dto.MatchEventResponse;
-import com.techcup.techcup_futbol.Controller.dto.MatchResponse;
+import com.techcup.techcup_futbol.controller.dto.MatchEventResponse;
+import com.techcup.techcup_futbol.controller.dto.MatchResponse;
 import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.MatchEvent;
 

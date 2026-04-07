@@ -1,6 +1,5 @@
 package com.techcup.techcup_futbol.core.model;
 
-
 import lombok.Data;
 import java.util.List;
 
@@ -14,13 +13,9 @@ public class Team {
 
     private String shieldUrl;
 
-    @ElementCollection
-    @CollectionTable(name = "team_uniform_colors", joinColumns = @JoinColumn(name = "team_id"))
-    @Column(name = "hex_color", length = 7)
     private List<String> uniformColors;
 
     private Player captain;
-
 
     private TeamStatus status;
 

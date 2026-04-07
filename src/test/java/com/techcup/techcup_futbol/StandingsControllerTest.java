@@ -1,10 +1,10 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.Controller.StandingsController;
+import com.techcup.techcup_futbol.controller.StandingsController;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.StandingsService;
 import com.techcup.techcup_futbol.core.service.TournamentService;
-import com.techcup.techcup_futbol.repository.TeamRepository;
+import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

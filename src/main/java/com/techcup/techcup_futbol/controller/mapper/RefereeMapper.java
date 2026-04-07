@@ -1,7 +1,7 @@
-package com.techcup.techcup_futbol.Controller.mapper;
+package com.techcup.techcup_futbol.controller.mapper;
 
-import com.techcup.techcup_futbol.Controller.dto.AssignedMatchDTO;
-import com.techcup.techcup_futbol.Controller.dto.RefereeResponse;
+import com.techcup.techcup_futbol.controller.dto.AssignedMatchDTO;
+import com.techcup.techcup_futbol.controller.dto.RefereeResponse;
 import com.techcup.techcup_futbol.core.model.Referee;
 
 import java.util.List;

@@ -2,10 +2,8 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.LineupException;
-import com.techcup.techcup_futbol.repository.LineupRepository;
-import com.techcup.techcup_futbol.repository.MatchRepository;
-import com.techcup.techcup_futbol.repository.PlayerRepository;
-import com.techcup.techcup_futbol.repository.TeamRepository;
+import com.techcup.techcup_futbol.persistence.repository.*;
+import com.techcup.techcup_futbol.persistence.entity.*;
 import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +30,8 @@ public class LineupServiceImpl implements LineupService {
     @Autowired
     private PlayerRepository playerRepository;
 
-    @Override
     @Transactional
-    public void registerMatch(Match match) {
+    public void registerMatch(MatchEntity match) {
         if (match != null && !matchRepository.existsById(match.getId())) {
             matchRepository.save(match);
         }
@@ -47,7 +44,7 @@ public class LineupServiceImpl implements LineupService {
                          List<String> fieldPositions) {
         log.info("Creando alineación — partido: {} | equipo: {}", matchId, teamId);
 
-        Match match = matchRepository.findById(matchId)
+        MatchEntity match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new LineupException("matchId",
                         String.format(LineupException.MATCH_NOT_FOUND, matchId)));
 
@@ -91,14 +88,14 @@ public class LineupServiceImpl implements LineupService {
 
         Lineup lineup = new Lineup();
         lineup.setId(IdGenerator.generateId());
-        lineup.setMatch(match);
+        lineup.setMatch(matchEntity);
         lineup.setTeam(team);
         lineup.setFormation(formation);
         lineup.setStarters(starters);
         lineup.setSubstitutes(substitutes);
         lineup.setFieldPositions(fieldPositions != null ? fieldPositions : List.of());
 
-        lineupRepository.save(lineup);
+        lineupRepository.save(lineupEntity);
         log.info("Alineación creada ID: {} para equipo '{}'", lineup.getId(), team.getTeamName());
         return lineup;
     }

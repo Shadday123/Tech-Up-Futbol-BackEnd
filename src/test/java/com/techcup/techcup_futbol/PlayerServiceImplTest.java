@@ -5,7 +5,7 @@ import com.techcup.techcup_futbol.core.model.PositionEnum;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.core.service.PlayerServiceImpl;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
-import com.techcup.techcup_futbol.repository.PlayerRepository;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

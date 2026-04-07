@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.BracketException;
+import com.techcup.techcup_futbol.persistence.entity.*;
 import com.techcup.techcup_futbol.persistence.repository.MatchRepository;
 import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
 import com.techcup.techcup_futbol.persistence.repository.TournamentBracketsRepository;
@@ -41,15 +42,15 @@ public class BracketServiceImpl implements BracketService {
 
     @Override
     @Transactional
-    public List<TournamentBrackets> generate(String tournamentId, int teamsCount) {
+    public List<TournamentBracketsEntity> generate(String tournamentId, int teamsCount) {
         log.info("Generando llaves para torneo ID: {} con {} equipos",
                 tournamentId, teamsCount);
 
-        Tournament tournament = tournamentRepository.findById(tournamentId)
+        TournamentEntity tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new BracketException("tournamentId",
                         String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId)));
 
-        List<TournamentBrackets> existing = tournamentBracketsRepository.findByTournamentId(tournamentId);
+        List<TournamentBracketsEntity> existing = tournamentBracketsRepository.findByTournamentId(tournamentId);
         if (!existing.isEmpty()) {
             boolean hasResults = existing.stream()
                     .flatMap(b -> b.getMatches().stream())
@@ -60,7 +61,7 @@ public class BracketServiceImpl implements BracketService {
             tournamentBracketsRepository.deleteAll(existing);
         }
 
-        List<Team> teams = new ArrayList<>(teamRepository.findAll());
+        List<TeamEntity> teams = new ArrayList<>(teamRepository.findAll());
         int count = Math.min(teamsCount, teams.size());
 
         if (count < 2) {
@@ -73,19 +74,19 @@ public class BracketServiceImpl implements BracketService {
         }
 
         Collections.shuffle(teams.subList(0, count), new java.security.SecureRandom());
-        List<Team> selected = new ArrayList<>(teams.subList(0, count));
+        List<TeamEntity> selected = new ArrayList<>(teams.subList(0, count));
 
         PhaseEnum phase = resolveInitialPhase(count);
-        List<Match> roundMatches = new ArrayList<>();
+        List<MatchEntity> roundMatches = new ArrayList<>();
 
         for (int i = 0; i < selected.size() - 1; i += 2) {
-            Match m = buildMatch(selected.get(i), selected.get(i + 1));
+            MatchEntity m = buildMatch(selected.get(i), selected.get(i + 1));
             matchRepository.save(m);
             roundMatches.add(m);
             matchService.registerMatch(m);
         }
 
-        TournamentBrackets bracket = new TournamentBrackets();
+        TournamentBracketsEntity bracket = new TournamentBracketsEntity();
         bracket.setId(IdGenerator.generateId());
         bracket.setTournament(tournament);
         bracket.setPhase(phase);
@@ -100,9 +101,8 @@ public class BracketServiceImpl implements BracketService {
 
     @Override
     public List<TournamentBrackets> findByTournamentId(String tournamentId) {
-        Tournament tournament = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new BracketException("tournamentId",
-                        String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId)));
+        TournamentEntity tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow();
 
         List<TournamentBrackets> phases = tournamentBracketsRepository.findByTournamentId(tournamentId);
         if (phases.isEmpty()) {
@@ -119,11 +119,11 @@ public class BracketServiceImpl implements BracketService {
     public List<TournamentBrackets> advanceWinner(String tournamentId, String matchId) {
         log.info("Avanzando ganador del partido ID: {}", matchId);
 
-        Tournament tournament = tournamentRepository.findById(tournamentId)
+        TournamentEntity tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new BracketException("tournamentId",
                         String.format(BracketException.TOURNAMENT_NOT_FOUND, tournamentId)));
 
-        Match match = matchRepository.findById(matchId)
+        MatchEntity match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new BracketException("matchId",
                         String.format(BracketException.MATCH_NOT_FOUND, matchId)));
 
@@ -156,9 +156,9 @@ public class BracketServiceImpl implements BracketService {
                     .toList();
 
             PhaseEnum nextPhase = nextPhase(currentPhase.getPhase());
-            List<Match> nextMatches = new ArrayList<>();
+            List<MatchEntity> nextMatches = new ArrayList<>();
             for (int i = 0; i < winners.size() - 1; i += 2) {
-                Match nm = buildMatch(winners.get(i), winners.get(i + 1));
+                MatchEntity nm = buildMatch(winners.get(i), winners.get(i + 1));
                 matchRepository.save(nm);
                 nextMatches.add(nm);
                 matchService.registerMatch(nm);

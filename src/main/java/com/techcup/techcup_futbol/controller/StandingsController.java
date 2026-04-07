@@ -1,13 +1,13 @@
-package com.techcup.techcup_futbol.Controller;
+package com.techcup.techcup_futbol.controller;
 
-import com.techcup.techcup_futbol.Controller.dto.StandingsResponse;
-import com.techcup.techcup_futbol.Controller.mapper.StandingsMapper;
+import com.techcup.techcup_futbol.controller.dto.StandingsResponse;
+import com.techcup.techcup_futbol.controller.mapper.StandingsMapper;
 import com.techcup.techcup_futbol.core.model.Standings;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.service.StandingsService;
 import com.techcup.techcup_futbol.core.service.TournamentService;
-import com.techcup.techcup_futbol.repository.TeamRepository;
+import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

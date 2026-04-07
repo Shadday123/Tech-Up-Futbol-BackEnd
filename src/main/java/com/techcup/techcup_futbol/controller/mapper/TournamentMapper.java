@@ -1,11 +1,11 @@
-package com.techcup.techcup_futbol.Controller.mapper;
+package com.techcup.techcup_futbol.controller.mapper;
 
-import com.techcup.techcup_futbol.Controller.dto.FieldDTO;
-import com.techcup.techcup_futbol.Controller.dto.ImportantDateDTO;
-import com.techcup.techcup_futbol.Controller.dto.MatchScheduleDTO;
-import com.techcup.techcup_futbol.Controller.dto.TournamentConfigResponse;
-import com.techcup.techcup_futbol.Controller.dto.TournamentDTO;
-import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
+import com.techcup.techcup_futbol.controller.dto.FieldDTO;
+import com.techcup.techcup_futbol.controller.dto.ImportantDateDTO;
+import com.techcup.techcup_futbol.controller.dto.MatchScheduleDTO;
+import com.techcup.techcup_futbol.controller.dto.TournamentConfigResponse;
+import com.techcup.techcup_futbol.controller.dto.TournamentDTO;
+import com.techcup.techcup_futbol.controller.dto.TournamentResponse;
 import com.techcup.techcup_futbol.core.model.Tournament;
 
 import java.time.LocalDateTime;

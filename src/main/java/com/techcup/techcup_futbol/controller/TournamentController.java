@@ -1,10 +1,10 @@
-package com.techcup.techcup_futbol.Controller;
+package com.techcup.techcup_futbol.controller;
 
-import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
-import com.techcup.techcup_futbol.Controller.dto.TournamentResponse;
-import com.techcup.techcup_futbol.Controller.dto.CreateTournamentConfigRequest;
-import com.techcup.techcup_futbol.Controller.dto.TournamentConfigResponse;
-import com.techcup.techcup_futbol.Controller.mapper.TournamentMapper;
+import com.techcup.techcup_futbol.controller.dto.CreateTournamentRequest;
+import com.techcup.techcup_futbol.controller.dto.TournamentResponse;
+import com.techcup.techcup_futbol.controller.dto.CreateTournamentConfigRequest;
+import com.techcup.techcup_futbol.controller.dto.TournamentConfigResponse;
+import com.techcup.techcup_futbol.controller.mapper.TournamentMapper;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.service.TournamentService;

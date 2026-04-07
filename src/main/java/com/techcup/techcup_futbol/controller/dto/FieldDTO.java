@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.Controller.dto;
+package com.techcup.techcup_futbol.controller.dto;
 
 public record FieldDTO(
         String name,

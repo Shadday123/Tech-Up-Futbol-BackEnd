@@ -1,8 +1,8 @@
-package com.techcup.techcup_futbol.Controller.mapper;
+package com.techcup.techcup_futbol.controller.mapper;
 
-import com.techcup.techcup_futbol.Controller.dto.LineupPlayerDTO;
-import com.techcup.techcup_futbol.Controller.dto.LineupResponse;
-import com.techcup.techcup_futbol.Controller.dto.PlayerPositionDTO;
+import com.techcup.techcup_futbol.controller.dto.LineupPlayerDTO;
+import com.techcup.techcup_futbol.controller.dto.LineupResponse;
+import com.techcup.techcup_futbol.controller.dto.PlayerPositionDTO;
 import com.techcup.techcup_futbol.core.model.Lineup;
 import com.techcup.techcup_futbol.core.model.Player;
 

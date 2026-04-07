@@ -1,13 +1,14 @@
-package com.techcup.techcup_futbol.Controller;
+package com.techcup.techcup_futbol.controller;
 
-import com.techcup.techcup_futbol.Controller.dto.PaymentResponse;
-import com.techcup.techcup_futbol.Controller.dto.UpdatePaymentStatusRequest;
-import com.techcup.techcup_futbol.Controller.dto.UploadReceiptRequest;
-import com.techcup.techcup_futbol.Controller.mapper.PaymentMapper;
+import com.techcup.techcup_futbol.controller.dto.PaymentResponse;
+import com.techcup.techcup_futbol.controller.dto.UpdatePaymentStatusRequest;
+import com.techcup.techcup_futbol.controller.dto.UploadReceiptRequest;
+import com.techcup.techcup_futbol.controller.mapper.PaymentMapper;
 import com.techcup.techcup_futbol.core.model.Payment;
 import com.techcup.techcup_futbol.core.model.Team;
+import com.techcup.techcup_futbol.persistence.entity.*;
 import com.techcup.techcup_futbol.core.service.PaymentService;
-import com.techcup.techcup_futbol.repository.TeamRepository;
+import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class PaymentController {
             @Valid @RequestBody UploadReceiptRequest request) {
         log.info("POST /api/payments/upload — equipo: {}", request.teamId());
         Payment payment = paymentService.uploadReceipt(request.teamId(), request.receiptUrl());
-        Team team = teamRepository.findById(payment.getTeamId()).orElse(null);
+        TeamEntity team = teamRepository.findById(payment.getTeamId()).orElse(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(PaymentMapper.toResponse(payment, team));
     }
 
@@ -48,7 +49,7 @@ public class PaymentController {
             @Valid @RequestBody UpdatePaymentStatusRequest request) {
         log.info("PUT /api/payments/{}/status — nuevo estado: {}", id, request.status());
         Payment payment = paymentService.updateStatus(id, request.status());
-        Team team = payment.getTeamId() != null
+        TeamEntity team = payment.getTeamId() != null
                 ? teamRepository.findById(payment.getTeamId()).orElse(null) : null;
         return ResponseEntity.ok(PaymentMapper.toResponse(payment, team));
     }
@@ -57,7 +58,7 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> findById(@PathVariable String id) {
         log.info("GET /api/payments/{}", id);
         Payment payment = paymentService.findById(id);
-        Team team = payment.getTeamId() != null
+        TeamEntity team = payment.getTeamId() != null
                 ? teamRepository.findById(payment.getTeamId()).orElse(null) : null;
         return ResponseEntity.ok(PaymentMapper.toResponse(payment, team));
     }
@@ -67,7 +68,7 @@ public class PaymentController {
         log.info("GET /api/payments");
         List<PaymentResponse> responses = paymentService.findAll().stream()
                 .map(p -> {
-                    Team team = p.getTeamId() != null
+                    TeamEntity team = p.getTeamId() != null
                             ? teamRepository.findById(p.getTeamId()).orElse(null) : null;
                     return PaymentMapper.toResponse(p, team);
                 }).toList();
@@ -78,7 +79,7 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> findByTeam(@PathVariable String teamId) {
         log.info("GET /api/payments/team/{}", teamId);
         Payment payment = paymentService.findByTeamId(teamId);
-        Team team = teamRepository.findById(teamId).orElse(null);
+        TeamEntity team = teamRepository.findById(teamId).orElse(null);
         return ResponseEntity.ok(PaymentMapper.toResponse(payment, team));
     }
 

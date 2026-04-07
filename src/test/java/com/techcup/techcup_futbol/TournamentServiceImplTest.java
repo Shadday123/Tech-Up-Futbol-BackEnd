@@ -5,7 +5,7 @@ import com.techcup.techcup_futbol.core.exception.TournamentException;
 import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.service.TournamentServiceImpl;
-import com.techcup.techcup_futbol.repository.TournamentRepository;
+import com.techcup.techcup_futbol.persistence.repository.TournamentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

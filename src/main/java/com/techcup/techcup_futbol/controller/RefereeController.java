@@ -1,9 +1,9 @@
-package com.techcup.techcup_futbol.Controller;
+package com.techcup.techcup_futbol.controller;
 
-import com.techcup.techcup_futbol.Controller.dto.AssignRefereeRequest;
-import com.techcup.techcup_futbol.Controller.dto.CreateRefereeRequest;
-import com.techcup.techcup_futbol.Controller.dto.RefereeResponse;
-import com.techcup.techcup_futbol.Controller.mapper.RefereeMapper;
+import com.techcup.techcup_futbol.controller.dto.AssignRefereeRequest;
+import com.techcup.techcup_futbol.controller.dto.CreateRefereeRequest;
+import com.techcup.techcup_futbol.controller.dto.RefereeResponse;
+import com.techcup.techcup_futbol.controller.mapper.RefereeMapper;
 import com.techcup.techcup_futbol.core.service.RefereeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

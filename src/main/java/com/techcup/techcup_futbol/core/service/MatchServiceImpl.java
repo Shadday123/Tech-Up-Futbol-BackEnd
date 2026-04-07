@@ -2,10 +2,10 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
-import com.techcup.techcup_futbol.repository.MatchEventRepository;
-import com.techcup.techcup_futbol.repository.MatchRepository;
-import com.techcup.techcup_futbol.repository.PlayerRepository;
-import com.techcup.techcup_futbol.repository.TeamRepository;
+import com.techcup.techcup_futbol.persistence.repository.MatchEventRepository;
+import com.techcup.techcup_futbol.persistence.repository.MatchRepository;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
+import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
 import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

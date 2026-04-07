@@ -1,7 +1,7 @@
-package com.techcup.techcup_futbol.Controller;
+package com.techcup.techcup_futbol.controller;
 
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
-import com.techcup.techcup_futbol.Controller.mapper.PlayerSearchMapper;
+import com.techcup.techcup_futbol.controller.dto.PlayerSearchResult;
+import com.techcup.techcup_futbol.controller.mapper.PlayerSearchMapper;
 import com.techcup.techcup_futbol.core.model.PositionEnum;
 import com.techcup.techcup_futbol.core.service.PlayerSearchService;
 import io.swagger.v3.oas.annotations.tags.Tag;

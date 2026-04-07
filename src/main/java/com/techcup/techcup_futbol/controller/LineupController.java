@@ -1,8 +1,8 @@
-package com.techcup.techcup_futbol.Controller;
+package com.techcup.techcup_futbol.controller;
 
-import com.techcup.techcup_futbol.Controller.dto.CreateLineupRequest;
-import com.techcup.techcup_futbol.Controller.dto.LineupResponse;
-import com.techcup.techcup_futbol.Controller.mapper.LineupMapper;
+import com.techcup.techcup_futbol.controller.dto.CreateLineupRequest;
+import com.techcup.techcup_futbol.controller.dto.LineupResponse;
+import com.techcup.techcup_futbol.controller.mapper.LineupMapper;
 import com.techcup.techcup_futbol.core.model.Lineup;
 import com.techcup.techcup_futbol.core.service.LineupService;
 import io.swagger.v3.oas.annotations.tags.Tag;

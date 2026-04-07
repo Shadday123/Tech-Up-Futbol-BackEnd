@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "teams")
-public class TeamEntity {
+public class TeamEntity  {
 
     @Id
     private String id;
@@ -19,6 +19,9 @@ public class TeamEntity {
 
     private String shieldUrl;
 
+    @ElementCollection
+    @CollectionTable(name = "team_uniform_colors", joinColumns = @JoinColumn(name = "team_id"))
+    @Column(name = "hex_color", length = 7)
     private String uniformColors;
 
     @ManyToOne

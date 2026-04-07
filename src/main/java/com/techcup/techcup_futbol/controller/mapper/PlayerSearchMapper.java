@@ -1,6 +1,6 @@
-package com.techcup.techcup_futbol.Controller.mapper;
+package com.techcup.techcup_futbol.controller.mapper;
 
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
+import com.techcup.techcup_futbol.controller.dto.PlayerSearchResult;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
 

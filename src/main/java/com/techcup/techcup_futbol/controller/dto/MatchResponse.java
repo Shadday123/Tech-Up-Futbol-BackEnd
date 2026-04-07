@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.Controller.dto;
+package com.techcup.techcup_futbol.controller.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;

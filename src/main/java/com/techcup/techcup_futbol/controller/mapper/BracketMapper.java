@@ -1,8 +1,8 @@
-package com.techcup.techcup_futbol.Controller.mapper;
+package com.techcup.techcup_futbol.controller.mapper;
 
-import com.techcup.techcup_futbol.Controller.dto.BracketMatchDTO;
-import com.techcup.techcup_futbol.Controller.dto.BracketResponse;
-import com.techcup.techcup_futbol.Controller.dto.PhaseDTO;
+import com.techcup.techcup_futbol.controller.dto.BracketMatchDTO;
+import com.techcup.techcup_futbol.controller.dto.BracketResponse;
+import com.techcup.techcup_futbol.controller.dto.PhaseDTO;
 import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.model.MatchStatus;
 import com.techcup.techcup_futbol.core.model.Team;

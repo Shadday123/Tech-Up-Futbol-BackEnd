@@ -1,7 +1,7 @@
-package com.techcup.techcup_futbol.Controller.mapper;
+package com.techcup.techcup_futbol.controller.mapper;
 
-import com.techcup.techcup_futbol.Controller.dto.StandingsResponse;
-import com.techcup.techcup_futbol.Controller.dto.TeamStandingDTO;
+import com.techcup.techcup_futbol.controller.dto.StandingsResponse;
+import com.techcup.techcup_futbol.controller.dto.TeamStandingDTO;
 import com.techcup.techcup_futbol.core.model.Standings;
 
 import java.util.ArrayList;
