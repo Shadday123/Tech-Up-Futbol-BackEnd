@@ -31,9 +31,14 @@ El sistema consiste en una plataforma web orientada a la gestión de torneos de 
 ## Analisis de requerimientos
 [Requirements (1).md](Requirements%20%281%29.md)
 
+## Análisis de patrónes de diseño
+[AnalisisDePatrones.md](AnalisisDePatrones.md)
+
 ## Diagrama de Despliegue
 
 ## Diagrama de Clases
+![Diagrama_Clases.jpg](docs/Images/Diagrama_Clases.jpg)
+
 
 ## Diagrama de Componentes
 

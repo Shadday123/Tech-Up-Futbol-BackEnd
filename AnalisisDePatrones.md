@@ -135,14 +135,3 @@ Los observers se implementan como listeners independientes:
 | Observer       | Open/Closed + Loose Coupling — Nuevos listeners sin tocar el publicador            | Módulos desacoplados que reaccionan a resultados de partidos de forma independiente |
 
 
-## Diagramas de Componentes General
-
-![ComponentesGeneral (1).jpg](docs/Images/ComponentesGeneral%20%281%29.jpg)
-
-## Diagrama de Componentes Especifico
-
-![Diagrama sin título.drawio (2).png](docs/Images/Diagrama%20sin%20t%C3%ADtulo.drawio%20%282%29.png)
-
-## Diagrama de clases
-
-![TechUp (1).jpg](docs/Images/TechUp%20%281%29.jpg)
