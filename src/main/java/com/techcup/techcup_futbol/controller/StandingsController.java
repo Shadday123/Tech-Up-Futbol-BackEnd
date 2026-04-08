@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.controller;
 
 import com.techcup.techcup_futbol.controller.dto.StandingsResponse;
 import com.techcup.techcup_futbol.controller.mapper.StandingsMapper;
+import com.techcup.techcup_futbol.controller.mapper.TeamMapper;
 import com.techcup.techcup_futbol.core.model.Standings;
 import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.model.Tournament;
@@ -48,15 +49,14 @@ public class StandingsController {
             @PathVariable String teamId) {
         log.info("POST /api/standings/tournament/{}/register-team/{}", tournamentId, teamId);
 
-        Team team = teamRepository.findById(teamId).orElse(null);
-        if (team == null) {
-            return ResponseEntity.badRequest()
-                    .body("No existe equipo con ID: " + teamId);
-        }
+        teamRepository.findById(teamId).ifPresentOrElse(
+                teamEntity -> {
+                    Team team = TeamMapper.toModel(teamEntity);
+                    standingsService.registerTeamInTournament(tournamentId, team);
+                },
+                () -> log.warn("Equipo no encontrado: {}", teamId)
+        );
 
-        standingsService.registerTeamInTournament(tournamentId, team);
-        return ResponseEntity.ok(
-                "Equipo '" + team.getTeamName() + "' registrado en tabla de posiciones del torneo.");
+        return ResponseEntity.ok("Equipo registrado correctamente o ya existe en el torneo.");
     }
-
 }

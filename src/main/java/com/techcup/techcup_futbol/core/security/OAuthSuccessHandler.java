@@ -1,4 +1,4 @@
-package com.techcup.techcup_futbol.security;
+package com.techcup.techcup_futbol.core.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

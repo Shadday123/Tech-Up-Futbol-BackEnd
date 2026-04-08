@@ -2,7 +2,9 @@ package com.techcup.techcup_futbol.core.security;
 
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.SystemRole;
-import com.techcup.techcup_futbol.repository.PlayerRepository;
+import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
+import com.techcup.techcup_futbol.persistence.mapper.PlayerPersistenceMapper;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,9 +27,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        Player player = playerRepository.findByEmailIgnoreCase(email)
+        PlayerEntity playerEntity = playerRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "No existe usuario con email: " + email));
+
+        Player player = PlayerPersistenceMapper.toDomain(playerEntity);
 
         SystemRole systemRole = player.getSystemRole() != null
                 ? player.getSystemRole() : SystemRole.JUGADOR;

@@ -33,6 +33,9 @@ public class TournamentException extends RuntimeException {
             "El torneo con ID '%s' aún no tiene configuración. "
                     + "Use PUT /api/tournaments/{id}/config para crearla.";
 
+    public static final String TOURNAMENT_NAME_EXISTS =
+            "Torneo ya creado con ese nombre";
+
     private final String field;
 
     public TournamentException(String message) {

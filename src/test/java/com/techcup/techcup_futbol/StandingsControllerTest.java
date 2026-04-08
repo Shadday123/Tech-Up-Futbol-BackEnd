@@ -4,12 +4,14 @@ import com.techcup.techcup_futbol.controller.StandingsController;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.service.StandingsService;
 import com.techcup.techcup_futbol.core.service.TournamentService;
+import com.techcup.techcup_futbol.persistence.entity.TeamEntity;
 import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
@@ -33,6 +35,14 @@ class StandingsControllerTest {
 
     @InjectMocks
     private StandingsController standingsController;
+
+    private TeamEntity buildTeamEntity(String id, String name) {
+        TeamEntity team = new TeamEntity();
+        team.setId(id);
+        team.setTeamName(name);
+        team.setShieldUrl("shield.png");
+        return team;
+    }
 
     private Team buildTeam(String id, String name) {
         Team team = new Team();
@@ -77,7 +87,7 @@ class StandingsControllerTest {
 
         ResponseEntity<?> response = standingsController.findByTournament("T001");
 
-        assertEquals(200, response.getStatusCode().value());
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
         assertNotNull(response.getBody());
         verify(tournamentService).findById("T001");
         verify(standingsService).findByTournamentId("T001");
@@ -87,14 +97,15 @@ class StandingsControllerTest {
 
     @Test
     void registerTeam_withExistingTeam_returnsOk() {
+        TeamEntity teamEntity = buildTeamEntity("E001", "Los Galacticos");
         Team team = buildTeam("E001", "Los Galacticos");
-        when(teamRepository.findById("E001")).thenReturn(Optional.of(team));
+        when(teamRepository.findById("E001")).thenReturn(Optional.of(teamEntity));
 
         ResponseEntity<String> response = standingsController.registerTeam("T001", "E001");
 
-        assertEquals(200, response.getStatusCode().value());
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
         assertTrue(response.getBody().contains("Los Galacticos"));
-        verify(standingsService).registerTeamInTournament("T001", team);
+        verify(standingsService).registerTeamInTournament(eq("T001"), any(Team.class));
     }
 
     @Test
@@ -103,8 +114,22 @@ class StandingsControllerTest {
 
         ResponseEntity<String> response = standingsController.registerTeam("T001", "E999");
 
-        assertEquals(400, response.getStatusCode().value());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatusCode().value());
         assertTrue(response.getBody().contains("No existe equipo"));
         verify(standingsService, never()).registerTeamInTournament(anyString(), any());
+        verify(teamRepository).findById("E999");
+    }
+
+    // ── ADICIONALES ──
+
+    @Test
+    void findByTournament_tournamentNotFound_returnsNotFound() {
+        when(tournamentService.findById("T999")).thenThrow(new RuntimeException("Not found"));
+
+        ResponseEntity<?> response = standingsController.findByTournament("T999");
+
+        assertEquals(404, response.getStatusCode().value());
+        verify(tournamentService).findById("T999");
+        verify(standingsService, never()).findByTournamentId(anyString());
     }
 }

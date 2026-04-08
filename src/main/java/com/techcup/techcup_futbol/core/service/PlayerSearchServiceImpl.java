@@ -1,5 +1,5 @@
 package com.techcup.techcup_futbol.core.service;
-
+import com.techcup.techcup_futbol.persistence.mapper.PlayerPersistenceMapper;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.PositionEnum;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
@@ -27,6 +27,7 @@ public class PlayerSearchServiceImpl implements PlayerSearchService {
                 position, semester, minAge, maxAge, gender, name, numberID);
 
         Stream<Player> stream = playerRepository.findAll().stream()
+                .map(PlayerPersistenceMapper:: toDomain)
                 .filter(p -> !p.isHaveTeam() && p.isDisponible());
 
         if (position != null) {

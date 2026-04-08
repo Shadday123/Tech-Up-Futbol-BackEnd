@@ -2,7 +2,7 @@ package com.techcup.techcup_futbol.core.validator;
 
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
-import com.techcup.techcup_futbol.repository.PlayerRepository;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
 import org.springframework.stereotype.Component;
 
 @Component

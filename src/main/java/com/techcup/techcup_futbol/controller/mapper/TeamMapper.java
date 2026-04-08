@@ -1,39 +1,25 @@
 package com.techcup.techcup_futbol.controller.mapper;
 
-import com.techcup.techcup_futbol.controller.dto.TeamDTO;
 import com.techcup.techcup_futbol.core.model.Team;
+import com.techcup.techcup_futbol.persistence.entity.TeamEntity;
 
 public class TeamMapper {
-    public static Team DTOtoModel(TeamDTO teamDTO){
-        if (teamDTO == null){
-            return null;
-        }
+
+    private TeamMapper() {}
+
+    public static Team toModel(TeamEntity entity) {
+        if (entity == null) return null;
         Team team = new Team();
-
-        team.setId(teamDTO.getId());
-        team.setPlayers(teamDTO.getPlayers());
-        team.setTeamName(teamDTO.getTeamName());
-        team.setCaptain(teamDTO.getCaptain());
-        team.setShieldUrl(teamDTO.getShieldUrl());
-        team.setUniformColors(teamDTO.getUniformColors());
-
+        team.setId(entity.getId());
+        team.setTeamName(entity.getTeamName());
         return team;
     }
 
-    public static TeamDTO ModeltoDTo(Team team){
-
-        if (team == null){
-            return null;
-        }
-        TeamDTO teamDTO = new TeamDTO();
-
-        teamDTO.setCaptain(team.getCaptain());
-        teamDTO.setTeamName(team.getTeamName());
-        teamDTO.setPlayers(team.getPlayers());
-        teamDTO.setUniformColors(team.getUniformColors());
-        teamDTO.setId(team.getId());
-        teamDTO.setShieldUrl(team.getShieldUrl());
-
-        return teamDTO;
+    public static TeamEntity toEntity(Team model) {
+        if (model == null) return null;
+        TeamEntity entity = new TeamEntity();
+        entity.setId(model.getId());
+        entity.setTeamName(model.getTeamName());
+        return entity;
     }
 }

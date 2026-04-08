@@ -11,7 +11,6 @@ import com.techcup.techcup_futbol.persistence.repository.TournamentRepository;
 import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,15 +24,21 @@ public class TournamentServiceImpl implements TournamentService {
 
     private static final Logger log = LoggerFactory.getLogger(TournamentServiceImpl.class);
 
-    @Autowired
-    private TournamentRepository tournamentRepository;
+    private final TournamentRepository tournamentRepository;
 
-    // ── CREATE
+    public TournamentServiceImpl(TournamentRepository tournamentRepository) {
+        this.tournamentRepository = tournamentRepository;
+    }
 
     @Override
     @Transactional
     public Tournament create(Tournament tournament) {
         log.info("Creando torneo: '{}'", tournament.getName());
+
+        if (tournamentRepository.existsByName(tournament.getName())) {
+            throw new TournamentException("name",
+                    String.format(TournamentException.TOURNAMENT_NAME_EXISTS, tournament.getName()));
+        }
 
         if (tournament == null) {
             throw new TournamentException("request", "No puede ser null");
@@ -52,8 +57,6 @@ public class TournamentServiceImpl implements TournamentService {
 
         return tournament;
     }
-
-    // ── UPDATE STATE
 
     @Override
     @Transactional
@@ -81,15 +84,11 @@ public class TournamentServiceImpl implements TournamentService {
         return torneo;
     }
 
-    // ── READ — POR ID
-
     @Override
     public Tournament findById(String id) {
         log.info("Buscando torneo con ID: {}", id);
         return obtenerTorneo(id);
     }
-
-    // ── READ — TODOS
 
     @Override
     public List<Tournament> findAll() {
@@ -101,7 +100,34 @@ public class TournamentServiceImpl implements TournamentService {
         return torneos;
     }
 
-    // ── CONFIG — CREATE / UPDATE
+    @Transactional(readOnly = true)
+    public List<Tournament> findByState(TournamentState state) {
+        log.info("Buscando torneos en estado: {}", state);
+        List<Tournament> torneos = tournamentRepository.findByCurrentState(state)
+                .stream()
+                .map(TournamentPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+        log.info("Torneos en estado {} encontrados: {}", state, torneos.size());
+        return torneos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Tournament> findByName(String name) {
+        log.info("Buscando torneos por nombre: '{}'", name);
+        List<Tournament> torneos = tournamentRepository.findByName(name)
+                .stream()
+                .map(TournamentPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+        log.info("Torneos con nombre '{}' encontrados: {}", name, torneos.size());
+        return torneos;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsByName(String name) {
+        boolean exists = tournamentRepository.existsByName(name);
+        log.debug("Nombre '{}' {} en el sistema", name, exists ? "EXISTE" : "DISPONIBLE");
+        return exists;
+    }
 
     @Override
     @Transactional
@@ -144,8 +170,6 @@ public class TournamentServiceImpl implements TournamentService {
         return tournament;
     }
 
-    // ── CONFIG — READ
-
     @Override
     public Tournament findConfig(String tournamentId) {
         Tournament tournament = obtenerTorneo(tournamentId);
@@ -158,7 +182,6 @@ public class TournamentServiceImpl implements TournamentService {
         return tournament;
     }
 
-    // ── HELPERS PRIVADOS
 
     private Tournament obtenerTorneo(String id) {
         return tournamentRepository.findById(id)

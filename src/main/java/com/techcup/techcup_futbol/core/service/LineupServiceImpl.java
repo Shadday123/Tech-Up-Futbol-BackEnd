@@ -1,6 +1,7 @@
 package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.core.model.Lineup;
+import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.exception.LineupException;
 import com.techcup.techcup_futbol.core.util.IdGenerator;
 
@@ -65,7 +66,7 @@ public class LineupServiceImpl implements LineupService {
         if (lineupRepository.existsByMatchIdAndTeamId(matchId, teamId)) {
             throw new LineupException("lineup",
                     String.format(LineupException.LINEUP_ALREADY_EXISTS,
-                            matchId, teamEntity.getName()));
+                            matchId, teamEntity.getTeamName()));
         }
 
         if (starterIds == null || starterIds.size() != 7) {
@@ -77,7 +78,7 @@ public class LineupServiceImpl implements LineupService {
         List<PlayerEntity> starters = starterIds.stream()
                 .map(id -> playerRepository.findById(id)
                         .orElseThrow(() -> new LineupException("starters",
-                                String.format(LineupException.PLAYER_NOT_IN_TEAM, id, teamEntity.getName()))))
+                                String.format(LineupException.PLAYER_NOT_IN_TEAM, id, teamEntity.getTeamName()))))
                 .toList();
 
         List<PlayerEntity> substitutes = new ArrayList<>();
@@ -99,7 +100,7 @@ public class LineupServiceImpl implements LineupService {
 
         LineUpEntity saved = lineupRepository.save(entity);
 
-        log.info("Alineación creada ID: {} para equipo '{}'", saved.getId(), teamEntity.getName());
+        log.info("Alineación creada ID: {} para equipo '{}'", saved.getId(), teamEntity.getTeamName());
 
         return LineupPersistenceMapper.toDomain(saved);
     }
@@ -129,5 +130,13 @@ public class LineupServiceImpl implements LineupService {
                         LineupException.RIVAL_LINEUP_NOT_PUBLISHED));
 
         return LineupPersistenceMapper.toDomain(entity);
+    }
+
+    @Override
+    @Transactional
+    public void registerMatch(Match match) {
+        log.info("Registrando alineaciones del partido: {}", match.getId());
+        List<LineUpEntity> lineups = lineupRepository.findByMatchId(match.getId());
+        log.info("Encontradas {} alineaciones para el partido", lineups.size());
     }
 }

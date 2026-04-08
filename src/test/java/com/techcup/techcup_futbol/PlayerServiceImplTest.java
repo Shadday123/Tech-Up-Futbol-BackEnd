@@ -1,10 +1,14 @@
 package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.core.exception.PlayerException;
+import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.PositionEnum;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.core.service.PlayerServiceImpl;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
+import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
+import com.techcup.techcup_futbol.persistence.entity.StudentPlayerEntity;
+import com.techcup.techcup_futbol.persistence.mapper.PlayerPersistenceMapper;
 import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,18 +36,23 @@ class PlayerServiceImplTest {
     @InjectMocks
     private PlayerServiceImpl playerService;
 
-    private StudentPlayer validPlayer;
+    private StudentPlayerEntity studentPlayerEntity;
+    private PlayerEntity playerEntity;
+    private StudentPlayer studentPlayer;
 
     @BeforeEach
     void setUp() {
-        validPlayer = new StudentPlayer();
-        validPlayer.setFullname("Juan Perez");
-        validPlayer.setAge(22);
-        validPlayer.setPosition(PositionEnum.Midfielder);
-        validPlayer.setNumberID(123456);
-        validPlayer.setDorsalNumber(10);
-        validPlayer.setDisponible(true);
-        validPlayer.setSemester(5);
+        studentPlayer = new StudentPlayer();
+        studentPlayer.setFullname("Juan Perez");
+        studentPlayer.setAge(22);
+        studentPlayer.setPosition(PositionEnum.Midfielder);
+        studentPlayer.setNumberID(123456);
+        studentPlayer.setDorsalNumber(10);
+        studentPlayer.setDisponible(true);
+        studentPlayer.setSemester(5);
+
+        playerEntity = PlayerPersistenceMapper.toEntity(studentPlayer);
+        studentPlayerEntity = (StudentPlayerEntity) playerEntity;
     }
 
     // ── REGISTRAR ──
@@ -52,82 +60,151 @@ class PlayerServiceImplTest {
     @Test
     void registrar_validPlayer_setsIdAndSaves() {
         String correo = "juan@gmail.com";
-        doNothing().when(playerValidator).validate(any(), eq(correo));
+        when(playerRepository.existsByEmailIgnoreCase(correo)).thenReturn(false);
+        doNothing().when(playerValidator).validate(studentPlayer, correo);
 
-        playerService.registrar(validPlayer, correo);
+        playerService.registrar(studentPlayer, correo);
 
-        assertNotNull(validPlayer.getId());
-        assertEquals(correo, validPlayer.getEmail());
-        verify(playerValidator).validate(validPlayer, correo);
-        verify(playerRepository).save(validPlayer);
+        assertNotNull(studentPlayer.getId());
+        assertEquals(correo, studentPlayer.getEmail());
+        verify(playerValidator).validate(studentPlayer, correo);
+        verify(playerRepository).save(any(PlayerEntity.class));
+    }
+
+    @Test
+    void registrar_emailAlreadyExists_throwsException() {
+        String correo = "juan@gmail.com";
+        when(playerRepository.existsByEmailIgnoreCase(correo)).thenReturn(true);
+
+        PlayerException exception = assertThrows(PlayerException.class,
+                () -> playerService.registrar(studentPlayer, "juan@gmail.com"));
+
+        assertEquals("email", exception.getField());
+        verify(playerValidator, never()).validate(any(), anyString());
     }
 
     // ── ACTUALIZAR PERFIL ──
 
     @Test
     void actualizarPerfil_updatesPhotoUrl() {
-        validPlayer.setId("p-001");
-        when(playerRepository.findById("p-001")).thenReturn(Optional.of(validPlayer));
+        studentPlayer.setId("p-001");
+        playerEntity.setId("p-001");
+        when(playerRepository.findById("p-001")).thenReturn(Optional.of(playerEntity));
+        when(playerRepository.save(any(PlayerEntity.class))).thenReturn(playerEntity);
 
-        playerService.actualizarPerfil(validPlayer, "http://photo.com/new.jpg");
+        playerService.actualizarPerfil(studentPlayer, "http://photo.com/new.jpg");
 
-        assertEquals("http://photo.com/new.jpg", validPlayer.getPhotoUrl());
+        verify(playerRepository).save(argThat(entity ->
+                "http://photo.com/new.jpg".equals(entity.getPhotoUrl())));
     }
 
     // ── CAMBIAR DISPONIBILIDAD ──
 
     @Test
     void cambiarDisponibilidad_toUnavailable_togglesState() {
-        validPlayer.setId("p-001");
-        validPlayer.setDisponible(true);
-        when(playerRepository.findById("p-001")).thenReturn(Optional.of(validPlayer));
+        studentPlayer.setId("p-001");
+        playerEntity.setId("p-001");
+        playerEntity.setDisponible(true);
+        when(playerRepository.findById("p-001")).thenReturn(Optional.of(playerEntity));
+        when(playerRepository.save(any(PlayerEntity.class))).thenReturn(playerEntity);
 
-        playerService.cambiarDisponibilidad(validPlayer, false);
+        playerService.cambiarDisponibilidad(studentPlayer, false);
 
-        assertFalse(validPlayer.isDisponible());
+        verify(playerRepository).save(argThat(entity -> !entity.isDisponible()));
     }
 
     @Test
     void cambiarDisponibilidad_sameState_throwsException() {
-        validPlayer.setId("p-001");
-        validPlayer.setDisponible(true);
-        when(playerRepository.findById("p-001")).thenReturn(Optional.of(validPlayer));
+        studentPlayer.setId("p-001");
+        playerEntity.setId("p-001");
+        playerEntity.setDisponible(true);
+        when(playerRepository.findById("p-001")).thenReturn(Optional.of(playerEntity));
 
-        assertThrows(PlayerException.class,
-                () -> playerService.cambiarDisponibilidad(validPlayer, true));
+        PlayerException exception = assertThrows(PlayerException.class,
+                () -> playerService.cambiarDisponibilidad(studentPlayer, true));
+
+        assertEquals("availability", exception.getField());
     }
 
     // ── LISTAR JUGADORES ──
 
     @Test
     void listarJugadores_returnsList() {
-        List<StudentPlayer> jugadores = List.of(validPlayer);
-        when(playerRepository.findAll()).thenReturn(List.copyOf(jugadores));
+        List<PlayerEntity> entities = List.of(playerEntity);
+        when(playerRepository.findAll()).thenReturn(entities);
 
         var result = playerService.listarJugadores();
 
         assertEquals(1, result.size());
+        assertEquals("Juan Perez", result.get(0).getFullname());
         verify(playerRepository).findAll();
+    }
+
+    // ── NUEVOS MÉTODOS DEL REPOSITORIO ──
+
+    @Test
+    void listarJugadoresSinEquipo_returnsList() {
+        List<PlayerEntity> sinEquipo = List.of(playerEntity);
+        when(playerRepository.findByHaveTeamFalse()).thenReturn(sinEquipo);
+
+        var result = playerService.listarJugadoresSinEquipo();
+
+        assertEquals(1, result.size());
+        verify(playerRepository).findByHaveTeamFalse();
+    }
+
+    @Test
+    void listarPorPosicion_returnsList() {
+        List<PlayerEntity> midfielders = List.of(playerEntity);
+        when(playerRepository.findByPosition(PositionEnum.Midfielder)).thenReturn(midfielders);
+
+        var result = playerService.listarPorPosicion(PositionEnum.Midfielder);
+
+        assertEquals(1, result.size());
+        verify(playerRepository).findByPosition(PositionEnum.Midfielder);
+    }
+
+    @Test
+    void buscarPorEmail_returnsList() {
+        List<PlayerEntity> coincidencias = List.of(playerEntity);
+        when(playerRepository.findByEmailContaining("perez")).thenReturn(coincidencias);
+
+        var result = playerService.buscarPorEmail("perez");
+
+        assertEquals(1, result.size());
+        verify(playerRepository).findByEmailContaining("perez");
+    }
+
+    @Test
+    void listarEstudiantesPorSemestre_returnsList() {
+        List<StudentPlayerEntity> semestre5 = List.of(studentPlayerEntity);
+        when(playerRepository.findBySemester(5)).thenReturn(semestre5);
+
+        var result = playerService.listarEstudiantesPorSemestre(5);
+
+        assertEquals(1, result.size());
+        verify(playerRepository).findBySemester(5);
     }
 
     // ── BUSCAR POR ID ──
 
     @Test
     void buscarPorId_existing_returnsOptional() {
-        validPlayer.setId("p-001");
-        when(playerRepository.findById("p-001")).thenReturn(Optional.of(validPlayer));
+        studentPlayer.setId("p-001");
+        playerEntity.setId("p-001");
+        when(playerRepository.findById("p-001")).thenReturn(Optional.of(playerEntity));
 
-        Optional<?> result = playerService.buscarPorId("p-001");
+        Optional<Player> result = playerService.buscarPorId("p-001");
 
         assertTrue(result.isPresent());
-        assertEquals(validPlayer, result.get());
+        assertEquals("Juan Perez", result.get().getFullname());
     }
 
     @Test
     void buscarPorId_nonExistent_returnsEmpty() {
         when(playerRepository.findById("p-999")).thenReturn(Optional.empty());
 
-        Optional<?> result = playerService.buscarPorId("p-999");
+        Optional<Player> result = playerService.buscarPorId("p-999");
 
         assertTrue(result.isEmpty());
     }
@@ -138,16 +215,19 @@ class PlayerServiceImplTest {
     void obtenerPorId_nonExistent_throwsPlayerException() {
         when(playerRepository.findById("p-999")).thenReturn(Optional.empty());
 
-        assertThrows(PlayerException.class,
+        PlayerException exception = assertThrows(PlayerException.class,
                 () -> playerService.obtenerPorId("p-999"));
+
+        assertEquals("id", exception.getField());
     }
 
     // ── ELIMINAR JUGADOR ──
 
     @Test
     void eliminarJugador_existing_deletesPlayer() {
-        validPlayer.setId("p-001");
-        when(playerRepository.findById("p-001")).thenReturn(Optional.of(validPlayer));
+        studentPlayer.setId("p-001");
+        playerEntity.setId("p-001");
+        when(playerRepository.findById("p-001")).thenReturn(Optional.of(playerEntity));
 
         playerService.eliminarJugador("p-001");
 

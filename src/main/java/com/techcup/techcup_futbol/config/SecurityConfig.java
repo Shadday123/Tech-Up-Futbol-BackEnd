@@ -2,7 +2,7 @@ package com.techcup.techcup_futbol.config;
 
 import com.techcup.techcup_futbol.core.security.JwtAuthEntryPoint;
 import com.techcup.techcup_futbol.core.security.JwtFilter;
-import com.techcup.techcup_futbol.security.OAuthSuccessHandler;
+import com.techcup.techcup_futbol.core.security.OAuthSuccessHandler;
 import com.techcup.techcup_futbol.core.security.JwtAuthEntryPoint;
 import com.techcup.techcup_futbol.core.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
