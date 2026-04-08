@@ -3,8 +3,6 @@ package com.techcup.techcup_futbol.config;
 import com.techcup.techcup_futbol.core.security.JwtAuthEntryPoint;
 import com.techcup.techcup_futbol.core.security.JwtFilter;
 import com.techcup.techcup_futbol.core.security.OAuthSuccessHandler;
-import com.techcup.techcup_futbol.core.security.JwtAuthEntryPoint;
-import com.techcup.techcup_futbol.core.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -43,53 +41,34 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors
-                        .configurationSource(corsConfigurationSource))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(ex ->
-                        ex.authenticationEntryPoint(authEntryPoint))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/players/registro").permitAll()
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/tournaments/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/standings/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/brackets/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/players/search").permitAll()
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/tournaments/**").hasRole("ORGANIZADOR")
-                        .requestMatchers(HttpMethod.PUT,
-                                "/api/tournaments/**").hasRole("ORGANIZADOR")
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/brackets/**").permitAll()
+                        .requestMatchers("/api/standings/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tournaments/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/players/search").permitAll()
+
+                        // 🔐 PROTEGIDOS POR ROLES
+                        .requestMatchers(HttpMethod.POST, "/api/tournaments/**").hasRole("ORGANIZADOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/tournaments/**").hasRole("ORGANIZADOR")
                         .requestMatchers("/api/referees/**").hasRole("ORGANIZADOR")
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/brackets/**").hasRole("ORGANIZADOR")
-                        .requestMatchers(HttpMethod.PUT,
-                                "/api/brackets/**").hasRole("ORGANIZADOR")
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/teams/**").hasAnyRole("CAPITAN", "ORGANIZADOR")
-                        .requestMatchers(HttpMethod.DELETE,
-                                "/api/teams/**").hasAnyRole("CAPITAN", "ORGANIZADOR")
-                        .requestMatchers("/api/lineups/**")
-                        .hasAnyRole("CAPITAN", "ORGANIZADOR")
-                        .requestMatchers("/api/payments/**")
-                        .hasAnyRole("CAPITAN", "ORGANIZADOR")
-                        .requestMatchers(HttpMethod.PUT,
-                                "/api/matches/**")
-                        .hasAnyRole("ARBITRO", "ORGANIZADOR")
+                        .requestMatchers(HttpMethod.POST, "/api/teams/**").hasAnyRole("CAPITAN", "ORGANIZADOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/teams/**").hasAnyRole("CAPITAN", "ORGANIZADOR")
+                        .requestMatchers("/api/lineups/**").hasAnyRole("CAPITAN", "ORGANIZADOR")
+                        .requestMatchers("/api/payments/**").hasAnyRole("CAPITAN", "ORGANIZADOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/matches/**").hasAnyRole("ARBITRO", "ORGANIZADOR")
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler(oAuthSuccessHandler))
-                .addFilterBefore(jwtFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                .oauth2Login(oauth2 -> oauth2.successHandler(oAuthSuccessHandler))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

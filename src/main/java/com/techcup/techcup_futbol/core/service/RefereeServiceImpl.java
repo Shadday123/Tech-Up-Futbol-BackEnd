@@ -69,7 +69,7 @@ public class RefereeServiceImpl implements RefereeService {
         matchEntity.setReferee(refereeEntity);
         matchRepository.save(matchEntity);
 
-        refereeRepository.save(refereeEntity); // ✅ Guarda cambios en assignedMatches
+        refereeRepository.save(refereeEntity);
 
         log.info("Árbitro '{}' asignado al partido {}", refereeEntity.getFullname(), matchId);
         return RefereePersistenceMapper.toDomain(refereeEntity);

@@ -116,10 +116,6 @@ public class MatchServiceImpl implements MatchService {
                         .orElseThrow(() -> new MatchException("events",
                                 String.format(MatchException.PLAYER_NOT_IN_LINEUP, er.playerId())));
 
-                // Crear MatchEvent (asumiendo existe el mapper)
-                // MatchEvent event = MatchEventPersistenceMapper.toEntity(...);
-                // matchEventRepository.save(event);
-
                 if ("YELLOW_CARD".equalsIgnoreCase(er.type())) yellowCount++;
                 if ("RED_CARD".equalsIgnoreCase(er.type())) redCount++;
             }
