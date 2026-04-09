@@ -2,9 +2,9 @@ name: QA Workflow
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ feature/SantiagoCajamarca ]
   pull_request:
-    branches: [ develop ]
+    branches: [ feature/SantiagoCajamarca ]
 
 jobs:
   build-and-test:
