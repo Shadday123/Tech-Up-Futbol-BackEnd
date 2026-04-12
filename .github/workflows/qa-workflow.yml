@@ -2,11 +2,16 @@ name: QA Workflow
 
 on:
   push:
-    branches: [ feature/SantiagoCajamarca ]
+    branches: [ develop, feature/SantiagoCajamarca ]
   pull_request:
-    branches: [ feature/SantiagoCajamarca ]
+    branches: [ develop, feature/SantiagoCajamarca ]
+
+env:
+  AZURE_WEBAPP_NAME_QA: techcup-futbol-qa   # CAMBIAR POR EL NOMBRE DE NUESTRA WEB EN AZURE
 
 jobs:
+
+  # Build, Test, Analisis
   build-and-test:
     runs-on: ubuntu-latest
 
@@ -20,8 +25,110 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      # Variables de entorno QA para la base de datos
       - name: Build with Maven
         run: mvn clean install -DskipTests
+        env:
+          DB_URL: ${{ secrets.QA_DB_URL }}
+          DB_USER: ${{ secrets.QA_DB_USER }}
+          DB_PASS: ${{ secrets.QA_DB_PASS }}
+          DB_DRIVER: org.postgresql.Driver
+          JPA_DIALECT: org.hibernate.dialect.PostgreSQLDialect
 
       - name: Run tests
         run: mvn test
+        env:
+          DB_URL: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+          DB_USER: sa
+          DB_PASS: ""
+          DB_DRIVER: org.h2.Driver
+          JPA_DIALECT: org.hibernate.dialect.H2Dialect
+
+      # Generar reporte de cobertura con JaCoCo
+      - name: Generate JaCoCo report
+        run: mvn jacoco:report
+
+      # Publicar resultados de tests como artefacto
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: target/surefire-reports/
+
+      # Publicar reporte JaCoCo como artefacto
+      - name: Upload JaCoCo report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+
+      # Publicar el JAR como artefacto
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/techcup-futbol-1.0.0.jar
+
+  # Build Docker Image
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t techcup-futbol:qa-${{ github.sha }} .
+
+      - name: Save Docker image as artifact
+        run: docker save techcup-futbol:qa-${{ github.sha }} | gzip > techcup-qa.tar.gz
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-qa
+          path: techcup-qa.tar.gz
+
+  # Deploy a Azure
+  deploy-qa:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: .
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_QA }}
+
+      - name: Deploy to Azure Web App (QA)
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME_QA }}
+          package: techcup-futbol-1.0.0.jar
+
+      - name: Set App Settings in Azure (QA)
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME_QA }}
+          app-settings-json: |
+            [
+              { "name": "DB_URL",        "value": "${{ secrets.QA_DB_URL }}" },
+              { "name": "DB_USER",       "value": "${{ secrets.QA_DB_USER }}" },
+              { "name": "DB_PASS",       "value": "${{ secrets.QA_DB_PASS }}" },
+              { "name": "DB_DRIVER",     "value": "org.postgresql.Driver" },
+              { "name": "JPA_DIALECT",   "value": "org.hibernate.dialect.PostgreSQLDialect" },
+              { "name": "JWT_SECRET",    "value": "${{ secrets.JWT_SECRET }}" },
+              { "name": "GOOGLE_CLIENT_ID",     "value": "${{ secrets.GOOGLE_CLIENT_ID }}" },
+              { "name": "GOOGLE_CLIENT_SECRET", "value": "${{ secrets.GOOGLE_CLIENT_SECRET }}" }
+            ]
+
+      - name: Logout from Azure
+        run: az logout

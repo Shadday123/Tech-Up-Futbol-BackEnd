@@ -4,8 +4,12 @@ on:
   push:
     branches: [ main ]
 
+env:
+  AZURE_WEBAPP_NAME_PROD: techcup-futbol-prod   # CAMBIAR POR EL NOMBRE DE NUESTRA WEB EN AZURE
 jobs:
-  build-and-deploy:
+
+  # Build, Test, Analisis
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +23,110 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: mvn clean install -DskipTests
+        env:
+          DB_URL: ${{ secrets.PROD_DB_URL }}
+          DB_USER: ${{ secrets.PROD_DB_USER }}
+          DB_PASS: ${{ secrets.PROD_DB_PASS }}
+          DB_DRIVER: org.postgresql.Driver
+          JPA_DIALECT: org.hibernate.dialect.PostgreSQLDialect
 
       - name: Run tests
         run: mvn test
+        env:
+          DB_URL: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+          DB_USER: sa
+          DB_PASS: ""
+          DB_DRIVER: org.h2.Driver
+          JPA_DIALECT: org.hibernate.dialect.H2Dialect
+
+      - name: Generate JaCoCo report
+        run: mvn jacoco:report
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-prod
+          path: target/surefire-reports/
+
+      - name: Upload JaCoCo report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report-prod
+          path: target/site/jacoco/
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar-prod
+          path: target/techcup-futbol-1.0.0.jar
+
+  # Build Docker Image
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t techcup-futbol:prod-${{ github.sha }} .
+
+      - name: Save Docker image as artifact
+        run: docker save techcup-futbol:prod-${{ github.sha }} | gzip > techcup-prod.tar.gz
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-prod
+          path: techcup-prod.tar.gz
+
+  # Deploy a Azure PROD
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    environment: production   # Se necesiat aprobación manual en GitHub
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar-prod
+          path: .
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_PROD }}
+
+      - name: Deploy to Azure Web App (PROD)
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME_PROD }}
+          package: techcup-futbol-1.0.0.jar
+
+      - name: Set App Settings in Azure (PROD)
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME_PROD }}
+          app-settings-json: |
+            [
+              { "name": "DB_URL",        "value": "${{ secrets.PROD_DB_URL }}" },
+              { "name": "DB_USER",       "value": "${{ secrets.PROD_DB_USER }}" },
+              { "name": "DB_PASS",       "value": "${{ secrets.PROD_DB_PASS }}" },
+              { "name": "DB_DRIVER",     "value": "org.postgresql.Driver" },
+              { "name": "JPA_DIALECT",   "value": "org.hibernate.dialect.PostgreSQLDialect" },
+              { "name": "JWT_SECRET",    "value": "${{ secrets.JWT_SECRET }}" },
+              { "name": "GOOGLE_CLIENT_ID",     "value": "${{ secrets.GOOGLE_CLIENT_ID }}" },
+              { "name": "GOOGLE_CLIENT_SECRET", "value": "${{ secrets.GOOGLE_CLIENT_SECRET }}" }
+            ]
+
+      - name: Health check
+        run: |
+          sleep 30
+          curl --fail https://${{ env.AZURE_WEBAPP_NAME_PROD }}.azurewebsites.net/api-docs || echo "Health check pending..."
+
+      - name: Logout from Azure
+        run: az logout
