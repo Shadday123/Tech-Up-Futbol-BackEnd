@@ -31,3 +31,17 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Credenciales y variables de entorno ###
+.env
+.env.local
+.env.*.local
+*.env
+
+### Logs ###
+logs/
+*.log
+*.log.gz
+
+### Docker ###
+docker-compose.override.yml
