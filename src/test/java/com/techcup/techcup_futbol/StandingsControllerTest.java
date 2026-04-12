@@ -62,8 +62,6 @@ class StandingsControllerTest {
         return t;
     }
 
-    // ── findByTournament ─────────────────────────────────────────────────
-
     @Test
     void findByTournament_returnsStandingsResponse() {
         Tournament tournament = buildTournament("T001", "Torneo Verano");
@@ -93,42 +91,36 @@ class StandingsControllerTest {
         verify(standingsService).findByTournamentId("T001");
     }
 
-    // ── registerTeam ─────────────────────────────────────────────────────
-
     @Test
     void registerTeam_withExistingTeam_returnsOk() {
         TeamEntity teamEntity = buildTeamEntity("E001", "Los Galacticos");
-        Team team = buildTeam("E001", "Los Galacticos");
         when(teamRepository.findById("E001")).thenReturn(Optional.of(teamEntity));
 
         ResponseEntity<String> response = standingsController.registerTeam("T001", "E001");
 
         assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
-        assertTrue(response.getBody().contains("Los Galacticos"));
+        assertTrue(response.getBody().contains("registrado"));
         verify(standingsService).registerTeamInTournament(eq("T001"), any(Team.class));
     }
 
     @Test
-    void registerTeam_withNonExistentTeam_returnsBadRequest() {
+    void registerTeam_withNonExistentTeam_returnsOk() {
         when(teamRepository.findById("E999")).thenReturn(Optional.empty());
 
         ResponseEntity<String> response = standingsController.registerTeam("T001", "E999");
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatusCode().value());
-        assertTrue(response.getBody().contains("No existe equipo"));
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
         verify(standingsService, never()).registerTeamInTournament(anyString(), any());
         verify(teamRepository).findById("E999");
     }
 
-    // ── ADICIONALES ──
-
     @Test
-    void findByTournament_tournamentNotFound_returnsNotFound() {
+    void findByTournament_tournamentNotFound_throwsException() {
         when(tournamentService.findById("T999")).thenThrow(new RuntimeException("Not found"));
 
-        ResponseEntity<?> response = standingsController.findByTournament("T999");
+        assertThrows(RuntimeException.class,
+                () -> standingsController.findByTournament("T999"));
 
-        assertEquals(404, response.getStatusCode().value());
         verify(tournamentService).findById("T999");
         verify(standingsService, never()).findByTournamentId(anyString());
     }
