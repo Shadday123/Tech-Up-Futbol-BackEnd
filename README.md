@@ -46,12 +46,18 @@ El diagrama de contexto usa los siguientes componentes importantes:
 [AnalisisDePatrones.md](AnalisisDePatrones.md)
 
 ## Diagrama de Despliegue
+![Despliegue.png](docs/Images/Despliegue.png)
 
 ## Diagrama de Clase
 ![Diagrama_Clases.jpg](docs/Images/Diagrama_Clases.jpg)
 Este diagrama modela el dominio de nuestra app TECHCUP usando principios de "clean code" y patrónes de diseños.
 
 ## Diagrama de Componentes
+
+### General
+![ComponentesGeneral.png](docs/Images/ComponentesGeneral.png)
+### Especifico
+![ComponentesEspecifico.png](docs/Images/ComponentesEspecifico.png)
 
 ## Diagrama de Entidad-Relacion (Base de datos)
 ![Diagrama Entidad_Relacion.jpg](docs/Images/Diagrama%20Entidad_Relacion.jpg)
