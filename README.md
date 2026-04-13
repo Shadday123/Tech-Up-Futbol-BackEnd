@@ -67,5 +67,19 @@ partidos, donde se almacenan atributos de resultados y métricas de los encuentr
 estableciendo relaciones de pertenencia y roles como capitán, mientras que las alineaciones se crean de manera táctica.
 En conjunto, el modelo garantiza consistencia en los datos, soporte transacional y una adecuada separación de responsabilidades a nivel de persistencia.
 
+## Documentación API (Swagger)
+El proyecto utiliza Swagger para documentar la API REST. Con este link se accede:
+[](http://localhost:8081/swagger-ui/index.html)
+
+![VistaSwagger.png](docs/Images/VistaSwagger.png)
+
+### Ejemplo de login
+Aqui un ejemplo de como usamos nuestra API para logrearnos al TECHCUP
+![img.png](docs/Images/EndpointPOST.png)
+Usamos el endpoint de POST para logearnos y luego se muestra los siguientes errores
+![img_1.png](docs/Images/Errores.png)
+El manejo de response se plantea con 200´s y 400´s indicando los de 200 aprobaciones y 400 con rechazos
+
+
 
 
