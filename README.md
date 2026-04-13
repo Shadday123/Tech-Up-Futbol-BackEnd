@@ -8,7 +8,7 @@ creación y gestión de torneos, y reduciendo la carga operativa asociada a proc
 El sistema consiste en una plataforma web orientada a la gestión de torneos de fútbol dentro de la Escuela Colombiana de Ingeniería Julio Garavito. El backend del sistema se encarga de procesar la lógica de negocio, gestionar la información y servir como intermediario entre el cliente (frontend) y la base de datos.
 
 ## Integrantes 
-- Jeimy Vanessa Torres
+- Jeimmy Vanessa Torres
 - David Shadday Correa
 - Juan Esteban Rodríguez
 - David Santiago Cajamarca
@@ -75,11 +75,16 @@ El proyecto utiliza Swagger para documentar la API REST. Con este link se accede
 
 ### Ejemplo de login
 Aqui un ejemplo de como usamos nuestra API para logrearnos al TECHCUP
-![img.png](docs/Images/EndpointPOST.png)
+![EndpointPOST.png](docs/Images/EndpointPOST.png)
 Usamos el endpoint de POST para logearnos y luego se muestra los siguientes errores
-![img_1.png](docs/Images/Errores.png)
-El manejo de response se plantea con 200´s y 400´s indicando los de 200 aprobaciones y 400 con rechazos
+![Ejemplo.png](docs/Images/Ejemplo.png)
 
+El manejo de response se plantea con 200´s y 400´s indicando los de 200 aprobaciones y 400 con rechazos.
 
+Aqui en el siguiente archivo, se puede ver los "Happy path" y "Error path":
 
+[Pruebas.md](Pruebas.md)
+
+## Diagrama de secuencia
+![Diagrama Secuencia.jpeg](docs/Images/Diagrama%20Secuencia.jpeg)
 
