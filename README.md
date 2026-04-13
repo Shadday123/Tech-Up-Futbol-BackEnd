@@ -88,3 +88,4 @@ Aqui en el siguiente archivo, se puede ver los "Happy path" y "Error path":
 ## Diagrama de secuencia
 ![Diagrama Secuencia.jpeg](docs/Images/Diagrama%20Secuencia.jpeg)
 
+azure full
