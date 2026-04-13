@@ -1,7 +1,13 @@
 package com.techcup.techcup_futbol.exception;
 
-package com.techcup.techcup_futbol.exception;
-
+import com.techcup.techcup_futbol.core.exception.MatchException;
+import com.techcup.techcup_futbol.core.exception.BracketException;
+import com.techcup.techcup_futbol.core.exception.TeamException;
+import com.techcup.techcup_futbol.core.exception.PlayerException;
+import com.techcup.techcup_futbol.core.exception.TournamentException;
+import com.techcup.techcup_futbol.core.exception.LineupException;
+import com.techcup.techcup_futbol.core.exception.RefereeException;
+import com.techcup.techcup_futbol.core.exception.PaymentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
