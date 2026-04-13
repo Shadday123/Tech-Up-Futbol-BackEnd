@@ -1,111 +1,119 @@
 package com.techcup.techcup_futbol.exception;
 
-import com.techcup.techcup_futbol.core.exception.*;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.orm.jpa.JpaSystemException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.lang.MatchException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(PlayerException.class)
-    public ErrorResponse handlePlayerException(PlayerException ex, HttpServletRequest req) {
-        return buildResponse(resolveStatus(ex.getMessage()), ex.getMessage(), req.getRequestURI());
-    }
+    // ── TeamException ──────────────────────────────────────────────────────
 
     @ExceptionHandler(TeamException.class)
-    public ErrorResponse handleTeamException(TeamException ex, HttpServletRequest req) {
-        return buildResponse(resolveStatus(ex.getMessage()), ex.getMessage(), req.getRequestURI());
+    public ResponseEntity<Map<String, Object>> handleTeamException(TeamException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
+
+    // ── PlayerException ────────────────────────────────────────────────────
+
+    @ExceptionHandler(PlayerException.class)
+    public ResponseEntity<Map<String, Object>> handlePlayerException(PlayerException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
+    }
+
+    // ── TournamentException ────────────────────────────────────────────────
 
     @ExceptionHandler(TournamentException.class)
-    public ErrorResponse handleTournamentException(TournamentException ex, HttpServletRequest req) {
-        HttpStatus status = "id".equals(ex.getField()) || "config".equals(ex.getField())
-                ? HttpStatus.NOT_FOUND
-                : HttpStatus.BAD_REQUEST;
-        return buildResponse(status, ex.getMessage(), req.getRequestURI());
+    public ResponseEntity<Map<String, Object>> handleTournamentException(TournamentException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    @ExceptionHandler(MatchException.class)
-    public ErrorResponse handleMatchException(MatchException ex, HttpServletRequest req) {
-        return buildResponse(resolveStatus(ex.getMessage()), ex.getMessage(), req.getRequestURI());
-    }
+    // ── BracketException ───────────────────────────────────────────────────
 
     @ExceptionHandler(BracketException.class)
-    public ErrorResponse handleBracketException(BracketException ex, HttpServletRequest req) {
-        return buildResponse(resolveStatus(ex.getMessage()), ex.getMessage(), req.getRequestURI());
+    public ResponseEntity<Map<String, Object>> handleBracketException(BracketException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
+
+    // ── LineupException ────────────────────────────────────────────────────
 
     @ExceptionHandler(LineupException.class)
-    public ErrorResponse handleLineupException(LineupException ex, HttpServletRequest req) {
-        return buildResponse(resolveStatus(ex.getMessage()), ex.getMessage(), req.getRequestURI());
+    public ResponseEntity<Map<String, Object>> handleLineupException(LineupException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
+
+    // ── MatchException ─────────────────────────────────────────────────────
+
+    @ExceptionHandler(MatchException.class)
+    public ResponseEntity<Map<String, Object>> handleMatchException(MatchException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
+    }
+
+    // ── PaymentException ───────────────────────────────────────────────────
 
     @ExceptionHandler(PaymentException.class)
-    public ErrorResponse handlePaymentException(PaymentException ex, HttpServletRequest req) {
-        return buildResponse(resolveStatus(ex.getMessage()), ex.getMessage(), req.getRequestURI());
+    public ResponseEntity<Map<String, Object>> handlePaymentException(PaymentException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
+
+    // ── RefereeException ───────────────────────────────────────────────────
 
     @ExceptionHandler(RefereeException.class)
-    public ErrorResponse handleRefereeException(RefereeException ex, HttpServletRequest req) {
-        return buildResponse(resolveStatus(ex.getMessage()), ex.getMessage(), req.getRequestURI());
+    public ResponseEntity<Map<String, Object>> handleRefereeException(RefereeException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest req) {
-        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), req.getRequestURI());
+    // ── @Valid — errores de validación de campos ───────────────────────────
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
+        Map<String, String> fieldErrors = new HashMap<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            fieldErrors.put(error.getField(), error.getDefaultMessage());
+        }
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now().toString());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Error de validación");
+        body.put("fields", fieldErrors);
+        return ResponseEntity.badRequest().body(body);
     }
 
-    @ExceptionHandler(DuplicateResourceException.class)
-    public ErrorResponse handleDuplicateResourceException(DuplicateResourceException ex, HttpServletRequest req) {
-        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), req.getRequestURI());
+    // ── IllegalArgumentException (ej: tipo de jugador inválido) ───────────
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, null, ex.getMessage());
     }
 
-    @ExceptionHandler(DatabaseException.class)
-    public ErrorResponse handleDatabaseException(DatabaseException ex, HttpServletRequest req) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), req.getRequestURI());
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ErrorResponse handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest req) {
-        return buildResponse(HttpStatus.CONFLICT, "Ya existe un recurso con esos datos", req.getRequestURI());
-    }
-
-    @ExceptionHandler(JpaSystemException.class)
-    public ErrorResponse handleJpaSystemException(JpaSystemException ex, HttpServletRequest req) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno de base de datos", req.getRequestURI());
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ErrorResponse handleRuntimeException(RuntimeException ex, HttpServletRequest req) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), req.getRequestURI());
-    }
+    // ── Fallback genérico ──────────────────────────────────────────────────
 
     @ExceptionHandler(Exception.class)
-    public ErrorResponse handleException(Exception ex, HttpServletRequest req) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor", req.getRequestURI());
+    public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, null,
+                "Error interno del servidor: " + ex.getMessage());
     }
 
-    private ErrorResponse buildResponse(HttpStatus status, String message, String path) {
-        return new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                message,
-                path,
-                LocalDateTime.now()
-        );
-    }
+    // ── Helper ─────────────────────────────────────────────────────────────
 
-    private HttpStatus resolveStatus(String message) {
-        if (message != null
-                && (message.contains("No existe") || message.contains("No se encontró"))) {
-            return HttpStatus.NOT_FOUND;
+    private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status,
+                                                               String field,
+                                                               String message) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now().toString());
+        body.put("status", status.value());
+        body.put("error", message);
+        if (field != null) {
+            body.put("field", field);
         }
-        return HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(status).body(body);
     }
 }

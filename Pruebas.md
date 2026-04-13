@@ -112,3 +112,11 @@ Este documento detalla los escenarios de prueba para la creación, administraci�
 ### **CS-T03: Asignación de Recurso Visual por Defecto**
 * **Condición**: El capitán crea el equipo pero no proporciona una URL para el escudo.
 * **Resultado**: El sistema debe asignar automáticamente la imagen `default-shield.png` para asegurar la integridad visual en la tabla de posiciones.
+
+
+##COVERTURA SPRINT 2:  33.33%
+<img width="1764" height="454" alt="image" src="https://github.com/user-attachments/assets/52b2a972-b105-4831-a934-d000442293de" />
+
+
+
+  
