@@ -43,6 +43,8 @@ class TournamentServiceImplTest {
         validTournament.setEndDate(LocalDateTime.of(2026, 6, 30, 18, 0));
         validTournament.setRegistrationFee(100.0);
         validTournament.setMaxTeams(8);
+        validTournament.setId("t-001");
+        validTournament.setConfigId("cfg.001");
 
         tournamentEntity = TournamentPersistenceMapper.toEntity(validTournament);
     }
@@ -260,10 +262,11 @@ class TournamentServiceImplTest {
 
     @Test
     void findConfig_withoutConfig_throwsException() {
-        validTournament.setId("t-001");
-        validTournament.setConfigId(null);
-        tournamentEntity.setId("t-001");
-        when(tournamentRepository.findById("t-001")).thenReturn(Optional.of(tournamentEntity));
+        TournamentEntity entityWithoutConfig = new TournamentEntity();
+        entityWithoutConfig.setId("t-001");
+        entityWithoutConfig.setName("Copa Tech");
+        entityWithoutConfig.setCurrentState(TournamentState.DRAFT);
+        when(tournamentRepository.findById("t-001")).thenReturn(Optional.of(entityWithoutConfig));
 
         TournamentException exception = assertThrows(TournamentException.class,
                 () -> tournamentService.findConfig("t-001"));

@@ -84,7 +84,7 @@ class PaymentServiceImplTest {
         newPaymentEntity.setId("pay-new");
         newPaymentEntity.setTeamId("team-001");
         newPaymentEntity.setAmount(550.0); // 50*11
-        newPaymentEntity.setCurrentStatus(PaymentStatus.PENDING);
+        newPaymentEntity.setCurrentStatus(PaymentStatus.UNDER_REVIEW);
         newPaymentEntity.setReceiptUrl("http://receipt.com/img.jpg");
 
         when(paymentRepository.save(any(PaymentEntity.class))).thenReturn(newPaymentEntity);
@@ -105,6 +105,7 @@ class PaymentServiceImplTest {
         when(paymentRepository.findByTeamId("team-001")).thenReturn(Optional.of(existingPaymentEntity));
 
         existingPaymentEntity.setReceiptUrl("http://receipt.com/new.jpg");
+        existingPaymentEntity.setCurrentStatus(PaymentStatus.UNDER_REVIEW);
         when(paymentRepository.save(existingPaymentEntity)).thenReturn(existingPaymentEntity);
 
         Payment result = paymentService.uploadReceipt("team-001", "http://receipt.com/new.jpg");
@@ -149,7 +150,7 @@ class PaymentServiceImplTest {
     @Test
     void updateStatus_validTransition_updatesStatus() {
         when(paymentRepository.findById("pay-001")).thenReturn(Optional.of(existingPaymentEntity));
-        existingPaymentEntity.setCurrentStatus(PaymentStatus.UNDER_REVIEW);
+        existingPaymentEntity.setCurrentStatus(PaymentStatus.PENDING);
         when(paymentRepository.save(existingPaymentEntity)).thenReturn(existingPaymentEntity);
 
         Payment result = paymentService.updateStatus("pay-001", "UNDER_REVIEW");
@@ -215,7 +216,7 @@ class PaymentServiceImplTest {
         when(paymentRepository.findByTeamId("team-999")).thenReturn(Optional.empty());
 
         PaymentException exception = assertThrows(PaymentException.class,
-                () -> paymentService.findById("team-999"));
+                () -> paymentService.findByTeamId("team-999"));
         assertEquals("teamId", exception.getField());
     }
 }
