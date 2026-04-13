@@ -22,63 +22,54 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // ── TeamException ──────────────────────────────────────────────────────
 
     @ExceptionHandler(TeamException.class)
     public ResponseEntity<Map<String, Object>> handleTeamException(TeamException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    // ── PlayerException ────────────────────────────────────────────────────
 
     @ExceptionHandler(PlayerException.class)
     public ResponseEntity<Map<String, Object>> handlePlayerException(PlayerException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    // ── TournamentException ────────────────────────────────────────────────
 
     @ExceptionHandler(TournamentException.class)
     public ResponseEntity<Map<String, Object>> handleTournamentException(TournamentException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    // ── BracketException ───────────────────────────────────────────────────
 
     @ExceptionHandler(BracketException.class)
     public ResponseEntity<Map<String, Object>> handleBracketException(BracketException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    // ── LineupException ────────────────────────────────────────────────────
 
     @ExceptionHandler(LineupException.class)
     public ResponseEntity<Map<String, Object>> handleLineupException(LineupException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    // ── MatchException ─────────────────────────────────────────────────────
 
     @ExceptionHandler(MatchException.class)
     public ResponseEntity<Map<String, Object>> handleMatchException(MatchException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    // ── PaymentException ───────────────────────────────────────────────────
 
     @ExceptionHandler(PaymentException.class)
     public ResponseEntity<Map<String, Object>> handlePaymentException(PaymentException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    // ── RefereeException ───────────────────────────────────────────────────
 
     @ExceptionHandler(RefereeException.class)
     public ResponseEntity<Map<String, Object>> handleRefereeException(RefereeException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
     }
 
-    // ── @Valid — errores de validación de campos ───────────────────────────
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
@@ -95,14 +86,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
-    // ── IllegalArgumentException (ej: tipo de jugador inválido) ───────────
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, null, ex.getMessage());
     }
 
-    // ── Fallback genérico ──────────────────────────────────────────────────
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
@@ -110,7 +99,6 @@ public class GlobalExceptionHandler {
                 "Error interno del servidor: " + ex.getMessage());
     }
 
-    // ── Helper ─────────────────────────────────────────────────────────────
 
     private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status,
                                                                String field,
