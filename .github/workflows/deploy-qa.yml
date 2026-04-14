@@ -27,18 +27,5 @@ jobs:
         with:
           app-name: 'techcup-qa'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_QA }}
-          package: target/*.jar
 
-      - name: Set environment variables in Azure
-        uses: azure/appservice-settings@v1
-        with:
-          app-name: 'techcup-qa'
-          app-settings-json: |
-            [
-              {"name": "DB_URL", "value": "${{ secrets.DB_URL }}"},
-              {"name": "DB_USER", "value": "${{ secrets.DB_USER }}"},
-              {"name": "DB_PASS", "value": "${{ secrets.DB_PASS }}"},
-              {"name": "DB_DRIVER", "value": "${{ secrets.DB_DRIVER }}"},
-              {"name": "JPA_DIALECT", "value": "${{ secrets.JPA_DIALECT }}"},
-              {"name": "JWT_SECRET", "value": "${{ secrets.JWT_SECRET }}"}
-            ]
+          package: target/*.jar
