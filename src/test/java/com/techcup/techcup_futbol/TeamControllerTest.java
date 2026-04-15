@@ -44,7 +44,7 @@ class TeamControllerTest {
         team.setId("t1");
         team.setTeamName("Los Mejores");
         team.setShieldUrl("shield.png");
-        team.setUniformColors("Rojo");
+        team.setUniformColors(List.of("Rojo", "Blanco"));
         team.setCaptain(captain);
         team.setPlayers(new ArrayList<>(List.of(captain)));
     }
