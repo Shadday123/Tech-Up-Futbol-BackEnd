@@ -20,8 +20,11 @@ public class PlayerPersistenceMapper {
             RelativePlayerEntity e = new RelativePlayerEntity();
             e.setParentship(r.getParentship());
             entity = e;
-        } else if (player instanceof ExternalPlayer) {
-            entity = new ExternalPlayerEntity();
+        } else if (player instanceof ExternalPlayer r) {
+            ExternalPlayerEntity e = new ExternalPlayerEntity();
+            e.setRelationship(r.getRelationship());
+            e.setRelativeId(r.getRelativeId());
+            entity = e;
         } else {
             // InstitutionalPlayer y cualquier otro
             entity = new InstitutionalPlayerEntity();

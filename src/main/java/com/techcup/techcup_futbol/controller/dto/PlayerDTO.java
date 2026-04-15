@@ -49,4 +49,8 @@ public class PlayerDTO {
     @Min(value = 1, message = "El semestre mínimo es 1")
     @Max(value = 10, message = "El semestre máximo es 10")
     private Integer semester;
+
+    private String relationship;
+
+    private String relationalId;
 }
