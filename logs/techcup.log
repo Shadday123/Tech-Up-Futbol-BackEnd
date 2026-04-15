@@ -6725,3 +6725,605 @@ create table match_events (id varchar(255) not null, minute integer not null, ty
 2026-04-15T15:12:46.418-05:00  INFO 24904 --- [techcup-futbol] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-04-15T15:12:46.422-05:00  INFO 24904 --- [techcup-futbol] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2026-04-15T15:12:46.424-05:00  INFO 24904 --- [techcup-futbol] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-04-15T18:14:40.875-05:00  INFO 2428 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.1 with PID 2428 (C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd\target\classes started by invitado1 in C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd)
+2026-04-15T18:14:40.879-05:00 DEBUG 2428 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-04-15T18:14:40.881-05:00  INFO 2428 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-04-15T18:14:42.837-05:00  INFO 2428 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-15T18:14:42.983-05:00  INFO 2428 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 131 ms. Found 11 JPA repository interfaces.
+2026-04-15T18:14:45.302-05:00  INFO 2428 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-04-15T18:14:45.326-05:00  INFO 2428 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-15T18:14:45.326-05:00  INFO 2428 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-04-15T18:14:45.480-05:00  INFO 2428 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-15T18:14:45.480-05:00  INFO 2428 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4461 ms
+2026-04-15T18:14:45.742-05:00  INFO 2428 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-15T18:14:46.169-05:00  INFO 2428 --- [techcup-futbol] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:techcupdb user=DOSW
+2026-04-15T18:14:46.173-05:00  INFO 2428 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-15T18:14:46.191-05:00  INFO 2428 --- [techcup-futbol] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:techcupdb'
+2026-04-15T18:14:46.545-05:00  INFO 2428 --- [techcup-futbol] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-15T18:14:46.687-05:00  INFO 2428 --- [techcup-futbol] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-04-15T18:14:46.758-05:00  INFO 2428 --- [techcup-futbol] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-15T18:14:47.241-05:00  INFO 2428 --- [techcup-futbol] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-15T18:14:47.337-05:00  WARN 2428 --- [techcup-futbol] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-15T18:14:50.488-05:00  INFO 2428 --- [techcup-futbol] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-15T18:14:50.632-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table lineup_field_positions (lineup_id varchar(255) not null, position_entry varchar(255))
+2026-04-15T18:14:50.640-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table lineup_starters (lineup_id varchar(255) not null, player_id varchar(255) not null)
+2026-04-15T18:14:50.641-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table lineup_substitutes (lineup_id varchar(255) not null, player_id varchar(255) not null)
+2026-04-15T18:14:50.643-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table lineups (id varchar(255) not null, formation varchar(255), match_id varchar(255) not null, team_id varchar(255) not null, primary key (id))
+2026-04-15T18:14:50.652-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))
+2026-04-15T18:14:50.656-05:00  WARN 2428 --- [techcup-futbol] [main] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:574) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:514) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.createTable(AbstractSchemaMigrator.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:286) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:145) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429) ~[na:na]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:142) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1833) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:682) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:509) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1685) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1434) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:210) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:173) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:168) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:153) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:86) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:266) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:240) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4880) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145) ~[na:na]
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:866) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:845) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145) ~[na:na]
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:866) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:240) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:433) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:921) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:437) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:126) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:105) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:499) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:218) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:188) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:162) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:618) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.techcup.techcup_futbol.TechcupFutbolApplication.main(TechcupFutbolApplication.java:13) ~[classes/:na]
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier"; SQL statement:
+create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id)) [42001-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getSyntaxError(DbException.java:261) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.readIdentifier(Parser.java:5533) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8994) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreate(Parser.java:6404) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parsePrepared(Parser.java:666) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:592) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:564) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.prepareCommand(Parser.java:483) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231) ~[h2-2.2.224.jar:2.2.224]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-5.0.1.jar:na]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	... 123 common frames omitted
+
+2026-04-15T18:14:50.673-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table matches (id varchar(255) not null, date_time timestamp(6), field integer not null, red_cards integer not null, score_local integer not null, score_visitor integer not null, status varchar(255) not null check (status in ('SCHEDULED','IN_PROGRESS','FINISHED')), yellow_cards integer not null, local_team_id varchar(255), referee_id varchar(255), visitor_team_id varchar(255), winner_id varchar(255), bracket_id varchar(255), primary key (id))
+2026-04-15T18:14:50.679-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table payments (id varchar(255) not null, amount float(53), current_status varchar(255) not null check (current_status in ('PENDING','UNDER_REVIEW','APPROVED','REJECTED')), receipt_url varchar(255), team_id varchar(255), primary key (id))
+2026-04-15T18:14:50.684-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table players (player_type varchar(31) not null, id varchar(255) not null, age integer not null, captain boolean not null, disponible boolean not null, dorsal_number integer not null, email varchar(255), fullname varchar(255) not null, gender varchar(255), have_team boolean not null, numberid integer not null, password_hash varchar(255), photo_url TEXT, position varchar(255) check (position in ('GoalKeeper','Defender','Midfielder','Winger')), system_role varchar(255) check (system_role in ('ORGANIZADOR','JUGADOR','CAPITAN','ARBITRO','ADMIN','FAMILIAR')), relationship varchar(255), relative_id integer, parentship varchar(255), semester integer, primary key (id))
+2026-04-15T18:14:50.689-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table referees (id varchar(255) not null, email varchar(255), experience integer not null, fullname varchar(255), license varchar(255), password_hash varchar(255), primary key (id))
+2026-04-15T18:14:50.693-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table standings (id varchar(255) not null, goals_against integer not null, goals_difference integer not null, goals_for integer not null, matches_drawn integer not null, matches_lost integer not null, matches_played integer not null, matches_won integer not null, points integer not null, tournament_id varchar(255) not null, team_id varchar(255) not null, primary key (id))
+2026-04-15T18:14:50.696-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table team_players (team_id varchar(255) not null, player_id varchar(255) not null)
+2026-04-15T18:14:50.705-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table team_uniform_colors (team_id varchar(255) not null, hex_color varchar(7))
+2026-04-15T18:14:50.710-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table teams (id varchar(255) not null, shield_url varchar(255), status varchar(255) check (status in ('PENDING','APPROVED')), team_name varchar(255) not null, captain_id varchar(255), primary key (id))
+2026-04-15T18:14:50.714-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournament_brackets (id varchar(255) not null, phase varchar(255) not null check (phase in ('INITIAL_ROUND','QUARTER_FINALS','SEMI_FINALS','FINAL')), tournament_id varchar(255) not null, primary key (id))
+2026-04-15T18:14:50.719-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournament_fields (tournament_id varchar(255) not null, field_entry varchar(255))
+2026-04-15T18:14:50.720-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournament_important_dates (tournament_id varchar(255) not null, date_entry varchar(255))
+2026-04-15T18:14:50.722-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournament_match_schedules (tournament_id varchar(255) not null, schedule_entry varchar(255))
+2026-04-15T18:14:50.724-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournaments (id varchar(255) not null, config_id varchar(255), current_state varchar(255) not null check (current_state in ('DELETED','ACTIVE','IN_PROGRESS','COMPLETED','DRAFT')), end_date timestamp(6) not null, max_teams integer not null, name varchar(255) not null, registration_deadline timestamp(6), registration_fee float(53), rules varchar(255), sanctions varchar(255), start_date timestamp(6) not null, primary key (id))
+2026-04-15T18:14:50.727-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table users (id uuid not null, email varchar(255) not null, password_hash varchar(255) not null, role varchar(255) not null check (role in ('ORGANIZADOR','JUGADOR','CAPITAN','ARBITRO','ADMIN','FAMILIAR')), primary key (id))
+2026-04-15T18:14:50.733-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists teams drop constraint if exists UK_dsqu2wx93en6lbl2bnrjy7kol
+2026-04-15T18:14:50.734-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists teams add constraint UK_dsqu2wx93en6lbl2bnrjy7kol unique (team_name)
+2026-04-15T18:14:50.751-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists users drop constraint if exists UK_6dotkott2kjsp8vw4d0m25fb7
+2026-04-15T18:14:50.752-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists users add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+2026-04-15T18:14:50.762-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_field_positions add constraint FK4yg7mhq0uypkgb6te5sg2gnd7 foreign key (lineup_id) references lineups
+2026-04-15T18:14:50.799-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_starters add constraint FK89q3d0t1aoj16rf8f8lkho2w9 foreign key (player_id) references players
+2026-04-15T18:14:50.805-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_starters add constraint FKd7rw091n6npugk5uccbrcbxs8 foreign key (lineup_id) references lineups
+2026-04-15T18:14:50.817-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_substitutes add constraint FKq0fjlx7qf40qyfqauiko7obiv foreign key (player_id) references players
+2026-04-15T18:14:50.822-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_substitutes add constraint FKhvyem1nx1wgeby9qbnm7pvc4e foreign key (lineup_id) references lineups
+2026-04-15T18:14:50.827-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineups add constraint FK8tc4ikmh6tjbd2mqsnk1ay2ee foreign key (match_id) references matches
+2026-04-15T18:14:50.832-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineups add constraint FK1ct28rvuuc63ym5t1mlxi02ij foreign key (team_id) references teams
+2026-04-15T18:14:50.837-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists match_events add constraint FKdid29vmxxv18fh9p07a9vjnkf foreign key (match_id) references matches
+2026-04-15T18:14:50.838-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists match_events add constraint FKdhjkbqvon9gr1x0e1g9ma20ii foreign key (player_id) references players
+2026-04-15T18:14:50.840-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKjjodp7mq77byxw9s43svfej foreign key (local_team_id) references teams
+2026-04-15T18:14:50.845-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKe93f8jtxkaoyjrmhit15msgm5 foreign key (referee_id) references referees
+2026-04-15T18:14:50.849-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKcrhtu0qelpencoxb8egat04gm foreign key (visitor_team_id) references teams
+2026-04-15T18:14:50.852-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKbeel88lh2ksupphafotnqy7ry foreign key (winner_id) references teams
+2026-04-15T18:14:50.856-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKm9f1lug4x2olh4deuut0ryqye foreign key (bracket_id) references tournament_brackets
+2026-04-15T18:14:50.860-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists standings add constraint FK6ak9f4ieqoq2bam5sjt9us7e foreign key (team_id) references teams
+2026-04-15T18:14:50.865-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists team_players add constraint FKddxneji5ow8j3171oe6mc2gu0 foreign key (player_id) references players
+2026-04-15T18:14:50.869-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists team_players add constraint FK3bhsykltbdhsmmb61l2ml12h foreign key (team_id) references teams
+2026-04-15T18:14:50.875-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists team_uniform_colors add constraint FK5dhu5yxky53n11ux373bjopsx foreign key (team_id) references teams
+2026-04-15T18:14:50.879-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists teams add constraint FKcesm40kqtewfv1sq3mqg8767s foreign key (captain_id) references players
+2026-04-15T18:14:50.887-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists tournament_brackets add constraint FK325wy7lvv71vek3eosaev2vwp foreign key (tournament_id) references tournaments
+2026-04-15T18:14:50.923-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists tournament_fields add constraint FKoc7br4wgf1hl9ylr6pup49qjd foreign key (tournament_id) references tournaments
+2026-04-15T18:14:50.936-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists tournament_important_dates add constraint FKkitc5kia70fkoyi6r55qckyx9 foreign key (tournament_id) references tournaments
+2026-04-15T18:14:50.940-05:00 DEBUG 2428 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists tournament_match_schedules add constraint FKgrfi90xby6xqpd94xx67dei40 foreign key (tournament_id) references tournaments
+2026-04-15T18:14:50.949-05:00  INFO 2428 --- [techcup-futbol] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-15T18:14:52.227-05:00 DEBUG 2428 --- [techcup-futbol] [main] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2026-04-15T18:14:52.229-05:00 DEBUG 2428 --- [techcup-futbol] [main] c.t.t.core.security.JwtFilter            : Filter 'jwtFilter' configured for use
+2026-04-15T18:14:55.090-05:00 DEBUG 2428 --- [techcup-futbol] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 53 mappings in 'requestMappingHandlerMapping'
+2026-04-15T18:14:55.589-05:00 DEBUG 2428 --- [techcup-futbol] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-04-15T18:14:56.248-05:00  INFO 2428 --- [techcup-futbol] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-04-15T18:14:56.745-05:00  INFO 2428 --- [techcup-futbol] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@54ff871a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4c94621d, org.springframework.security.web.context.SecurityContextHolderFilter@cc655a, org.springframework.security.web.header.HeaderWriterFilter@218289de, org.springframework.web.filter.CorsFilter@2ecb7f0c, org.springframework.security.web.authentication.logout.LogoutFilter@2b6c3f70, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@d0c3793, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@6434827e, com.techcup.techcup_futbol.core.security.JwtFilter@5d27a744, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@344ab465, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@250988e5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@16be2c40, org.springframework.security.web.session.SessionManagementFilter@7d24def, org.springframework.security.web.access.ExceptionTranslationFilter@41861964, org.springframework.security.web.access.intercept.AuthorizationFilter@525b999]
+2026-04-15T18:14:57.080-05:00 DEBUG 2428 --- [techcup-futbol] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-04-15T18:14:57.168-05:00 DEBUG 2428 --- [techcup-futbol] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-04-15T18:14:58.034-05:00  INFO 2428 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path ''
+2026-04-15T18:14:58.056-05:00  INFO 2428 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Started TechcupFutbolApplication in 18.36 seconds (process running for 21.005)
+2026-04-15T18:14:58.739-05:00  INFO 2428 --- [techcup-futbol] [RMI TCP Connection(1)-192.168.1.8] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-15T18:14:58.740-05:00  INFO 2428 --- [techcup-futbol] [RMI TCP Connection(1)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-15T18:14:58.741-05:00 DEBUG 2428 --- [techcup-futbol] [RMI TCP Connection(1)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-04-15T18:14:58.741-05:00 DEBUG 2428 --- [techcup-futbol] [RMI TCP Connection(1)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-04-15T18:14:58.741-05:00 DEBUG 2428 --- [techcup-futbol] [RMI TCP Connection(1)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-04-15T18:14:58.745-05:00 DEBUG 2428 --- [techcup-futbol] [RMI TCP Connection(1)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@50f6eb17
+2026-04-15T18:14:58.748-05:00 DEBUG 2428 --- [techcup-futbol] [RMI TCP Connection(1)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@2114955c
+2026-04-15T18:14:58.749-05:00 DEBUG 2428 --- [techcup-futbol] [RMI TCP Connection(1)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-04-15T18:14:58.749-05:00  INFO 2428 --- [techcup-futbol] [RMI TCP Connection(1)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Completed initialization in 9 ms
+2026-04-15T18:15:10.680-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /oauth2/authorization/google
+2026-04-15T18:15:10.758-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-1] o.s.s.web.DefaultRedirectStrategy        : Redirecting to https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=$%7BGOOGLE_CLIENT_ID%7D&scope=email%20profile&state=EdefGp_1ws77A_j4a0Y_I3stkDi_FMtyZs5K90ulBAE%3D&redirect_uri=http://localhost:8081/login/oauth2/code/google
+2026-04-15T18:15:52.119-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-2] o.s.security.web.FilterChainProxy        : Securing OPTIONS /api/referees/registro
+2026-04-15T18:15:52.144-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.security.web.FilterChainProxy        : Securing POST /api/referees/registro
+2026-04-15T18:15:52.626-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:15:52.648-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:15:52.658-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-04-15T18:15:52.667-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.security.web.FilterChainProxy        : Secured POST /api/referees/registro
+2026-04-15T18:15:52.671-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/api/referees/registro", parameters={}
+2026-04-15T18:15:52.674-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.techcup.techcup_futbol.controller.RefereeController#registrar(RefereeRegistrationRequest)
+2026-04-15T18:15:52.756-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [RefereeRegistrationRequest[fullname=David Correa, email=shadday539@gmail.com, password=Potosi1#, lic (truncated)...]
+2026-04-15T18:15:52.855-05:00  INFO 2428 --- [techcup-futbol] [http-nio-8081-exec-3] c.t.t.controller.RefereeController       : POST /api/referees/registro — email: shadday539@gmail.com
+2026-04-15T18:15:52.872-05:00  INFO 2428 --- [techcup-futbol] [http-nio-8081-exec-3] c.t.t.core.service.RefereeServiceImpl    : Auto-registro de árbitro: shadday539@gmail.com
+2026-04-15T18:15:52.878-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : select re1_0.id from referees re1_0 where re1_0.email=? fetch first ? rows only
+2026-04-15T18:15:52.881-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:15:53.093-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : select re1_0.id,re1_0.email,re1_0.experience,re1_0.fullname,re1_0.license,re1_0.password_hash from referees re1_0 where re1_0.id=?
+2026-04-15T18:15:53.139-05:00  INFO 2428 --- [techcup-futbol] [http-nio-8081-exec-3] c.t.t.core.service.RefereeServiceImpl    : Árbitro registrado — ID: d979ba63-c8f8-4ce5-b04e-35d0dece6c32 | Email: shadday539@gmail.com
+2026-04-15T18:15:53.173-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : insert into referees (email,experience,fullname,license,password_hash,id) values (?,?,?,?,?,?)
+2026-04-15T18:15:53.183-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : insert into users (email,password_hash,role,id) values (?,?,?,?)
+2026-04-15T18:15:53.213-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-04-15T18:15:53.217-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [RefereeResponse[id=d979ba63-c8f8-4ce5-b04e-35d0dece6c32, fullname=David Correa, email=shadday539@gma (truncated)...]
+2026-04-15T18:15:53.233-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 201 CREATED
+2026-04-15T18:16:04.489-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-4] o.s.security.web.FilterChainProxy        : Securing OPTIONS /api/auth/login
+2026-04-15T18:16:04.498-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2026-04-15T18:16:04.503-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:16:04.505-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:16:04.518-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2026-04-15T18:16:04.519-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.web.servlet.DispatcherServlet        : POST "/api/auth/login", parameters={}
+2026-04-15T18:16:04.519-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.techcup.techcup_futbol.controller.AuthController#login(LoginRequest)
+2026-04-15T18:16:04.525-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [LoginRequest[email=shadday539@gmail.com, password=Potosi1#]]
+2026-04-15T18:16:04.679-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:16:04.681-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:16:04.842-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.s.a.dao.DaoAuthenticationProvider    : Authenticated user
+2026-04-15T18:16:04.870-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:16:04.874-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:16:04.880-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-04-15T18:16:04.882-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [LoginResponse[token=eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0FSQklUUk8iXSwic3ViIjoic2hhZGRheTUzOUB (truncated)...]
+2026-04-15T18:16:04.884-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-15T18:16:04.953-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-7] o.s.security.web.FilterChainProxy        : Securing OPTIONS /api/referees/cca272f2-77b5-4bf6-85e5-55fd10bc3411
+2026-04-15T18:16:04.959-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-6] o.s.security.web.FilterChainProxy        : Securing OPTIONS /api/referees/cca272f2-77b5-4bf6-85e5-55fd10bc3411
+2026-04-15T18:16:04.968-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /api/referees/cca272f2-77b5-4bf6-85e5-55fd10bc3411
+2026-04-15T18:16:04.975-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:16:04.981-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:16:05.002-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.s.w.access.AccessDeniedHandlerImpl   : Responding with 403 status code
+2026-04-15T18:16:05.015-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /error
+2026-04-15T18:16:05.017-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.security.web.FilterChainProxy        : Secured GET /error
+2026-04-15T18:16:05.018-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2026-04-15T18:16:05.019-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2026-04-15T18:16:05.024-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-04-15T18:16:05.025-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Wed Apr 15 18:16:05 COT 2026, status=403, error=Forbidden, path=/api/referees/cca272f2-77 (truncated)...]
+2026-04-15T18:16:05.031-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 403
+2026-04-15T18:16:05.031-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-04-15T18:16:05.035-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /api/referees/cca272f2-77b5-4bf6-85e5-55fd10bc3411
+2026-04-15T18:16:05.043-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:16:05.047-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:16:05.054-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.s.w.access.AccessDeniedHandlerImpl   : Responding with 403 status code
+2026-04-15T18:16:05.057-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /error
+2026-04-15T18:16:05.059-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /error
+2026-04-15T18:16:05.060-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2026-04-15T18:16:05.061-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2026-04-15T18:16:05.062-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-04-15T18:16:05.062-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Wed Apr 15 18:16:05 COT 2026, status=403, error=Forbidden, path=/api/referees/cca272f2-77 (truncated)...]
+2026-04-15T18:16:05.064-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 403
+2026-04-15T18:16:05.064-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-04-15T18:16:55.086-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-2] o.s.security.web.FilterChainProxy        : Securing OPTIONS /api/auth/registro/organizador
+2026-04-15T18:16:55.092-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/registro/organizador
+2026-04-15T18:16:55.098-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:16:55.101-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:16:55.104-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/registro/organizador
+2026-04-15T18:16:55.104-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/api/auth/registro/organizador", parameters={}
+2026-04-15T18:16:55.105-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.techcup.techcup_futbol.controller.AuthController#registrarOrganizador(OrganizerRegistrationRequest)
+2026-04-15T18:16:55.110-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [OrganizerRegistrationRequest[fullname=David Correa, email=shadday538@gmail.com, password=Potosi1#, a (truncated)...]
+2026-04-15T18:16:55.119-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:16:55.273-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] org.hibernate.SQL                        : insert into users (email,password_hash,role,id) values (?,?,?,?)
+2026-04-15T18:16:55.275-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-04-15T18:16:55.276-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [LoginResponse[token=null, email=shadday538@gmail.com, rol=ORGANIZADOR, mensaje=Organizador registrad (truncated)...]
+2026-04-15T18:16:55.277-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 201 CREATED
+2026-04-15T18:17:06.285-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2026-04-15T18:17:06.290-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:17:06.294-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:17:06.299-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2026-04-15T18:17:06.299-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.web.servlet.DispatcherServlet        : POST "/api/auth/login", parameters={}
+2026-04-15T18:17:06.300-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.techcup.techcup_futbol.controller.AuthController#login(LoginRequest)
+2026-04-15T18:17:06.301-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [LoginRequest[email=shadday538@gmail.com, password=Potosi1#]]
+2026-04-15T18:17:06.303-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:17:06.306-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:17:06.455-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.s.a.dao.DaoAuthenticationProvider    : Authenticated user
+2026-04-15T18:17:06.459-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:17:06.461-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:17:06.463-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-04-15T18:17:06.464-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [LoginResponse[token=eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX09SR0FOSVpBRE9SIl0sInN1YiI6InNoYWRkYXk (truncated)...]
+2026-04-15T18:17:06.465-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-15T18:17:06.508-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-7] o.s.security.web.FilterChainProxy        : Securing OPTIONS /api/teams
+2026-04-15T18:17:06.512-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-6] o.s.security.web.FilterChainProxy        : Securing OPTIONS /api/teams
+2026-04-15T18:17:06.516-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /api/teams
+2026-04-15T18:17:06.523-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:17:06.527-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:17:06.535-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.security.web.FilterChainProxy        : Secured GET /api/teams
+2026-04-15T18:17:06.535-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/teams", parameters={}
+2026-04-15T18:17:06.537-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.techcup.techcup_futbol.controller.TeamController#findAll()
+2026-04-15T18:17:06.541-05:00  INFO 2428 --- [techcup-futbol] [http-nio-8081-exec-9] c.t.t.controller.TeamController          : GET /api/teams
+2026-04-15T18:17:06.562-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] org.hibernate.SQL                        : select te1_0.id,te1_0.captain_id,te1_0.shield_url,te1_0.status,te1_0.team_name from teams te1_0
+2026-04-15T18:17:06.566-05:00  INFO 2428 --- [techcup-futbol] [http-nio-8081-exec-9] c.t.t.core.service.TeamServiceImpl       : [2026-04-15 18:17:06] Listando todos los equipos — total: 0
+2026-04-15T18:17:06.569-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-04-15T18:17:06.569-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[]]
+2026-04-15T18:17:06.572-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-15T18:17:06.576-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /api/teams
+2026-04-15T18:17:06.582-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] org.hibernate.SQL                        : select pe1_0.id,pe1_0.player_type,pe1_0.age,pe1_0.captain,pe1_0.disponible,pe1_0.dorsal_number,pe1_0.email,pe1_0.fullname,pe1_0.gender,pe1_0.have_team,pe1_0.numberid,pe1_0.password_hash,pe1_0.photo_url,pe1_0.position,pe1_0.system_role,pe1_0.relationship,pe1_0.relative_id,pe1_0.parentship,pe1_0.semester from players pe1_0 where upper(pe1_0.email)=upper(?)
+2026-04-15T18:17:06.588-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] org.hibernate.SQL                        : select ue1_0.id,ue1_0.email,ue1_0.password_hash,ue1_0.role from users ue1_0 where ue1_0.email=?
+2026-04-15T18:17:06.595-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /api/teams
+2026-04-15T18:17:06.595-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/teams", parameters={}
+2026-04-15T18:17:06.596-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.techcup.techcup_futbol.controller.TeamController#findAll()
+2026-04-15T18:17:06.596-05:00  INFO 2428 --- [techcup-futbol] [http-nio-8081-exec-8] c.t.t.controller.TeamController          : GET /api/teams
+2026-04-15T18:17:06.598-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] org.hibernate.SQL                        : select te1_0.id,te1_0.captain_id,te1_0.shield_url,te1_0.status,te1_0.team_name from teams te1_0
+2026-04-15T18:17:06.599-05:00  INFO 2428 --- [techcup-futbol] [http-nio-8081-exec-8] c.t.t.core.service.TeamServiceImpl       : [2026-04-15 18:17:06] Listando todos los equipos — total: 0
+2026-04-15T18:17:06.601-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-04-15T18:17:06.601-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[]]
+2026-04-15T18:17:06.603-05:00 DEBUG 2428 --- [techcup-futbol] [http-nio-8081-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-15T18:30:47.874-05:00  INFO 2428 --- [techcup-futbol] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-15T18:30:47.880-05:00  INFO 2428 --- [techcup-futbol] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-04-15T18:30:47.883-05:00  INFO 2428 --- [techcup-futbol] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-04-15T18:31:19.037-05:00  INFO 27240 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Starting TechcupFutbolApplication using Java 21.0.1 with PID 27240 (C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd\target\classes started by invitado1 in C:\Users\crist\Downloads\Tech-Up-Futbol-BackEnd)
+2026-04-15T18:31:19.041-05:00 DEBUG 27240 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-04-15T18:31:19.042-05:00  INFO 27240 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-04-15T18:31:20.686-05:00  INFO 27240 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-15T18:31:20.849-05:00  INFO 27240 --- [techcup-futbol] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 150 ms. Found 11 JPA repository interfaces.
+2026-04-15T18:31:22.969-05:00  INFO 27240 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-04-15T18:31:22.989-05:00  INFO 27240 --- [techcup-futbol] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-15T18:31:22.991-05:00  INFO 27240 --- [techcup-futbol] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-04-15T18:31:23.132-05:00  INFO 27240 --- [techcup-futbol] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-15T18:31:23.133-05:00  INFO 27240 --- [techcup-futbol] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3974 ms
+2026-04-15T18:31:23.380-05:00  INFO 27240 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-15T18:31:23.731-05:00  INFO 27240 --- [techcup-futbol] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:techcupdb user=DOSW
+2026-04-15T18:31:23.734-05:00  INFO 27240 --- [techcup-futbol] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-15T18:31:23.750-05:00  INFO 27240 --- [techcup-futbol] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:techcupdb'
+2026-04-15T18:31:24.062-05:00  INFO 27240 --- [techcup-futbol] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-15T18:31:24.164-05:00  INFO 27240 --- [techcup-futbol] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-04-15T18:31:24.227-05:00  INFO 27240 --- [techcup-futbol] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-15T18:31:24.640-05:00  INFO 27240 --- [techcup-futbol] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-15T18:31:24.719-05:00  WARN 27240 --- [techcup-futbol] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-15T18:31:27.122-05:00  INFO 27240 --- [techcup-futbol] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-15T18:31:27.206-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table lineup_field_positions (lineup_id varchar(255) not null, position_entry varchar(255))
+2026-04-15T18:31:27.211-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table lineup_starters (lineup_id varchar(255) not null, player_id varchar(255) not null)
+2026-04-15T18:31:27.212-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table lineup_substitutes (lineup_id varchar(255) not null, player_id varchar(255) not null)
+2026-04-15T18:31:27.213-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table lineups (id varchar(255) not null, formation varchar(255), match_id varchar(255) not null, team_id varchar(255) not null, primary key (id))
+2026-04-15T18:31:27.220-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))
+2026-04-15T18:31:27.223-05:00  WARN 27240 --- [techcup-futbol] [main] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))" via JDBC [Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier";]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:574) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:514) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.createTable(AbstractSchemaMigrator.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:232) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:117) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:286) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:145) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429) ~[na:na]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:142) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1833) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:682) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:509) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1685) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1434) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:210) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:173) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:168) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:153) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:86) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:266) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:240) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4880) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145) ~[na:na]
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:866) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:845) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145) ~[na:na]
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:866) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:240) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:433) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:921) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:437) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:126) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:105) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:499) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:218) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:188) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:162) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:618) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.techcup.techcup_futbol.TechcupFutbolApplication.main(TechcupFutbolApplication.java:13) ~[classes/:na]
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; se esperaba "identifier"
+Syntax error in SQL statement "create table match_events (id varchar(255) not null, [*]minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id))"; expected "identifier"; SQL statement:
+create table match_events (id varchar(255) not null, minute integer not null, type varchar(255), match_id varchar(255) not null, player_id varchar(255), primary key (id)) [42001-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.message.DbException.getSyntaxError(DbException.java:261) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.readIdentifier(Parser.java:5533) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8994) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parseCreate(Parser.java:6404) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parsePrepared(Parser.java:666) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:592) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.parse(Parser.java:564) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.command.Parser.prepareCommand(Parser.java:483) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245) ~[h2-2.2.224.jar:2.2.224]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231) ~[h2-2.2.224.jar:2.2.224]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94) ~[HikariCP-5.0.1.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-5.0.1.jar:na]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
+	... 123 common frames omitted
+
+2026-04-15T18:31:27.234-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table matches (id varchar(255) not null, date_time timestamp(6), field integer not null, red_cards integer not null, score_local integer not null, score_visitor integer not null, status varchar(255) not null check (status in ('SCHEDULED','IN_PROGRESS','FINISHED')), yellow_cards integer not null, local_team_id varchar(255), referee_id varchar(255), visitor_team_id varchar(255), winner_id varchar(255), bracket_id varchar(255), primary key (id))
+2026-04-15T18:31:27.239-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table payments (id varchar(255) not null, amount float(53), current_status varchar(255) not null check (current_status in ('PENDING','UNDER_REVIEW','APPROVED','REJECTED')), receipt_url varchar(255), team_id varchar(255), primary key (id))
+2026-04-15T18:31:27.242-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table players (player_type varchar(31) not null, id varchar(255) not null, age integer not null, captain boolean not null, disponible boolean not null, dorsal_number integer not null, email varchar(255), fullname varchar(255) not null, gender varchar(255), have_team boolean not null, numberid integer not null, password_hash varchar(255), photo_url TEXT, position varchar(255) check (position in ('GoalKeeper','Defender','Midfielder','Winger')), system_role varchar(255) check (system_role in ('ORGANIZADOR','JUGADOR','CAPITAN','ARBITRO','ADMIN','FAMILIAR')), relationship varchar(255), relative_id integer, parentship varchar(255), semester integer, primary key (id))
+2026-04-15T18:31:27.245-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table referees (id varchar(255) not null, email varchar(255), experience integer not null, fullname varchar(255), license varchar(255), password_hash varchar(255), primary key (id))
+2026-04-15T18:31:27.248-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table standings (id varchar(255) not null, goals_against integer not null, goals_difference integer not null, goals_for integer not null, matches_drawn integer not null, matches_lost integer not null, matches_played integer not null, matches_won integer not null, points integer not null, tournament_id varchar(255) not null, team_id varchar(255) not null, primary key (id))
+2026-04-15T18:31:27.250-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table team_players (team_id varchar(255) not null, player_id varchar(255) not null)
+2026-04-15T18:31:27.255-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table team_uniform_colors (team_id varchar(255) not null, hex_color varchar(7))
+2026-04-15T18:31:27.259-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table teams (id varchar(255) not null, shield_url varchar(255), status varchar(255) check (status in ('PENDING','APPROVED')), team_name varchar(255) not null, captain_id varchar(255), primary key (id))
+2026-04-15T18:31:27.262-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournament_brackets (id varchar(255) not null, phase varchar(255) not null check (phase in ('INITIAL_ROUND','QUARTER_FINALS','SEMI_FINALS','FINAL')), tournament_id varchar(255) not null, primary key (id))
+2026-04-15T18:31:27.264-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournament_fields (tournament_id varchar(255) not null, field_entry varchar(255))
+2026-04-15T18:31:27.265-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournament_important_dates (tournament_id varchar(255) not null, date_entry varchar(255))
+2026-04-15T18:31:27.267-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournament_match_schedules (tournament_id varchar(255) not null, schedule_entry varchar(255))
+2026-04-15T18:31:27.269-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table tournaments (id varchar(255) not null, config_id varchar(255), current_state varchar(255) not null check (current_state in ('DELETED','ACTIVE','IN_PROGRESS','COMPLETED','DRAFT')), end_date timestamp(6) not null, max_teams integer not null, name varchar(255) not null, registration_deadline timestamp(6), registration_fee float(53), rules varchar(255), sanctions varchar(255), start_date timestamp(6) not null, primary key (id))
+2026-04-15T18:31:27.272-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : create table users (id uuid not null, email varchar(255) not null, password_hash varchar(255) not null, role varchar(255) not null check (role in ('ORGANIZADOR','JUGADOR','CAPITAN','ARBITRO','ADMIN','FAMILIAR')), primary key (id))
+2026-04-15T18:31:27.275-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists teams drop constraint if exists UK_dsqu2wx93en6lbl2bnrjy7kol
+2026-04-15T18:31:27.276-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists teams add constraint UK_dsqu2wx93en6lbl2bnrjy7kol unique (team_name)
+2026-04-15T18:31:27.278-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists users drop constraint if exists UK_6dotkott2kjsp8vw4d0m25fb7
+2026-04-15T18:31:27.279-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists users add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+2026-04-15T18:31:27.280-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_field_positions add constraint FK4yg7mhq0uypkgb6te5sg2gnd7 foreign key (lineup_id) references lineups
+2026-04-15T18:31:27.291-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_starters add constraint FK89q3d0t1aoj16rf8f8lkho2w9 foreign key (player_id) references players
+2026-04-15T18:31:27.294-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_starters add constraint FKd7rw091n6npugk5uccbrcbxs8 foreign key (lineup_id) references lineups
+2026-04-15T18:31:27.296-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_substitutes add constraint FKq0fjlx7qf40qyfqauiko7obiv foreign key (player_id) references players
+2026-04-15T18:31:27.299-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineup_substitutes add constraint FKhvyem1nx1wgeby9qbnm7pvc4e foreign key (lineup_id) references lineups
+2026-04-15T18:31:27.302-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineups add constraint FK8tc4ikmh6tjbd2mqsnk1ay2ee foreign key (match_id) references matches
+2026-04-15T18:31:27.305-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists lineups add constraint FK1ct28rvuuc63ym5t1mlxi02ij foreign key (team_id) references teams
+2026-04-15T18:31:27.308-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists match_events add constraint FKdid29vmxxv18fh9p07a9vjnkf foreign key (match_id) references matches
+2026-04-15T18:31:27.309-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists match_events add constraint FKdhjkbqvon9gr1x0e1g9ma20ii foreign key (player_id) references players
+2026-04-15T18:31:27.310-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKjjodp7mq77byxw9s43svfej foreign key (local_team_id) references teams
+2026-04-15T18:31:27.312-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKe93f8jtxkaoyjrmhit15msgm5 foreign key (referee_id) references referees
+2026-04-15T18:31:27.315-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKcrhtu0qelpencoxb8egat04gm foreign key (visitor_team_id) references teams
+2026-04-15T18:31:27.317-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKbeel88lh2ksupphafotnqy7ry foreign key (winner_id) references teams
+2026-04-15T18:31:27.320-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists matches add constraint FKm9f1lug4x2olh4deuut0ryqye foreign key (bracket_id) references tournament_brackets
+2026-04-15T18:31:27.322-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists standings add constraint FK6ak9f4ieqoq2bam5sjt9us7e foreign key (team_id) references teams
+2026-04-15T18:31:27.325-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists team_players add constraint FKddxneji5ow8j3171oe6mc2gu0 foreign key (player_id) references players
+2026-04-15T18:31:27.328-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists team_players add constraint FK3bhsykltbdhsmmb61l2ml12h foreign key (team_id) references teams
+2026-04-15T18:31:27.331-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists team_uniform_colors add constraint FK5dhu5yxky53n11ux373bjopsx foreign key (team_id) references teams
+2026-04-15T18:31:27.334-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists teams add constraint FKcesm40kqtewfv1sq3mqg8767s foreign key (captain_id) references players
+2026-04-15T18:31:27.337-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists tournament_brackets add constraint FK325wy7lvv71vek3eosaev2vwp foreign key (tournament_id) references tournaments
+2026-04-15T18:31:27.341-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists tournament_fields add constraint FKoc7br4wgf1hl9ylr6pup49qjd foreign key (tournament_id) references tournaments
+2026-04-15T18:31:27.344-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists tournament_important_dates add constraint FKkitc5kia70fkoyi6r55qckyx9 foreign key (tournament_id) references tournaments
+2026-04-15T18:31:27.347-05:00 DEBUG 27240 --- [techcup-futbol] [main] org.hibernate.SQL                        : alter table if exists tournament_match_schedules add constraint FKgrfi90xby6xqpd94xx67dei40 foreign key (tournament_id) references tournaments
+2026-04-15T18:31:27.353-05:00  INFO 27240 --- [techcup-futbol] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-15T18:31:28.177-05:00 DEBUG 27240 --- [techcup-futbol] [main] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2026-04-15T18:31:28.178-05:00 DEBUG 27240 --- [techcup-futbol] [main] c.t.t.core.security.JwtFilter            : Filter 'jwtFilter' configured for use
+2026-04-15T18:31:29.670-05:00 DEBUG 27240 --- [techcup-futbol] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 53 mappings in 'requestMappingHandlerMapping'
+2026-04-15T18:31:29.993-05:00 DEBUG 27240 --- [techcup-futbol] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-04-15T18:31:30.354-05:00  INFO 27240 --- [techcup-futbol] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-04-15T18:31:30.622-05:00  INFO 27240 --- [techcup-futbol] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@330a6b76, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@34018757, org.springframework.security.web.context.SecurityContextHolderFilter@2e67df05, org.springframework.security.web.header.HeaderWriterFilter@2ef99072, org.springframework.web.filter.CorsFilter@6f21c18f, org.springframework.security.web.authentication.logout.LogoutFilter@419fc1d6, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@39dfadd7, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@5e5d26e4, com.techcup.techcup_futbol.core.security.JwtFilter@790bd0e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@189e986f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@df9bfaa, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@34723cfe, org.springframework.security.web.session.SessionManagementFilter@4928a347, org.springframework.security.web.access.ExceptionTranslationFilter@3d44da41, org.springframework.security.web.access.intercept.AuthorizationFilter@47d0127f]
+2026-04-15T18:31:30.904-05:00 DEBUG 27240 --- [techcup-futbol] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-04-15T18:31:30.983-05:00 DEBUG 27240 --- [techcup-futbol] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-04-15T18:31:32.088-05:00  INFO 27240 --- [techcup-futbol] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path ''
+2026-04-15T18:31:32.122-05:00  INFO 27240 --- [techcup-futbol] [main] c.t.t.TechcupFutbolApplication           : Started TechcupFutbolApplication in 14.013 seconds (process running for 15.629)
+2026-04-15T18:31:32.442-05:00  INFO 27240 --- [techcup-futbol] [RMI TCP Connection(3)-192.168.1.8] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-15T18:31:32.442-05:00  INFO 27240 --- [techcup-futbol] [RMI TCP Connection(3)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-15T18:31:32.443-05:00 DEBUG 27240 --- [techcup-futbol] [RMI TCP Connection(3)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-04-15T18:31:32.443-05:00 DEBUG 27240 --- [techcup-futbol] [RMI TCP Connection(3)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-04-15T18:31:32.443-05:00 DEBUG 27240 --- [techcup-futbol] [RMI TCP Connection(3)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-04-15T18:31:32.446-05:00 DEBUG 27240 --- [techcup-futbol] [RMI TCP Connection(3)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@7b128cd2
+2026-04-15T18:31:32.448-05:00 DEBUG 27240 --- [techcup-futbol] [RMI TCP Connection(3)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@51e513b7
+2026-04-15T18:31:32.449-05:00 DEBUG 27240 --- [techcup-futbol] [RMI TCP Connection(3)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-04-15T18:31:32.449-05:00  INFO 27240 --- [techcup-futbol] [RMI TCP Connection(3)-192.168.1.8] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
+2026-04-15T18:33:55.579-05:00  INFO 27240 --- [techcup-futbol] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-15T18:33:55.583-05:00  INFO 27240 --- [techcup-futbol] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-04-15T18:33:55.586-05:00  INFO 27240 --- [techcup-futbol] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
