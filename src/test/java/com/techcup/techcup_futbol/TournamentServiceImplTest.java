@@ -49,8 +49,6 @@ class TournamentServiceImplTest {
         tournamentEntity = TournamentPersistenceMapper.toEntity(validTournament);
     }
 
-    // ── CREATE ──
-
     @Test
     void create_withValidTournament_setsDraftAndSaves() {
         when(tournamentRepository.existsByName("Copa Tech")).thenReturn(false);
@@ -78,8 +76,6 @@ class TournamentServiceImplTest {
         assertThrows(NullPointerException.class,
                 () -> tournamentService.create(null));
     }
-
-    // ── UPDATE STATUS ──
 
     @Test
     void updateStatus_validTransition_updatesState() {
@@ -109,8 +105,6 @@ class TournamentServiceImplTest {
         assertEquals("state", exception.getField());
     }
 
-    // ── FIND BY ID ──
-
     @Test
     void findById_existing_returnsTournament() {
         validTournament.setId("t-001");
@@ -133,8 +127,6 @@ class TournamentServiceImplTest {
         assertTrue(exception.getMessage().contains("t-999"));
     }
 
-    // ── FIND ALL ──
-
     @Test
     void findAll_returnsList() {
         List<TournamentEntity> tournaments = List.of(tournamentEntity);
@@ -146,7 +138,6 @@ class TournamentServiceImplTest {
         verify(tournamentRepository).findAll();
     }
 
-    // ── NUEVOS MÉTODOS DEL REPOSITORY ──
 
     @Test
     void findByState_returnsList() {
@@ -189,8 +180,6 @@ class TournamentServiceImplTest {
         assertFalse(result);
         verify(tournamentRepository).existsByName("Otro Torneo");
     }
-
-    // ── CREATE OR UPDATE CONFIG ──
 
     @Test
     void createOrUpdateConfig_validDraft_setsConfig() {
@@ -246,13 +235,12 @@ class TournamentServiceImplTest {
         assertEquals("registrationDeadline", exception.getField());
     }
 
-    // ── FIND CONFIG ──
-
     @Test
     void findConfig_withConfig_returnsTournament() {
         validTournament.setId("t-001");
         validTournament.setConfigId("cfg-001");
         tournamentEntity.setId("t-001");
+        tournamentEntity.setConfigId("cfg-001");
         when(tournamentRepository.findById("t-001")).thenReturn(Optional.of(tournamentEntity));
 
         Tournament result = tournamentService.findConfig("t-001");
@@ -274,4 +262,3 @@ class TournamentServiceImplTest {
         assertEquals("config", exception.getField());
     }
 }
-

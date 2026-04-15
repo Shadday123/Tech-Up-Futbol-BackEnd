@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feature/DavidCajamarca
 
 jobs:
   build-and-deploy:
