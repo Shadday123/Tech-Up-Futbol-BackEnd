@@ -54,7 +54,7 @@ class TeamControllerTest {
         CreateTeamRequest request = new CreateTeamRequest();
         request.setTeamName("Los Mejores");
         request.setShieldUrl("shield.png");
-        request.setUniformColors("Rojo");
+        request.setUniformColors(List.of("Rojo", "Blanco"));
         request.setCaptainId("p1");
         request.setPlayerIds(List.of("p1"));
 
