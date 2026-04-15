@@ -20,6 +20,9 @@ public class RefereeEntity {
 
     private String fullname;
     private String email;
+    private String passwordHash;
+    private String license;
+    private int experience;
 
     @OneToMany(mappedBy = "referee", fetch = FetchType.LAZY)
     private List<MatchEntity> assignedMatches = new ArrayList<>();

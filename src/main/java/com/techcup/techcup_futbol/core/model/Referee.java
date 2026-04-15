@@ -16,6 +16,9 @@ public class Referee {
 
     private String fullname;
     private String email;
+    private String password;
+    private String license;
+    private int experience;
 
     private List<Match> assignedMatches = new ArrayList<>();
 

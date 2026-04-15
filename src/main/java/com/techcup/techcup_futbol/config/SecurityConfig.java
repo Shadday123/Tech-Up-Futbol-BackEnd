@@ -48,6 +48,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs", "/api-docs/**", "/api-docs").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
@@ -60,6 +61,7 @@ public class SecurityConfig {
                         // 🔐 PROTEGIDOS POR ROLES
                         .requestMatchers(HttpMethod.POST, "/api/tournaments/**").hasRole("ORGANIZADOR")
                         .requestMatchers(HttpMethod.PUT, "/api/tournaments/**").hasRole("ORGANIZADOR")
+                        .requestMatchers(HttpMethod.POST, "/api/referees/registro").permitAll()
                         .requestMatchers("/api/referees/**").hasRole("ORGANIZADOR")
                         .requestMatchers(HttpMethod.POST, "/api/teams/**").hasAnyRole("CAPITAN", "ORGANIZADOR")
                         .requestMatchers(HttpMethod.DELETE, "/api/teams/**").hasAnyRole("CAPITAN", "ORGANIZADOR")
