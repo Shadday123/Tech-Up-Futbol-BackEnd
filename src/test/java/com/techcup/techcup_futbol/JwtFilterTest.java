@@ -4,16 +4,16 @@ import com.techcup.techcup_futbol.core.security.JwtFilter;
 import com.techcup.techcup_futbol.core.security.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockFilterChain;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -36,21 +36,19 @@ class JwtFilterTest {
     @Mock
     private UserDetailsService userDetailsService;
 
-    @Mock
-    private HttpServletRequest request;
-
-    @Mock
-    private HttpServletResponse response;
-
-    @Mock
-    private FilterChain filterChain;
-
     @InjectMocks
     private JwtFilter jwtFilter;
+
+    private MockHttpServletRequest request;
+    private MockHttpServletResponse response;
+    private MockFilterChain filterChain;
 
     @BeforeEach
     void setUp() {
         SecurityContextHolder.clearContext();
+        request = new MockHttpServletRequest();
+        response = new MockHttpServletResponse();
+        filterChain = new MockFilterChain();
     }
 
     private UserDetails buildUser(String email) {
@@ -59,21 +57,18 @@ class JwtFilterTest {
 
     @Test
     void doFilter_noAuthorizationHeader_passesThrough() throws ServletException, IOException {
-        when(request.getHeader("Authorization")).thenReturn(null);
+        jwtFilter.doFilter(request, response, filterChain);
 
-        jwtFilter.doFilterInternal(request, response, filterChain);
-
-        verify(filterChain).doFilter(request, response);
         verify(jwtUtil, never()).extractUsername(any());
+        assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
     }
 
     @Test
     void doFilter_authHeaderWithoutBearer_passesThrough() throws ServletException, IOException {
-        when(request.getHeader("Authorization")).thenReturn("Basic sometoken");
+        request.addHeader("Authorization", "Basic sometoken");
 
-        jwtFilter.doFilterInternal(request, response, filterChain);
+        jwtFilter.doFilter(request, response, filterChain);
 
-        verify(filterChain).doFilter(request, response);
         verify(jwtUtil, never()).extractUsername(any());
     }
 
@@ -82,58 +77,51 @@ class JwtFilterTest {
         String token = "valid.jwt.token";
         UserDetails user = buildUser("test@example.com");
 
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+        request.addHeader("Authorization", "Bearer " + token);
         when(jwtUtil.extractUsername(token)).thenReturn("test@example.com");
         when(userDetailsService.loadUserByUsername("test@example.com")).thenReturn(user);
         when(jwtUtil.isTokenValid(token, user)).thenReturn(true);
 
-        jwtFilter.doFilterInternal(request, response, filterChain);
+        jwtFilter.doFilter(request, response, filterChain);
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNotNull();
-        verify(filterChain).doFilter(request, response);
     }
 
     @Test
     void doFilter_expiredToken_setsAttributeAndClearsContext() throws ServletException, IOException {
         String token = "expired.jwt.token";
-
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+        request.addHeader("Authorization", "Bearer " + token);
         when(jwtUtil.extractUsername(token)).thenThrow(new ExpiredJwtException(null, null, "expired"));
 
-        jwtFilter.doFilterInternal(request, response, filterChain);
+        jwtFilter.doFilter(request, response, filterChain);
 
-        verify(request).setAttribute("jwt.error", "Token expirado");
+        assertThat(request.getAttribute("jwt.error")).isEqualTo("Token expirado");
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
-        verify(filterChain).doFilter(request, response);
     }
 
     @Test
     void doFilter_invalidToken_setsAttributeAndClearsContext() throws ServletException, IOException {
         String token = "bad.jwt.token";
-
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+        request.addHeader("Authorization", "Bearer " + token);
         when(jwtUtil.extractUsername(token)).thenThrow(new JwtException("invalid"));
 
-        jwtFilter.doFilterInternal(request, response, filterChain);
+        jwtFilter.doFilter(request, response, filterChain);
 
-        verify(request).setAttribute("jwt.error", "Token inválido");
+        assertThat(request.getAttribute("jwt.error")).isEqualTo("Token inválido");
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
-        verify(filterChain).doFilter(request, response);
     }
 
     @Test
     void doFilter_userNotFound_clearsContextAndContinues() throws ServletException, IOException {
         String token = "valid.jwt.token";
-
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+        request.addHeader("Authorization", "Bearer " + token);
         when(jwtUtil.extractUsername(token)).thenReturn("ghost@example.com");
         when(userDetailsService.loadUserByUsername("ghost@example.com"))
                 .thenThrow(new UsernameNotFoundException("not found"));
 
-        jwtFilter.doFilterInternal(request, response, filterChain);
+        jwtFilter.doFilter(request, response, filterChain);
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
-        verify(filterChain).doFilter(request, response);
     }
 
     @Test
@@ -141,14 +129,13 @@ class JwtFilterTest {
         String token = "mismatched.jwt.token";
         UserDetails user = buildUser("real@example.com");
 
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+        request.addHeader("Authorization", "Bearer " + token);
         when(jwtUtil.extractUsername(token)).thenReturn("real@example.com");
         when(userDetailsService.loadUserByUsername("real@example.com")).thenReturn(user);
         when(jwtUtil.isTokenValid(token, user)).thenReturn(false);
 
-        jwtFilter.doFilterInternal(request, response, filterChain);
+        jwtFilter.doFilter(request, response, filterChain);
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
-        verify(filterChain).doFilter(request, response);
     }
 }

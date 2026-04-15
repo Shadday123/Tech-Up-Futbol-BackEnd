@@ -35,7 +35,7 @@ class MapperTest {
         player.setId("p1");
         player.setFullname("Juan");
         player.setEmail("juan@example.com");
-        player.setPosition(PositionEnum.Forward);
+        player.setPosition(PositionEnum.Winger);
         player.setSemester(5);
         player.setAge(22);
         player.setGender("M");
@@ -143,7 +143,7 @@ class MapperTest {
         TournamentDTO dto = new TournamentDTO();
         dto.setId(null);
         dto.setName("Sin ID");
-        dto.setCurrentState(TournamentState.PENDING);
+        dto.setCurrentState(TournamentState.DRAFT);
 
         Tournament result = TournamentMapper.toModel(dto);
 
@@ -155,14 +155,14 @@ class MapperTest {
         Tournament t = new Tournament();
         t.setId("T002");
         t.setName("Liga Local");
-        t.setCurrentState(TournamentState.PENDING);
+        t.setCurrentState(TournamentState.DRAFT);
         t.setMaxTeams(16);
 
         TournamentDTO dto = TournamentMapper.toDTO(t);
 
         assertEquals("T002", dto.getId());
         assertEquals("Liga Local", dto.getName());
-        assertEquals(TournamentState.PENDING, dto.getCurrentState());
+        assertEquals(TournamentState.DRAFT, dto.getCurrentState());
     }
 
     @Test
@@ -186,7 +186,7 @@ class MapperTest {
     void tournamentMapper_toConfigResponse_withNullLists_returnsEmptyLists() {
         Tournament t = new Tournament();
         t.setId("T004");
-        t.setCurrentState(TournamentState.PENDING);
+        t.setCurrentState(TournamentState.DRAFT);
         t.setImportantDates(null);
         t.setMatchSchedules(null);
         t.setFields(null);

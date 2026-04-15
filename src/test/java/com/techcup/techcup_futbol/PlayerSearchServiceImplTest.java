@@ -61,7 +61,7 @@ class PlayerSearchServiceImplTest {
 
     @Test
     void search_playerWithTeam_excluded() {
-        StudentPlayerEntity withTeam = buildStudentEntity("p2", "Con Equipo", PositionEnum.Forward,
+        StudentPlayerEntity withTeam = buildStudentEntity("p2", "Con Equipo", PositionEnum.Winger,
                 20, "M", 222222, 3, true, true);
         when(playerRepository.findAll()).thenReturn(List.of(withTeam));
 
@@ -72,7 +72,7 @@ class PlayerSearchServiceImplTest {
 
     @Test
     void search_playerNotDisponible_excluded() {
-        StudentPlayerEntity noDisp = buildStudentEntity("p3", "No Disponible", PositionEnum.Forward,
+        StudentPlayerEntity noDisp = buildStudentEntity("p3", "No Disponible", PositionEnum.Winger,
                 20, "M", 333333, 3, false, false);
         when(playerRepository.findAll()).thenReturn(List.of(noDisp));
 
@@ -84,7 +84,7 @@ class PlayerSearchServiceImplTest {
     @Test
     void search_byPosition_filtersCorrectly() {
         StudentPlayerEntity midfielder = buildStudentEntity("p1", "MF", PositionEnum.Midfielder, 22, "M", 1, 5, false, true);
-        StudentPlayerEntity forward = buildStudentEntity("p2", "FW", PositionEnum.Forward, 22, "M", 2, 5, false, true);
+        StudentPlayerEntity forward = buildStudentEntity("p2", "FW", PositionEnum.Winger, 22, "M", 2, 5, false, true);
         when(playerRepository.findAll()).thenReturn(List.of(midfielder, forward));
 
         List<Player> result = playerSearchService.search(PositionEnum.Midfielder, null, null, null, null, null, null);
@@ -95,8 +95,8 @@ class PlayerSearchServiceImplTest {
 
     @Test
     void search_byGender_filtersCorrectly() {
-        StudentPlayerEntity male = buildStudentEntity("p1", "Man", PositionEnum.Forward, 20, "M", 1, 5, false, true);
-        StudentPlayerEntity female = buildStudentEntity("p2", "Woman", PositionEnum.Forward, 20, "F", 2, 5, false, true);
+        StudentPlayerEntity male = buildStudentEntity("p1", "Man", PositionEnum.Winger, 20, "M", 1, 5, false, true);
+        StudentPlayerEntity female = buildStudentEntity("p2", "Woman", PositionEnum.Winger, 20, "F", 2, 5, false, true);
         when(playerRepository.findAll()).thenReturn(List.of(male, female));
 
         List<Player> result = playerSearchService.search(null, null, null, null, "F", null, null);
@@ -107,8 +107,8 @@ class PlayerSearchServiceImplTest {
 
     @Test
     void search_byMinAge_filtersCorrectly() {
-        StudentPlayerEntity young = buildStudentEntity("p1", "Young", PositionEnum.Forward, 18, "M", 1, 2, false, true);
-        StudentPlayerEntity old = buildStudentEntity("p2", "Old", PositionEnum.Forward, 25, "M", 2, 5, false, true);
+        StudentPlayerEntity young = buildStudentEntity("p1", "Young", PositionEnum.Winger, 18, "M", 1, 2, false, true);
+        StudentPlayerEntity old = buildStudentEntity("p2", "Old", PositionEnum.Winger, 25, "M", 2, 5, false, true);
         when(playerRepository.findAll()).thenReturn(List.of(young, old));
 
         List<Player> result = playerSearchService.search(null, null, 20, null, null, null, null);
@@ -119,8 +119,8 @@ class PlayerSearchServiceImplTest {
 
     @Test
     void search_byMaxAge_filtersCorrectly() {
-        StudentPlayerEntity young = buildStudentEntity("p1", "Young", PositionEnum.Forward, 18, "M", 1, 2, false, true);
-        StudentPlayerEntity old = buildStudentEntity("p2", "Old", PositionEnum.Forward, 25, "M", 2, 5, false, true);
+        StudentPlayerEntity young = buildStudentEntity("p1", "Young", PositionEnum.Winger, 18, "M", 1, 2, false, true);
+        StudentPlayerEntity old = buildStudentEntity("p2", "Old", PositionEnum.Winger, 25, "M", 2, 5, false, true);
         when(playerRepository.findAll()).thenReturn(List.of(young, old));
 
         List<Player> result = playerSearchService.search(null, null, null, 20, null, null, null);

@@ -126,7 +126,7 @@ class PlayerMapperTest {
         student.setId("p1");
         student.setFullname("Juan");
         student.setEmail("juan@example.com");
-        student.setPosition(PositionEnum.Forward);
+        student.setPosition(PositionEnum.Winger);
         student.setSemester(7);
 
         PlayerDTO result = PlayerMapper.toDTO(student);
@@ -170,7 +170,7 @@ class PlayerMapperTest {
         StudentPlayer student = new StudentPlayer();
         student.setId("p1");
         student.setFullname("Carlos");
-        student.setPosition(PositionEnum.Goalkeeper);
+        student.setPosition(PositionEnum.GoalKeeper);
         student.setSemester(4);
 
         PlayerResponse response = PlayerMapper.mapToResponse(student);
