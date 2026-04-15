@@ -21,7 +21,10 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: mvn clean package
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 
       - name: Login to Azure Container Registry
         uses: docker/login-action@v3

@@ -21,12 +21,14 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: mvn clean package
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 
       - name: Deploy to Azure Web App QA
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'techcup-qa'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_QA }}
-
           package: target/*.jar
