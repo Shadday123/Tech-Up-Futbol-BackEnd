@@ -28,12 +28,11 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String email = oauth2User.getAttribute("email");
         String token = jwtUtil.generateToken(email, "ROLE_JUGADOR");
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(
-                "{\"token\":\"" + token + "\"," +
-                        "\"email\":\"" + email + "\"," +
-                        "\"rol\":\"ROLE_JUGADOR\"," +
-                        "\"mensaje\":\"Login con Google exitoso\"}"
-        );
+        String redirectUrl = "http://localhost:5173/oauth2/callback"
+                + "?token=" + token
+                + "&email=" + email
+                + "&rol=JUGADOR";
+
+        response.sendRedirect(redirectUrl);
     }
 }

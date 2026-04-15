@@ -6,14 +6,15 @@ import com.techcup.techcup_futbol.core.validator.EmailValidator;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
 import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
-import com.techcup.techcup_futbol.persistence.entity.StudentPlayerEntity;
+import com.techcup.techcup_futbol.persistence.entity.UserEntity;
 import com.techcup.techcup_futbol.persistence.mapper.PlayerPersistenceMapper;
 import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
+import com.techcup.techcup_futbol.persistence.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.techcup.techcup_futbol.core.util.IdGenerator;
 
 import java.time.LocalDateTime;
@@ -30,10 +31,18 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
     private final PlayerValidator playerValidator;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, PlayerValidator playerValidator) {
+
+    public PlayerServiceImpl(PlayerRepository playerRepository,
+                             PlayerValidator playerValidator,
+                             UserRepository userRepository,
+                             PasswordEncoder passwordEncoder) {
         this.playerRepository = playerRepository;
         this.playerValidator = playerValidator;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -61,9 +70,19 @@ public class PlayerServiceImpl implements PlayerService {
         jugador.setEmail(correo);
 
         PlayerEntity entity = PlayerPersistenceMapper.toEntity(jugador);
+        String hashedPassword = passwordEncoder.encode(entity.getPasswordHash());
+        entity.setPasswordHash(hashedPassword);
         playerRepository.save(entity);
 
         log.info("Jugador registrado — ID: {} | Email: {}", jugador.getId(), correo);
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(correo);
+        userEntity.setPasswordHash(hashedPassword);
+        userEntity.setRole(entity.getSystemRole());
+        userRepository.save(userEntity);
+
+        log.info("Usuario de autenticación creado — Email: {}", correo);
     }
 
     @Override

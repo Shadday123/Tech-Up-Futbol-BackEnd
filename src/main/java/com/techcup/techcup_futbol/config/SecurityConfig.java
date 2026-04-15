@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/brackets/**").permitAll()
                         .requestMatchers("/api/standings/**").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/players/registro").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/tournaments/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/players/search").permitAll()
 
