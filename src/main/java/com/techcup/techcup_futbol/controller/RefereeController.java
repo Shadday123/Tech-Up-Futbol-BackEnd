@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.controller;
 
 import com.techcup.techcup_futbol.controller.dto.AssignRefereeRequest;
 import com.techcup.techcup_futbol.controller.dto.CreateRefereeRequest;
+import com.techcup.techcup_futbol.controller.dto.RefereeRegistrationRequest;
 import com.techcup.techcup_futbol.controller.dto.RefereeResponse;
 import com.techcup.techcup_futbol.controller.mapper.RefereeMapper;
 import com.techcup.techcup_futbol.core.service.RefereeService;
@@ -26,6 +27,19 @@ public class RefereeController {
 
     public RefereeController(RefereeService refereeService) {
         this.refereeService = refereeService;
+    }
+
+    @PostMapping("/registro")
+    public ResponseEntity<RefereeResponse> registrar(@Valid @RequestBody RefereeRegistrationRequest request) {
+        log.info("POST /api/referees/registro — email: {}", request.email());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(RefereeMapper.toResponse(
+                        refereeService.registrar(
+                                request.fullname(),
+                                request.email(),
+                                request.password(),
+                                request.license(),
+                                request.experience())));
     }
 
     @PostMapping

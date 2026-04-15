@@ -16,6 +16,9 @@ public class RefereePersistenceMapper {
         entity.setId(referee.getId());
         entity.setFullname(referee.getFullname());
         entity.setEmail(referee.getEmail());
+        entity.setPasswordHash(referee.getPassword());
+        entity.setLicense(referee.getLicense());
+        entity.setExperience(referee.getExperience());
 
         return entity;
     }
@@ -28,6 +31,8 @@ public class RefereePersistenceMapper {
         referee.setId(entity.getId());
         referee.setFullname(entity.getFullname());
         referee.setEmail(entity.getEmail());
+        referee.setLicense(entity.getLicense());
+        referee.setExperience(entity.getExperience());
 
         if (entity.getAssignedMatches() != null) {
             referee.setAssignedMatches(
