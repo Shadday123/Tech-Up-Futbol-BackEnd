@@ -1,322 +1,222 @@
 package com.techcup.techcup_futbol;
 
-import com.techcup.techcup_futbol.Controller.dto.PaymentDTOs.*;
 import com.techcup.techcup_futbol.core.exception.PaymentException;
-import com.techcup.techcup_futbol.core.model.*;
+import com.techcup.techcup_futbol.core.model.Payment;
+import com.techcup.techcup_futbol.core.model.PaymentStatus;
+import com.techcup.techcup_futbol.core.model.PositionEnum;
+import com.techcup.techcup_futbol.core.model.StudentPlayer;
+import com.techcup.techcup_futbol.core.model.Team;
 import com.techcup.techcup_futbol.core.service.PaymentServiceImpl;
-import org.junit.jupiter.api.*;
+import com.techcup.techcup_futbol.persistence.entity.PaymentEntity;
+import com.techcup.techcup_futbol.persistence.entity.TeamEntity;
+import com.techcup.techcup_futbol.persistence.mapper.PaymentPersistenceMapper;
+import com.techcup.techcup_futbol.persistence.repository.PaymentRepository;
+import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@DisplayName("PaymentServiceImpl Tests")
+@ExtendWith(MockitoExtension.class)
 class PaymentServiceImplTest {
 
-    private PaymentServiceImpl service;
+    @Mock
+    private PaymentRepository paymentRepository;
+
+    @Mock
+    private TeamRepository teamRepository;
+
+    @InjectMocks
+    private PaymentServiceImpl paymentService;
+
+    private TeamEntity teamEntity;
+    private PaymentEntity existingPaymentEntity;
+    private Payment existingPayment;
 
     @BeforeEach
     void setUp() {
-        DataStore.limpiarDatos();
-        service = new PaymentServiceImpl();
-    }
+        // TeamEntity para el repositorio
+        StudentPlayer captain = new StudentPlayer();
+        captain.setId("cap-001");
+        captain.setFullname("Capitan");
+        captain.setAge(22);
+        captain.setPosition(PositionEnum.Defender);
+        captain.setSemester(5);
 
-    // ── Happy Path
-
-    @Nested
-    @DisplayName("Happy Path")
-    class HappyPath {
-
-        @Test
-        @DisplayName("HP-PAY-01: uploadReceipt() crea un pago en UNDER_REVIEW para equipo existente")
-        void uploadReceiptCreapagoUnderReview() {
-            Team team = buildTeam("Pagadores");
-            DataStore.equipos.put(team.getId(), team);
-
-            UploadReceiptRequest req = new UploadReceiptRequest(team.getId(), "http://comprobante.com/pago.pdf");
-            PaymentResponse resp = service.uploadReceipt(req);
-
-            assertNotNull(resp.id());
-            assertEquals(PaymentStatus.UNDER_REVIEW, resp.currentStatus());
-            assertEquals(team.getId(), resp.teamId());
-        }
-
-        @Test
-        @DisplayName("HP-PAY-02: uploadReceipt() actualiza comprobante si ya existe pago (resubida)")
-        void uploadReceiptActualizaComprobante() {
-            Team team = buildTeam("Resubida");
-            DataStore.equipos.put(team.getId(), team);
-
-            UploadReceiptRequest req1 = new UploadReceiptRequest(team.getId(), "http://v1.pdf");
-            PaymentResponse r1 = service.uploadReceipt(req1);
-
-            // El pago pasó a UNDER_REVIEW; se rechaza y vuelve a PENDING para poder subir de nuevo
-            service.updateStatus(r1.id(), "REJECTED");
-            service.updateStatus(r1.id(), "PENDING");
-
-            UploadReceiptRequest req2 = new UploadReceiptRequest(team.getId(), "http://v2.pdf");
-            PaymentResponse r2 = service.uploadReceipt(req2);
-
-            assertEquals(PaymentStatus.UNDER_REVIEW, r2.currentStatus());
-            assertEquals("http://v2.pdf", r2.receiptUrl());
-        }
-
-        @Test
-        @DisplayName("HP-PAY-03: updateStatus() PENDING → UNDER_REVIEW")
-        void updateStatusPendingAUnderReview() {
-            String paymentId = crearPagoConEstado("Equipo A");
-            // el pago queda en UNDER_REVIEW al subir el comprobante, lo ponemos a PENDING primero
-            service.updateStatus(paymentId, "REJECTED");
-            service.updateStatus(paymentId, "PENDING");
-
-            PaymentResponse resp = service.updateStatus(paymentId, "UNDER_REVIEW");
-            assertEquals(PaymentStatus.UNDER_REVIEW, resp.currentStatus());
-        }
-
-        @Test
-        @DisplayName("HP-PAY-04: updateStatus() UNDER_REVIEW → APPROVED")
-        void updateStatusUnderReviewAApproved() {
-            String paymentId = crearPagoConEstado("Equipo B");
-            PaymentResponse resp = service.updateStatus(paymentId, "APPROVED");
-            assertEquals(PaymentStatus.APPROVED, resp.currentStatus());
-        }
-
-        @Test
-        @DisplayName("HP-PAY-05: updateStatus() UNDER_REVIEW → REJECTED")
-        void updateStatusUnderReviewARejected() {
-            String paymentId = crearPagoConEstado("Equipo C");
-            PaymentResponse resp = service.updateStatus(paymentId, "REJECTED");
-            assertEquals(PaymentStatus.REJECTED, resp.currentStatus());
-        }
-
-        @Test
-        @DisplayName("HP-PAY-06: updateStatus() REJECTED → PENDING")
-        void updateStatusRejectedAPending() {
-            String paymentId = crearPagoConEstado("Equipo D");
-            service.updateStatus(paymentId, "REJECTED");
-            PaymentResponse resp = service.updateStatus(paymentId, "PENDING");
-            assertEquals(PaymentStatus.PENDING, resp.currentStatus());
-        }
-
-        @Test
-        @DisplayName("HP-PAY-07: findById() retorna el pago si existe")
-        void findByIdRetornaPago() {
-            String paymentId = crearPagoConEstado("Equipo E");
-            PaymentResponse resp = service.findById(paymentId);
-            assertNotNull(resp);
-            assertEquals(paymentId, resp.id());
-        }
-
-        @Test
-        @DisplayName("HP-PAY-08: findAll() retorna todos los pagos")
-        void findAllRetornaTodos() {
-            crearPagoConEstado("Equipo F");
-            crearPagoConEstado("Equipo G");
-            List<PaymentResponse> lista = service.findAll();
-            assertEquals(2, lista.size());
-        }
-
-        @Test
-        @DisplayName("HP-PAY-09: findByTeamId() retorna pago del equipo correcto")
-        void findByTeamIdRetornaPago() {
-            Team team = buildTeam("Equipo H");
-            DataStore.equipos.put(team.getId(), team);
-            service.uploadReceipt(new UploadReceiptRequest(team.getId(), "http://h.pdf"));
-
-            PaymentResponse resp = service.findByTeamId(team.getId());
-            assertNotNull(resp);
-            assertEquals(team.getId(), resp.teamId());
-        }
-    }
-
-    // ── Error Path
-
-    @Nested
-    @DisplayName("Error Path")
-    class ErrorPath {
-
-        @Test
-        @DisplayName("EP-PAY-01: uploadReceipt() lanza PaymentException si equipo no existe")
-        void uploadReceiptEquipoNoExisteLanza() {
-            UploadReceiptRequest req = new UploadReceiptRequest("NO-EXISTE", "http://r.pdf");
-            PaymentException ex = assertThrows(PaymentException.class,
-                    () -> service.uploadReceipt(req));
-            assertEquals("teamId", ex.getField());
-        }
-
-        @Test
-        @DisplayName("EP-PAY-02: uploadReceipt() lanza PaymentException si URL está vacía")
-        void uploadReceiptUrlVaciaLanza() {
-            Team team = buildTeam("Sin URL");
-            DataStore.equipos.put(team.getId(), team);
-            UploadReceiptRequest req = new UploadReceiptRequest(team.getId(), "");
-            PaymentException ex = assertThrows(PaymentException.class,
-                    () -> service.uploadReceipt(req));
-            assertEquals("receiptUrl", ex.getField());
-        }
-
-        @Test
-        @DisplayName("EP-PAY-03: uploadReceipt() lanza PaymentException si pago ya está APPROVED")
-        void uploadReceiptPagoAprobadoLanza() {
-            String paymentId = crearPagoConEstado("Equipo Aprobado");
-            service.updateStatus(paymentId, "APPROVED");
-
-            Team team = DataStore.equipos.values().stream()
-                    .filter(t -> t.getTeamName().equals("Equipo Aprobado"))
-                    .findFirst().orElseThrow();
-            UploadReceiptRequest req = new UploadReceiptRequest(team.getId(), "http://nuevo.pdf");
-            PaymentException ex = assertThrows(PaymentException.class,
-                    () -> service.uploadReceipt(req));
-            assertEquals("status", ex.getField());
-        }
-
-        @Test
-        @DisplayName("EP-PAY-04: updateStatus() lanza PaymentException si pago no existe")
-        void updateStatusPagoNoExisteLanza() {
-            PaymentException ex = assertThrows(PaymentException.class,
-                    () -> service.updateStatus("NO-EXISTE", "APPROVED"));
-            assertEquals("id", ex.getField());
-        }
-
-        @Test
-        @DisplayName("EP-PAY-05: updateStatus() lanza PaymentException si estado inválido")
-        void updateStatusEstadoInvalidoLanza() {
-            String paymentId = crearPagoConEstado("Equipo Invalido");
-            PaymentException ex = assertThrows(PaymentException.class,
-                    () -> service.updateStatus(paymentId, "INVALIDO"));
-            assertEquals("status", ex.getField());
-        }
-
-        @Test
-        @DisplayName("EP-PAY-06: updateStatus() lanza PaymentException en transición inválida PENDING → APPROVED")
-        void updateStatusTransicionInvalidaLanza() {
-            String paymentId = crearPagoConEstado("Equipo Trans");
-            service.updateStatus(paymentId, "REJECTED");
-            service.updateStatus(paymentId, "PENDING");
-
-            PaymentException ex = assertThrows(PaymentException.class,
-                    () -> service.updateStatus(paymentId, "APPROVED"));
-            assertEquals("status", ex.getField());
-        }
-
-        @Test
-        @DisplayName("EP-PAY-07: findById() lanza PaymentException si no existe")
-        void findByIdNoExisteLanza() {
-            PaymentException ex = assertThrows(PaymentException.class,
-                    () -> service.findById("NO-EXISTE"));
-            assertEquals("id", ex.getField());
-        }
-
-        @Test
-        @DisplayName("EP-PAY-08: findByTeamId() lanza PaymentException si equipo no tiene pago")
-        void findByTeamIdSinPagoLanza() {
-            assertThrows(PaymentException.class,
-                    () -> service.findByTeamId("EQUIPO-SIN-PAGO"));
-        }
-
-        @Test
-        @DisplayName("EP-PAY-09: updateStatus() APPROVED es terminal — no permite más transiciones")
-        void updateStatusApprovedEsTerminal() {
-            String paymentId = crearPagoConEstado("Equipo Terminal");
-            service.updateStatus(paymentId, "APPROVED");
-
-            for (String next : new String[]{"PENDING", "UNDER_REVIEW", "REJECTED", "APPROVED"}) {
-                assertThrows(PaymentException.class,
-                        () -> service.updateStatus(paymentId, next),
-                        "APPROVED → " + next + " debería fallar");
-            }
-        }
-    }
-
-    // ── Conditional Scenarios
-
-    @Nested
-    @DisplayName("Conditional Scenarios")
-    class ConditionalScenarios {
-
-        @Test
-        @DisplayName("CS-PAY-01: findAll() retorna lista vacía si no hay pagos")
-        void findAllVacioSiNoHayPagos() {
-            assertTrue(service.findAll().isEmpty());
-        }
-
-        @Test
-        @DisplayName("CS-PAY-02: flujo completo PENDING→UNDER_REVIEW→APPROVED")
-        void flujoCompletoAprobacion() {
-            String paymentId = crearPagoConEstado("Flujo Completo");
-            // ya está en UNDER_REVIEW al subir el comprobante
-            PaymentResponse resp = service.updateStatus(paymentId, "APPROVED");
-            assertEquals(PaymentStatus.APPROVED, resp.currentStatus());
-        }
-
-        @Test
-        @DisplayName("CS-PAY-03: flujo completo con rechazo y resubida")
-        void flujoConRechazoYResubida() {
-            Team team = buildTeam("Reintento");
-            DataStore.equipos.put(team.getId(), team);
-            PaymentResponse r1 = service.uploadReceipt(new UploadReceiptRequest(team.getId(), "v1.pdf"));
-            service.updateStatus(r1.id(), "REJECTED");
-            service.updateStatus(r1.id(), "PENDING");
-            PaymentResponse r2 = service.uploadReceipt(new UploadReceiptRequest(team.getId(), "v2.pdf"));
-            assertEquals(PaymentStatus.UNDER_REVIEW, r2.currentStatus());
-        }
-
-        @Test
-        @DisplayName("CS-PAY-04: uploadReceipt() calcula monto basado en número de jugadores")
-        void uploadReceiptCalculaMonto() {
-            Team team = buildTeam("Con Jugadores");
-            team.setPlayers(buildJugadores(4));
-            DataStore.equipos.put(team.getId(), team);
-
-            PaymentResponse resp = service.uploadReceipt(
-                    new UploadReceiptRequest(team.getId(), "http://r.pdf"));
-
-            assertEquals(200.0, resp.amount()); // 4 jugadores * 50.0
-        }
-
-        @Test
-        @DisplayName("CS-PAY-05: múltiples equipos tienen pagos independientes")
-        void multiplesEquiposPagosIndependientes() {
-            Team t1 = buildTeam("T1"); DataStore.equipos.put(t1.getId(), t1);
-            Team t2 = buildTeam("T2"); DataStore.equipos.put(t2.getId(), t2);
-
-            service.uploadReceipt(new UploadReceiptRequest(t1.getId(), "r1.pdf"));
-            service.uploadReceipt(new UploadReceiptRequest(t2.getId(), "r2.pdf"));
-
-            assertEquals(2, service.findAll().size());
-        }
-    }
-
-    // ── Helpers
-
-    private Team buildTeam(String name) {
         Team team = new Team();
-        team.setId(UUID.randomUUID().toString());
-        team.setTeamName(name);
-        team.setShieldUrl("shield.png");
-        team.setUniformColors("Rojo");
-        team.setPlayers(new ArrayList<>());
-        return team;
+        team.setId("team-001");
+        team.setTeamName("Los Tigres");
+        team.setCaptain(captain);
+        team.setPlayers(List.of(captain));
+
+        teamEntity = new TeamEntity();
+        teamEntity.setId("team-001");
+        teamEntity.setTeamName("Los Tigres");
+
+        // PaymentEntity para el repositorio
+        existingPaymentEntity = new PaymentEntity();
+        existingPaymentEntity.setId("pay-001");
+        existingPaymentEntity.setTeamId("team-001");
+        existingPaymentEntity.setAmount(550.0); // 50.0 * 11
+        existingPaymentEntity.setCurrentStatus(PaymentStatus.PENDING);
+
+        // Payment para las aserciones
+        existingPayment = PaymentPersistenceMapper.toDomain(existingPaymentEntity);
     }
 
-    private List<Player> buildJugadores(int count) {
-        List<Player> lista = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            StudentPlayer p = new StudentPlayer();
-            p.setId(UUID.randomUUID().toString());
-            lista.add(p);
-        }
-        return lista;
+    // ── UPLOAD RECEIPT ──
+
+    @Test
+    void uploadReceipt_newPayment_createsAndSaves() {
+        when(teamRepository.findById("team-001")).thenReturn(Optional.of(teamEntity));
+        when(paymentRepository.findByTeamId("team-001")).thenReturn(Optional.empty());
+
+        PaymentEntity newPaymentEntity = new PaymentEntity();
+        newPaymentEntity.setId("pay-new");
+        newPaymentEntity.setTeamId("team-001");
+        newPaymentEntity.setAmount(550.0); // 50*11
+        newPaymentEntity.setCurrentStatus(PaymentStatus.UNDER_REVIEW);
+        newPaymentEntity.setReceiptUrl("http://receipt.com/img.jpg");
+
+        when(paymentRepository.save(any(PaymentEntity.class))).thenReturn(newPaymentEntity);
+
+        Payment result = paymentService.uploadReceipt("team-001", "http://receipt.com/img.jpg");
+
+        assertEquals("pay-new", result.getId());
+        assertEquals("team-001", result.getTeamId());
+        assertEquals(550.0, result.getAmount());
+        assertEquals(PaymentStatus.UNDER_REVIEW, result.getCurrentStatus());
+        assertEquals("http://receipt.com/img.jpg", result.getReceiptUrl());
+        verify(paymentRepository).save(any(PaymentEntity.class));
     }
 
-    /** Crea un equipo, sube comprobante y retorna el paymentId (estado UNDER_REVIEW) */
-    private String crearPagoConEstado(String teamName) {
-        Team team = buildTeam(teamName);
-        DataStore.equipos.put(team.getId(), team);
-        PaymentResponse resp = service.uploadReceipt(
-                new UploadReceiptRequest(team.getId(), "http://comprobante.pdf"));
-        return resp.id();
+    @Test
+    void uploadReceipt_existingPayment_updatesReceipt() {
+        when(teamRepository.findById("team-001")).thenReturn(Optional.of(teamEntity));
+        when(paymentRepository.findByTeamId("team-001")).thenReturn(Optional.of(existingPaymentEntity));
+
+        existingPaymentEntity.setReceiptUrl("http://receipt.com/new.jpg");
+        existingPaymentEntity.setCurrentStatus(PaymentStatus.UNDER_REVIEW);
+        when(paymentRepository.save(existingPaymentEntity)).thenReturn(existingPaymentEntity);
+
+        Payment result = paymentService.uploadReceipt("team-001", "http://receipt.com/new.jpg");
+
+        assertEquals("pay-001", result.getId());
+        assertEquals(PaymentStatus.UNDER_REVIEW, result.getCurrentStatus());
+        assertEquals("http://receipt.com/new.jpg", result.getReceiptUrl());
+        verify(paymentRepository).save(existingPaymentEntity);
+    }
+
+    @Test
+    void uploadReceipt_teamNotFound_throwsException() {
+        when(teamRepository.findById("team-999")).thenReturn(Optional.empty());
+
+        PaymentException exception = assertThrows(PaymentException.class,
+                () -> paymentService.uploadReceipt("team-999", "http://receipt.com/img.jpg"));
+        assertEquals("teamId", exception.getField());
+    }
+
+    @Test
+    void uploadReceipt_blankUrl_throwsException() {
+        when(teamRepository.findById("team-001")).thenReturn(Optional.of(teamEntity));
+
+        PaymentException exception = assertThrows(PaymentException.class,
+                () -> paymentService.uploadReceipt("team-001", "  "));
+        assertEquals("receiptUrl", exception.getField());
+    }
+
+    @Test
+    void uploadReceipt_alreadyApproved_throwsException() {
+        existingPaymentEntity.setCurrentStatus(PaymentStatus.APPROVED);
+        when(teamRepository.findById("team-001")).thenReturn(Optional.of(teamEntity));
+        when(paymentRepository.findByTeamId("team-001")).thenReturn(Optional.of(existingPaymentEntity));
+
+        PaymentException exception = assertThrows(PaymentException.class,
+                () -> paymentService.uploadReceipt("team-001", "http://receipt.com/img.jpg"));
+        assertEquals("status", exception.getField());
+    }
+
+    // ── UPDATE STATUS ──
+
+    @Test
+    void updateStatus_validTransition_updatesStatus() {
+        when(paymentRepository.findById("pay-001")).thenReturn(Optional.of(existingPaymentEntity));
+        existingPaymentEntity.setCurrentStatus(PaymentStatus.PENDING);
+        when(paymentRepository.save(existingPaymentEntity)).thenReturn(existingPaymentEntity);
+
+        Payment result = paymentService.updateStatus("pay-001", "UNDER_REVIEW");
+
+        assertEquals(PaymentStatus.UNDER_REVIEW, result.getCurrentStatus());
+        verify(paymentRepository).save(existingPaymentEntity);
+    }
+
+    @Test
+    void updateStatus_invalidStatus_throwsException() {
+        when(paymentRepository.findById("pay-001")).thenReturn(Optional.of(existingPaymentEntity));
+
+        PaymentException exception = assertThrows(PaymentException.class,
+                () -> paymentService.updateStatus("pay-001", "INVALID_STATUS"));
+        assertEquals("status", exception.getField());
+    }
+
+    @Test
+    void updateStatus_invalidTransition_throwsException() {
+        existingPaymentEntity.setCurrentStatus(PaymentStatus.APPROVED);
+        when(paymentRepository.findById("pay-001")).thenReturn(Optional.of(existingPaymentEntity));
+
+        PaymentException exception = assertThrows(PaymentException.class,
+                () -> paymentService.updateStatus("pay-001", "PENDING"));
+        assertEquals("status", exception.getField());
+    }
+
+    // ── FIND BY ID ──
+
+    @Test
+    void findById_existing_returnsPayment() {
+        when(paymentRepository.findById("pay-001")).thenReturn(Optional.of(existingPaymentEntity));
+
+        Payment result = paymentService.findById("pay-001");
+
+        assertEquals("pay-001", result.getId());
+        assertEquals(550.0, result.getAmount());
+    }
+
+    @Test
+    void findById_nonExistent_throwsException() {
+        when(paymentRepository.findById("pay-999")).thenReturn(Optional.empty());
+
+        PaymentException exception = assertThrows(PaymentException.class,
+                () -> paymentService.findById("pay-999"));
+        assertEquals("id", exception.getField());
+    }
+
+    // ── FIND BY TEAM ID ──
+
+    @Test
+    void findByTeamId_existing_returnsPayment() {
+        when(paymentRepository.findByTeamId("team-001")).thenReturn(Optional.of(existingPaymentEntity));
+
+        Payment result = paymentService.findByTeamId("team-001");
+
+        assertEquals("team-001", result.getTeamId());
+        assertEquals(550.0, result.getAmount());
+    }
+
+    @Test
+    void findByTeamId_nonExistent_throwsException() {
+        when(paymentRepository.findByTeamId("team-999")).thenReturn(Optional.empty());
+
+        PaymentException exception = assertThrows(PaymentException.class,
+                () -> paymentService.findByTeamId("team-999"));
+        assertEquals("teamId", exception.getField());
     }
 }

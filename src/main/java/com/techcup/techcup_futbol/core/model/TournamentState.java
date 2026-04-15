@@ -7,5 +7,4 @@ public enum TournamentState {
     IN_PROGRESS,
     COMPLETED,
     DRAFT
-
 }

@@ -1,10 +1,11 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchRequest;
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
+import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.PositionEnum;
 
 import java.util.List;
 
 public interface PlayerSearchService {
-    List<PlayerSearchResult> search(PlayerSearchRequest filters);
+    List<Player> search(PositionEnum position, Integer semester, Integer minAge,
+                        Integer maxAge, String gender, String name, Integer numberID);
 }

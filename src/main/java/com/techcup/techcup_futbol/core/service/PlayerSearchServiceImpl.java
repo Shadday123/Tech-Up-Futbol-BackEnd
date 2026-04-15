@@ -1,12 +1,12 @@
 package com.techcup.techcup_futbol.core.service;
-
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchRequest;
-import com.techcup.techcup_futbol.Controller.dto.PlayerSearchResult;
-import com.techcup.techcup_futbol.core.model.DataStore;
+import com.techcup.techcup_futbol.persistence.mapper.PlayerPersistenceMapper;
 import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.PositionEnum;
 import com.techcup.techcup_futbol.core.model.StudentPlayer;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,62 +17,45 @@ public class PlayerSearchServiceImpl implements PlayerSearchService {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerSearchServiceImpl.class);
 
-    @Override
-    public List<PlayerSearchResult> search(PlayerSearchRequest f) {
-        log.info("Buscando jugadores con filtros: {}", f);
+    @Autowired
+    private PlayerRepository playerRepository;
 
-        Stream<Player> stream = DataStore.jugadores.values().stream()
+    @Override
+    public List<Player> search(PositionEnum position, Integer semester, Integer minAge,
+                               Integer maxAge, String gender, String name, Integer numberID) {
+        log.info("Buscando jugadores con filtros: position={} semester={} age={}-{} gender={} name={} id={}",
+                position, semester, minAge, maxAge, gender, name, numberID);
+
+        Stream<Player> stream = playerRepository.findAll().stream()
+                .map(PlayerPersistenceMapper:: toDomain)
                 .filter(p -> !p.isHaveTeam() && p.isDisponible());
 
-        if (f.position() != null) {
-            stream = stream.filter(p -> f.position().equals(p.getPosition()));
+        if (position != null) {
+            stream = stream.filter(p -> position.equals(p.getPosition()));
         }
-        if (f.gender() != null && !f.gender().isBlank()) {
-            stream = stream.filter(p -> f.gender().equalsIgnoreCase(p.getGender()));
+        if (gender != null && !gender.isBlank()) {
+            stream = stream.filter(p -> gender.equalsIgnoreCase(p.getGender()));
         }
-        if (f.minAge() != null) {
-            stream = stream.filter(p -> p.getAge() >= f.minAge());
+        if (minAge != null) {
+            stream = stream.filter(p -> p.getAge() >= minAge);
         }
-        if (f.maxAge() != null) {
-            stream = stream.filter(p -> p.getAge() <= f.maxAge());
+        if (maxAge != null) {
+            stream = stream.filter(p -> p.getAge() <= maxAge);
         }
-        if (f.name() != null && !f.name().isBlank()) {
-            String lowerName = f.name().toLowerCase();
+        if (name != null && !name.isBlank()) {
+            String lowerName = name.toLowerCase();
             stream = stream.filter(p -> p.getFullname().toLowerCase().contains(lowerName));
         }
-        if (f.numberID() != null) {
-            stream = stream.filter(p -> p.getNumberID() == f.numberID());
+        if (numberID != null) {
+            stream = stream.filter(p -> p.getNumberID() == numberID);
         }
-        if (f.semester() != null) {
+        if (semester != null) {
             stream = stream.filter(p -> p instanceof StudentPlayer s
-                    && s.getSemester() == f.semester());
+                    && s.getSemester() == semester);
         }
 
-        List<PlayerSearchResult> results = stream.map(this::toResult).toList();
+        List<Player> results = stream.toList();
         log.info("Jugadores encontrados: {}", results.size());
         return results;
-    }
-
-    private PlayerSearchResult toResult(Player p) {
-        String type = "INSTITUTIONAL";
-        Integer semester = null;
-        if (p instanceof StudentPlayer s) {
-            type = "STUDENT";
-            semester = s.getSemester();
-        } else if (p.getClass().getSimpleName().equals("RelativePlayer")) {
-            type = "RELATIVE";
-        }
-        return new PlayerSearchResult(
-                p.getId(),
-                p.getFullname(),
-                p.getPosition(),
-                p.getDorsalNumber(),
-                p.getPhotoUrl(),
-                type,
-                semester,
-                p.getAge(),
-                p.getGender(),
-                !p.isHaveTeam()
-        );
     }
 }

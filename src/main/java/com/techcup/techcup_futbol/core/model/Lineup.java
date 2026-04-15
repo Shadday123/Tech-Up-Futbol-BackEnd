@@ -1,5 +1,6 @@
 package com.techcup.techcup_futbol.core.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

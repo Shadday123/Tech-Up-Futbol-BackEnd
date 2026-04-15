@@ -141,8 +141,25 @@ Los observers se implementan como listeners independientes:
 
 ## Diagrama de Componentes Especifico
 
-![Diagrama de componentes especifico.png](docs/Images/Diagrama%20de%20componentes%20especifico.png)
-
+![Diagrama sin título.drawio (2).png](docs/Images/Diagrama%20sin%20t%C3%ADtulo.drawio%20%282%29.png)
 ## Diagrama de clases
+<img width="2361" height="1248" alt="TechUp-Page-1 drawio" src="https://github.com/user-attachments/assets/7f84d889-9bbe-4892-960d-284474c17c3a" />
 
-![TechUp (1).jpg](docs/Images/TechUp%20%281%29.jpg)
+# Diagrams de secuencia por requerimientos 
+ ## Registro de Torneo
+ 
+![Tournament Creation Workflow-2026-03-29-203432.png](docs/Images/Tournament%20Creation%20Workflow-2026-03-29-203432.png)
+
+https://mermaid.live/edit#pako:eNqdVW1v2jAQ_iuepUlBom0IBEpUKnVAW6Z1rQDxYeKLlxw0UuJkttOVtf3vO-eNELoNVgnVvnvu7bn47oW6kQfUoRJ-JMBdGPlsLVi45AT_mKsiQYaBD1xBJoqZUL7rx4wrMh8SJsk8SgRnIUKGEVciCgIQ-9jZogaegXjyXZiEcbCPXlx92UUvWOB7DLPZx05GNxo78W6Ag3gfMx0_3O86nEIcSR_Bm3303dXDLviOxfF7Rd2MbzXwJoi-s2D87EKs_IjfMu6lHGQGOX0nl5fzoUMe7mdzcsZi_0yV7iUxhgKYgmp62A6pGoWT-RDtkUOHuCnSECVAq1GDemTNIU8ZU3UE6uqIrxjJ0OHKKCxQRAvIYEB4EuSNKczRHgt2KryUJRduCjjiNDwv3SEd0ySfmEfysjIgBBLIH7Mb4U9W_aZw4J5WkIsBkQo7kV5eXyuXPHUtLMBHV6Pjy2PL2Wa5G6hW1xTWvlT4nWKgawBjBTsFil01uSDm4XnXjI-p4MDs79jzHFgojTA_VHMvZJi0dXjSNU_HfT5lyI_EIh8Gx5D133G5V9CVPTscQA5ZZ8MHJp6RO0TxSfFo_ZpJKuTws5KY0dgDSFD6jTb1IX0O6Qkbm_4vWpFepkkAcjeGnnnogz2BgWOOQ9TYPnL0xiZY4lr4arPwoyD9ZEputoxoJyWLB1vt89gnuBxWge9Wm_c5ZrONVBD-K_DfgPVYNvZMJ4m0BkQvGRBkLESxFfLuVYnCce8QFU1BxhGXNbZQWXaxOp5zrO8104nZJF7WoJXuTrhtjULxYDS9up43qlHzbbDvsRz31Zoss0WyDeHRJkX6PeookUCThiBCpq_0RVsuqXqEEJbUwaMHK5YEakmX_A3NcGN9i6KwsBRRsn6kzophJ5o0idOZmy3_mnTs6T1ZCgVSCGIYJVxRx2q1-qlr6rzQZ-rY9mmn27W6Zr_d7_Rsq91p0g11up1Tq9-2W-2-3bPtzrn91qS_0mRap1a3Z7XaXds877VM0-y8_QaDR7lO
+## Registro de Jugadores
+![Player Registration-2026-03-29-210707.png](docs/Images/Player%20Registration-2026-03-29-210707.png)
+
+https://mermaid.ai/app/projects/2fce3ab8-f284-4d06-aa07-a767aab2241f/diagrams/b296f0b9-eb6d-4949-8a79-addb8f37faca/version/v0.1/edit
+## Registro de equipos
+
+![img.png](docs/Images/img.png)
+
+https://mermaid.live/edit#pako:eNqdVF1vmzAU_SuWnzKJpoRkCUFqpQxYF2lNWYBonSJFLtymnojNjMnaVf3vs_lImqabuvEEvsfn3nvOEY844SlgBxfwowSWgEfJWpDNkiH1kERygWJEChQXJRGU1-c5EZImNCdMIt_V5QjIxuVMCp5lII5RQahRQUYeQIQgtjSB6SbPjoFR2NL9HbZoYQuS0ZSoOY9B3o5rDjkvqAI9HKMufI26yPgNyfz7BHJJOftEWFotUuPjk_Nz33VQcBVG6JTk9FQq1qIt-66qB6GD-I0EBiLgYpp2EpJLQtk0fVejglChPIX6Xq5JygUU3TXIIxjJZItAZ2eIlVmzv3688KRpdXgeVOcXvtNovFsEBZ8n1_58NbuKVh-v4pm3v3Ph6zuxgwamiT6QFM11BgpZIyAr4LW-Nf_LzpU4VQWpfagkjTLA0gORNI7Bz8oUlKjxtI4zsgEDFXcUsjQWmYFKRm-5UIHKuCgM1Ch0QBSpURIBRIKm6miaRr8obMqklPxkrf0gKsTx1GsJotYItS9VwehuSaYW7zQE9a6a4cDkmnfhoG2duKqxHr3Dqvkbsmcu6vNjC6NFa5Um2BsV-ZPL1Wxy6a_8yyC6fsWnA_yuvrdLCVoyed77l16Tz3N_4l2v_K_TMArVzTfnY-_skTJubdhzV7QeTTLeLok7CaLJdLaa-1_i6dz3_ns25WUBsg5ooZrDlqCMFpKokRNK_hCLvJQdmhqoWeNFjCWfQ5FzVsDzPVW5Hswye8itAppWQafpLuttoKv3vB4KG3gtaIodKUow8AbEhuhP_Kh5l1jewQaW2FGvKdySMpNLvGRP6pr6iX3jfNPeFLxc32HnlqhAGLjMtR_NT72F1Id-qn-IO6RQooFwdYKw0zMHFTF2HvG9-hwOurbds_v2aDjsW9a4Z-AH7FjD7mhkmYPe0Br3-31zPHwy8K9qFrNrv-_bZn80sm3LHo8s6-k3Yen8zQ
+## Buscar Jugadores 
+![Buscar Jugadores](https://github.com/user-attachments/assets/13e217ba-cc79-4da7-a36d-a37bbff18c91)
+

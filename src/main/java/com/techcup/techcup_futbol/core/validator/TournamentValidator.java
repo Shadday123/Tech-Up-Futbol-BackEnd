@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol.core.validator;
 
-import com.techcup.techcup_futbol.Controller.dto.CreateTournamentRequest;
+import com.techcup.techcup_futbol.core.model.Tournament;
 import com.techcup.techcup_futbol.core.model.TournamentState;
 import com.techcup.techcup_futbol.core.exception.TournamentException;
 
@@ -10,14 +10,14 @@ public class TournamentValidator {
 
     private TournamentValidator() {}
 
-    public static void validate(CreateTournamentRequest request) {
-        if (request == null) {
+    public static void validate(Tournament tournament) {
+        if (tournament == null) {
             throw new TournamentException(TournamentException.REQUEST_NULL);
         }
-        validateName(request.name());
-        validateDates(request.startDate().toLocalDate(), request.endDate().toLocalDate());
-        validateRegistrationFee(request.registrationFee());
-        validateMaxTeams(request.maxTeams());
+        validateName(tournament.getName());
+        validateDates(tournament.getStartDate().toLocalDate(), tournament.getEndDate().toLocalDate());
+        validateRegistrationFee(tournament.getRegistrationFee());
+        validateMaxTeams(tournament.getMaxTeams());
     }
 
     public static void validateName(String name) {
@@ -37,14 +37,14 @@ public class TournamentValidator {
         }
     }
 
-    public static void validateRegistrationFee(double fee) {
+        public static void validateRegistrationFee(double fee) {
         if (fee < 0) {
             throw new TournamentException("registrationFee",
                     String.format(TournamentException.REGISTRATION_FEE_NEGATIVE, fee));
         }
     }
     public static void validateMaxTeams(int maxTeams) {
-        if (maxTeams < 4) {
+        if (maxTeams < 2) {
             throw new TournamentException("maxTeams",
                     String.format(TournamentException.MAX_TEAMS_TOO_LOW, maxTeams));
         }

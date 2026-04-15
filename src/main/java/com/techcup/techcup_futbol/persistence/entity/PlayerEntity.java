@@ -1,0 +1,62 @@
+package com.techcup.techcup_futbol.persistence.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import com.techcup.techcup_futbol.core.model.*;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name ="players")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name ="player_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class PlayerEntity {
+
+    @Id
+    private String id;
+
+    @Column(nullable = false)
+    private String fullname;
+    private String email;
+
+    @JsonIgnore
+    private String passwordHash;
+
+    private int numberID;
+
+    @Enumerated(EnumType.STRING)
+    private PositionEnum position;
+
+    private int dorsalNumber;
+
+    @Column(columnDefinition = "TEXT")
+    private String photoUrl;
+
+    private boolean haveTeam;
+    private boolean disponible = true;
+
+    private int age;
+    private String gender;
+    private boolean captain;
+
+    @Enumerated(EnumType.STRING)
+    private SystemRole systemRole = SystemRole.JUGADOR;
+
+    @Transient
+    @JsonIgnore
+    private Affilation affiliation;
+
+    public void changeAvailability() {
+        this.disponible = !this.disponible;
+    }
+
+    public void respondToInvitation(boolean accept) {
+        if (accept) {
+            this.haveTeam = true;
+        }
+    }
+}

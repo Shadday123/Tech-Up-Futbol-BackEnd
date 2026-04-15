@@ -1,6 +1,6 @@
 package com.techcup.techcup_futbol.core.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,14 +8,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Player {
+public abstract class Player {
 
     private String id;
+
 
     private String fullname;
     private String email;
 
-    @JsonIgnore
+
     private String passwordHash;
 
     private int numberID;
@@ -31,7 +32,8 @@ public class Player {
     private String gender;
     private boolean captain;
 
-    @JsonIgnore
+    private SystemRole systemRole = SystemRole.JUGADOR;
+
     private Affilation affiliation;
 
     public void changeAvailability() {

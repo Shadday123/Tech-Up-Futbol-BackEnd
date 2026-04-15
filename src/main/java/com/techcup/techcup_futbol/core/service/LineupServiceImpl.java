@@ -1,157 +1,142 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.LineupDTOs.*;
-import com.techcup.techcup_futbol.core.model.*;
+import com.techcup.techcup_futbol.core.model.Lineup;
+import com.techcup.techcup_futbol.core.model.Match;
 import com.techcup.techcup_futbol.core.exception.LineupException;
-import com.techcup.techcup_futbol.util.IdGenerator;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
+
+import com.techcup.techcup_futbol.persistence.entity.LineUpEntity;
+import com.techcup.techcup_futbol.persistence.entity.MatchEntity;
+import com.techcup.techcup_futbol.persistence.entity.TeamEntity;
+import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
+
+import com.techcup.techcup_futbol.persistence.mapper.LineupPersistenceMapper;
+
+import com.techcup.techcup_futbol.persistence.repository.LineupRepository;
+import com.techcup.techcup_futbol.persistence.repository.MatchRepository;
+import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class LineupServiceImpl implements LineupService {
 
     private static final Logger log = LoggerFactory.getLogger(LineupServiceImpl.class);
 
-    private final Map<String, Match> matches = new HashMap<>();
-    private final Map<String, Lineup> lineups = new HashMap<>();
+    private final LineupRepository lineupRepository;
+    private final MatchRepository matchRepository;
+    private final TeamRepository teamRepository;
+    private final PlayerRepository playerRepository;
 
-    public void registerMatch(Match match) {
-        matches.put(match.getId(), match);
+    public LineupServiceImpl(LineupRepository lineupRepository,
+                             MatchRepository matchRepository,
+                             TeamRepository teamRepository,
+                             PlayerRepository playerRepository) {
+        this.lineupRepository = lineupRepository;
+        this.matchRepository = matchRepository;
+        this.teamRepository = teamRepository;
+        this.playerRepository = playerRepository;
     }
 
     @Override
-    public LineupResponse create(CreateLineupRequest request) {
-        log.info("Creando alineación — partido: {} | equipo: {}", request.matchId(), request.teamId());
+    @Transactional
+    public Lineup create(String matchId, String teamId, String formation,
+                         List<String> starterIds, List<String> substituteIds,
+                         List<String> fieldPositions) {
 
-        Match match = matches.get(request.matchId());
-        if (match == null) {
-            throw new LineupException("matchId",
-                    String.format(LineupException.MATCH_NOT_FOUND, request.matchId()));
-        }
+        log.info("Creando alineación — partido: {} | equipo: {}", matchId, teamId);
 
-        Team team = DataStore.equipos.get(request.teamId());
-        if (team == null) {
-            throw new LineupException("teamId",
-                    String.format(LineupException.TEAM_NOT_FOUND, request.teamId()));
-        }
+        MatchEntity matchEntity = matchRepository.findById(matchId)
+                .orElseThrow(() -> new LineupException("matchId",
+                        String.format(LineupException.MATCH_NOT_FOUND, matchId)));
 
-        String key = request.matchId() + "_" + request.teamId();
-        if (lineups.containsKey(key)) {
+        TeamEntity teamEntity = teamRepository.findById(teamId)
+                .orElseThrow(() -> new LineupException("teamId",
+                        String.format(LineupException.TEAM_NOT_FOUND, teamId)));
+
+        if (lineupRepository.existsByMatchIdAndTeamId(matchId, teamId)) {
             throw new LineupException("lineup",
                     String.format(LineupException.LINEUP_ALREADY_EXISTS,
-                            request.matchId(), team.getTeamName()));
+                            matchId, teamEntity.getTeamName()));
         }
 
-        if (request.starterIds() == null || request.starterIds().size() != 7) {
+        if (starterIds == null || starterIds.size() != 7) {
             throw new LineupException("starters",
                     String.format(LineupException.WRONG_STARTERS_COUNT,
-                            request.starterIds() == null ? 0 : request.starterIds().size()));
+                            starterIds == null ? 0 : starterIds.size()));
         }
 
-        List<Player> teamPlayers = team.getPlayers() != null ? team.getPlayers() : List.of();
-        Set<String> teamPlayerIds = new HashSet<>();
-        for (Player p : teamPlayers) teamPlayerIds.add(p.getId());
+        List<PlayerEntity> starters = starterIds.stream()
+                .map(id -> playerRepository.findById(id)
+                        .orElseThrow(() -> new LineupException("starters",
+                                String.format(LineupException.PLAYER_NOT_IN_TEAM, id, teamEntity.getTeamName()))))
+                .toList();
 
-        List<Player> starters = new ArrayList<>();
-        for (String sid : request.starterIds()) {
-            if (!teamPlayerIds.contains(sid)) {
-                throw new LineupException("starters",
-                        String.format(LineupException.PLAYER_NOT_IN_TEAM, sid, team.getTeamName()));
-            }
-            starters.add(DataStore.jugadores.get(sid));
-        }
-
-        List<Player> substitutes = new ArrayList<>();
-        if (request.substituteIds() != null) {
-            for (String sid : request.substituteIds()) {
-                Player p = DataStore.jugadores.get(sid);
-                if (p != null) substitutes.add(p);
-            }
-        }
-
-        List<String> positions = request.fieldPositions() == null ? List.of()
-                : request.fieldPositions().stream()
-                    .map(fp -> fp.playerId() + "|" + fp.x() + "|" + fp.y())
+        List<PlayerEntity> substitutes = new ArrayList<>();
+        if (substituteIds != null) {
+            substitutes = substituteIds.stream()
+                    .map(id -> playerRepository.findById(id).orElse(null))
+                    .filter(Objects::nonNull)
                     .toList();
+        }
 
-        Lineup lineup = new Lineup();
-        lineup.setId(IdGenerator.generateId());
-        lineup.setMatch(match);
-        lineup.setTeam(team);
-        lineup.setFormation(request.formation());
-        lineup.setStarters(starters);
-        lineup.setSubstitutes(substitutes);
-        lineup.setFieldPositions(positions);
+        LineUpEntity entity = new LineUpEntity();
+        entity.setId(IdGenerator.generateId());
+        entity.setMatch(matchEntity);
+        entity.setTeam(teamEntity);
+        entity.setFormation(formation);
+        entity.setFieldPositions(fieldPositions != null ? fieldPositions : List.of());
+        entity.setStarters(starters);
+        entity.setSubstitutes(substitutes);
 
-        lineups.put(key, lineup);
-        log.info("Alineación creada ID: {} para equipo '{}'", lineup.getId(), team.getTeamName());
-        return toResponse(lineup);
+        LineUpEntity saved = lineupRepository.save(entity);
+
+        log.info("Alineación creada ID: {} para equipo '{}'", saved.getId(), teamEntity.getTeamName());
+
+        return LineupPersistenceMapper.toDomain(saved);
     }
 
     @Override
-    public LineupResponse findByMatchAndTeam(String matchId, String teamId) {
-        String key = matchId + "_" + teamId;
-        Lineup lineup = lineups.get(key);
-        if (lineup == null) {
-            throw new LineupException("lineup",
-                    String.format(LineupException.LINEUP_NOT_FOUND, matchId, teamId));
-        }
-        return toResponse(lineup);
+    public Lineup findByMatchAndTeam(String matchId, String teamId) {
+        LineUpEntity entity = lineupRepository.findByMatchIdAndTeamId(matchId, teamId)
+                .orElseThrow(() -> new LineupException("lineup",
+                        String.format(LineupException.LINEUP_NOT_FOUND, matchId, teamId)));
+
+        return LineupPersistenceMapper.toDomain(entity);
     }
 
     @Override
-    public LineupResponse findRivalLineup(String matchId, String myTeamId) {
-        Match match = matches.get(matchId);
-        if (match == null) {
-            throw new LineupException("matchId",
-                    String.format(LineupException.MATCH_NOT_FOUND, matchId));
-        }
+    public Lineup findRivalLineup(String matchId, String myTeamId) {
+
+        MatchEntity match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new LineupException("matchId",
+                        String.format(LineupException.MATCH_NOT_FOUND, matchId)));
 
         String rivalId = match.getLocalTeam().getId().equals(myTeamId)
                 ? match.getVisitorTeam().getId()
                 : match.getLocalTeam().getId();
 
-        String rivalKey = matchId + "_" + rivalId;
-        Lineup rivalLineup = lineups.get(rivalKey);
-        if (rivalLineup == null) {
-            throw new LineupException("lineup", LineupException.RIVAL_LINEUP_NOT_PUBLISHED);
-        }
-        return toResponse(rivalLineup);
+        LineUpEntity entity = lineupRepository.findByMatchIdAndTeamId(matchId, rivalId)
+                .orElseThrow(() -> new LineupException("lineup",
+                        LineupException.RIVAL_LINEUP_NOT_PUBLISHED));
+
+        return LineupPersistenceMapper.toDomain(entity);
     }
 
-    private LineupResponse toResponse(Lineup l) {
-        List<LineupPlayerDTO> starters = l.getStarters() == null ? List.of()
-                : l.getStarters().stream().map(this::toPlayerDTO).toList();
-
-        List<LineupPlayerDTO> subs = l.getSubstitutes() == null ? List.of()
-                : l.getSubstitutes().stream().map(this::toPlayerDTO).toList();
-
-        List<PlayerPositionDTO> positions = l.getFieldPositions() == null ? List.of()
-                : l.getFieldPositions().stream().map(s -> {
-                    String[] p = s.split("\\|", 3);
-                    return new PlayerPositionDTO(p[0],
-                            p.length > 1 ? Double.parseDouble(p[1]) : 0,
-                            p.length > 2 ? Double.parseDouble(p[2]) : 0);
-                }).toList();
-
-        return new LineupResponse(
-                l.getId(),
-                l.getMatch().getId(),
-                l.getTeam().getId(),
-                l.getTeam().getTeamName(),
-                l.getFormation(),
-                starters, subs, positions
-        );
-    }
-
-    private LineupPlayerDTO toPlayerDTO(Player p) {
-        return new LineupPlayerDTO(
-                p.getId(), p.getFullname(),
-                p.getPosition() != null ? p.getPosition().name() : null,
-                p.getDorsalNumber(), p.getPhotoUrl()
-        );
+    @Override
+    @Transactional
+    public void registerMatch(Match match) {
+        log.info("Registrando alineaciones del partido: {}", match.getId());
+        List<LineUpEntity> lineups = lineupRepository.findByMatchId(match.getId());
+        log.info("Encontradas {} alineaciones para el partido", lineups.size());
     }
 }

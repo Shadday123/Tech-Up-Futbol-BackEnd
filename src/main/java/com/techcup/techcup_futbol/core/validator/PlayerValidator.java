@@ -1,34 +1,27 @@
 package com.techcup.techcup_futbol.core.validator;
 
-import com.techcup.techcup_futbol.Controller.dto.PlayerRegistrationRequest;
-import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PlayerValidator {
 
-    private PlayerValidator() {}
+    private final PlayerRepository playerRepository;
 
-    // ── Puntos de entrada ─────────────────────────────────────────────────────
-
-    /** Validación completa desde DTO. */
-    public static void validate(PlayerRegistrationRequest request) {
-        validateFullname(request.fullname());
-        validateAge(request.age());
-        EmailValidator.validate(request.email());
-        validateUniqueEmail(request.email());
-        validateUniqueNumberID(request.numberID());
+    public PlayerValidator(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
     }
 
     /** Validación completa desde objeto Player + correo separado. */
-    public static void validate(Player jugador, String correo) {
+    public void validate(Player jugador, String correo) {
         validateFullname(jugador.getFullname());
         validateAge(jugador.getAge());
         EmailValidator.validate(correo);
         validateUniqueEmail(correo);
         validateUniqueNumberID(jugador.getNumberID());
     }
-
 
     public static void validateFullname(String fullname) {
         if (fullname == null || fullname.isBlank()) {
@@ -47,22 +40,18 @@ public class PlayerValidator {
         EmailValidator.validate(email);
     }
 
-    public static void validateUniqueEmail(String email) {
-        boolean exists = DataStore.jugadores.values().stream()
-                .anyMatch(p -> p.getEmail() != null
-                        && p.getEmail().equalsIgnoreCase(email));
-        if (exists) {
+    public void validateUniqueEmail(String email) {
+        if (playerRepository.existsByEmailIgnoreCase(email)) {
             throw new PlayerException("email",
                     String.format(PlayerException.EMAIL_ALREADY_REGISTERED, email));
         }
     }
-    public static void validateUniqueNumberID(Integer numberID) {
+
+    public void validateUniqueNumberID(Integer numberID) {
         if (numberID == null) {
             throw new PlayerException("numberID", PlayerException.NUMBER_ID_NULL);
         }
-        boolean exists = DataStore.jugadores.values().stream()
-                .anyMatch(p -> numberID.equals(p.getNumberID()));
-        if (exists) {
+        if (playerRepository.existsByNumberID(numberID)) {
             throw new PlayerException("numberID",
                     String.format(PlayerException.NUMBER_ID_ALREADY_REGISTERED, numberID));
         }

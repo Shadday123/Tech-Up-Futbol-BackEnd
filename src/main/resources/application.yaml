@@ -1,37 +1,65 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
     name: techcup-futbol
-
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-
   datasource:
-    url : ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASS}
-
+    url: ${DB_URL:jdbc:h2:mem:techcupdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    username: ${DB_USER:dosw}
+    password: ${DB_PASS:asgard}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    database-platform: ${JPA_DIALECT:org.hibernate.dialect.H2Dialect}
+    open-in-view: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
 
 springdoc:
   swagger-ui:
+    path: /swagger-ui.html
+    url: /api-docs
+    operations-sorter: alpha
+  api-docs:
     path: /api-docs
+    oauth:
+      client-id: ${GOOGLE_CLIENT_ID}
 
 logging:
   level:
     root: INFO
     com.techcup.techcup_futbol: DEBUG
-    org.springframework: INFO
-    org.hibernate: WARN
-
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
   file:
     name: logs/techcup.log
 
 jwt:
-  secret: "TechCupFutbol2026ClaveSecretaMuyLargaParaQueSean256BitsMinimo!!"
-  expiration-ms: 86400000
+  secret: ${JWT_SECRET:TechCupFutbol2026ClaveSecretaMuyLargaParaQueSean256BitsMinimo1234567890abcdef}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always

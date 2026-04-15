@@ -1,211 +1,191 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.Controller.dto.MatchDTOs.*;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
-import com.techcup.techcup_futbol.util.IdGenerator;
+import com.techcup.techcup_futbol.persistence.entity.MatchEntity;
+import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
+import com.techcup.techcup_futbol.persistence.entity.TeamEntity;
+import com.techcup.techcup_futbol.persistence.mapper.MatchPersistenceMapper;
+import com.techcup.techcup_futbol.persistence.repository.MatchEventRepository;
+import com.techcup.techcup_futbol.persistence.repository.MatchRepository;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
+import com.techcup.techcup_futbol.persistence.repository.TeamRepository;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchServiceImpl implements MatchService {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceImpl.class);
 
-    private final Map<String, Match>           matches         = new HashMap<>();
-    private final Map<String, List<MatchEvent>> matchEvents    = new HashMap<>();
-    private final Map<String, MatchStatus>     matchStatusMap  = new HashMap<>();
+    private final MatchRepository matchRepository;
+    private final MatchEventRepository matchEventRepository;
+    private final TeamRepository teamRepository;
+    private final PlayerRepository playerRepository;
 
-
-    @Autowired
-    @Lazy
-    private LineupService lineupService;
-
-    @Autowired
-    private StandingsService standingsService;
-
-    // CREATE
+    public MatchServiceImpl(MatchRepository matchRepository,
+                            MatchEventRepository matchEventRepository,
+                            TeamRepository teamRepository,
+                            PlayerRepository playerRepository) {
+        this.matchRepository = matchRepository;
+        this.matchEventRepository = matchEventRepository;
+        this.teamRepository = teamRepository;
+        this.playerRepository = playerRepository;
+    }
 
     @Override
-    public MatchResponse create(CreateMatchRequest request) {
-        log.info("Creando partido: {} vs {}", request.localTeamId(), request.visitorTeamId());
+    @Transactional
+    public Match create(String localTeamId, String visitorTeamId, LocalDateTime dateTime,
+                        String refereeId, int field) {
+        log.info("Creando partido: {} vs {}", localTeamId, visitorTeamId);
 
-        Team local = DataStore.equipos.get(request.localTeamId());
-        if (local == null) {
-            throw new MatchException("localTeamId",
-                    String.format(MatchException.TEAM_NOT_FOUND, request.localTeamId()));
-        }
-        Team visitor = DataStore.equipos.get(request.visitorTeamId());
-        if (visitor == null) {
-            throw new MatchException("visitorTeamId",
-                    String.format(MatchException.TEAM_NOT_FOUND, request.visitorTeamId()));
-        }
-        if (request.localTeamId().equals(request.visitorTeamId())) {
+        TeamEntity localTeam = teamRepository.findById(localTeamId)
+                .orElseThrow(() -> new MatchException("localTeamId",
+                        String.format(MatchException.TEAM_NOT_FOUND, localTeamId)));
+
+        TeamEntity visitorTeam = teamRepository.findById(visitorTeamId)
+                .orElseThrow(() -> new MatchException("visitorTeamId",
+                        String.format(MatchException.TEAM_NOT_FOUND, visitorTeamId)));
+
+        if (localTeamId.equals(visitorTeamId)) {
             throw new MatchException("teams", MatchException.SAME_TEAM);
         }
 
-        Match match = new Match();
-        match.setId(IdGenerator.generateId());
-        match.setLocalTeam(local);
-        match.setVisitorTeam(visitor);
-        match.setDateTime(request.dateTime());
-        match.setField(request.field());
+        MatchEntity matchEntity = new MatchEntity();
+        matchEntity.setId(IdGenerator.generateId());
+        matchEntity.setLocalTeam(localTeam);
+        matchEntity.setVisitorTeam(visitorTeam);
+        matchEntity.setDateTime(dateTime);
+        matchEntity.setField(field);
+        matchEntity.setStatus(MatchStatus.SCHEDULED);
 
-        matches.put(match.getId(), match);
-        matchStatusMap.put(match.getId(), MatchStatus.SCHEDULED);
-        matchEvents.put(match.getId(), new ArrayList<>());
+        MatchEntity saved = matchRepository.save(matchEntity);
+        log.info("Partido creado ID: {} — {} vs {}", saved.getId(),
+                localTeam.getTeamName(), visitorTeam.getTeamName());
 
-        lineupService.registerMatch(match);
-
-        log.info("Partido creado ID: {} — {} vs {}", match.getId(),
-                local.getTeamName(), visitor.getTeamName());
-        return toResponse(match);
+        return MatchPersistenceMapper.toDomain(saved);
     }
 
-    // ── REGISTER RESULT
-
     @Override
-    public MatchResponse registerResult(String matchId, RegisterResultRequest request) {
+    @Transactional
+    public Match registerResult(String matchId, int scoreLocal, int scoreVisitor,
+                                List<MatchEventInput> events) {
         log.info("Registrando resultado del partido ID: {}", matchId);
 
-        Match match = matches.get(matchId);
-        if (match == null) {
-            throw new MatchException("matchId",
-                    String.format(MatchException.MATCH_NOT_FOUND, matchId));
-        }
-        if (matchStatusMap.get(matchId) == MatchStatus.FINISHED) {
+        MatchEntity match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchException("matchId",
+                        String.format(MatchException.MATCH_NOT_FOUND, matchId)));
+
+        if (match.getStatus() == MatchStatus.FINISHED) {
             throw new MatchException("status", MatchException.RESULT_ALREADY_REGISTERED);
         }
 
-        if (request.events() != null) {
-            long localGoals = request.events().stream()
+        if (events != null) {
+            long localGoals = events.stream()
                     .filter(e -> "GOAL".equalsIgnoreCase(e.type()))
                     .filter(e -> isPlayerInTeam(e.playerId(), match.getLocalTeam()))
                     .count();
-            long visitorGoals = request.events().stream()
+            long visitorGoals = events.stream()
                     .filter(e -> "GOAL".equalsIgnoreCase(e.type()))
                     .filter(e -> isPlayerInTeam(e.playerId(), match.getVisitorTeam()))
                     .count();
 
-            if (localGoals != request.scoreLocal()) {
+            if (localGoals != scoreLocal) {
                 throw new MatchException("events",
                         String.format(MatchException.GOALS_MISMATCH,
-                                match.getLocalTeam().getTeamName(),
-                                localGoals, request.scoreLocal()));
+                                match.getLocalTeam().getTeamName(), localGoals, scoreLocal));
             }
-            if (visitorGoals != request.scoreVisitor()) {
+            if (visitorGoals != scoreVisitor) {
                 throw new MatchException("events",
                         String.format(MatchException.GOALS_MISMATCH,
-                                match.getVisitorTeam().getTeamName(),
-                                visitorGoals, request.scoreVisitor()));
+                                match.getVisitorTeam().getTeamName(), visitorGoals, scoreVisitor));
             }
 
-            List<MatchEvent> events = new ArrayList<>();
+            matchEventRepository.deleteByMatchId(matchId);
+
             int yellowCount = 0, redCount = 0;
-            for (MatchEventRequest er : request.events()) {
-                Player player = DataStore.jugadores.get(er.playerId());
-                if (player == null) {
-                    throw new MatchException("events",
-                            String.format(MatchException.PLAYER_NOT_IN_LINEUP, er.playerId()));
-                }
-                MatchEvent event = new MatchEvent();
-                event.setId(IdGenerator.generateId());
-                event.setType(er.type());
-                event.setMinute(er.minute());
-                event.setPlayer(player);
-                event.setMatch(match);
-                events.add(event);
+            for (MatchEventInput er : events) {
+                PlayerEntity player = playerRepository.findById(er.playerId())
+                        .orElseThrow(() -> new MatchException("events",
+                                String.format(MatchException.PLAYER_NOT_IN_LINEUP, er.playerId())));
+
                 if ("YELLOW_CARD".equalsIgnoreCase(er.type())) yellowCount++;
                 if ("RED_CARD".equalsIgnoreCase(er.type())) redCount++;
             }
-            matchEvents.put(matchId, events);
             match.setYellowCards(yellowCount);
             match.setRedCards(redCount);
         }
 
-        match.setScoreLocal(request.scoreLocal());
-        match.setScoreVisitor(request.scoreVisitor());
-        matchStatusMap.put(matchId, MatchStatus.FINISHED);
-
-        // Notificar a StandingsService para recalcular tabla
-        standingsService.updateFromMatch(match);
+        match.setScoreLocal(scoreLocal);
+        match.setScoreVisitor(scoreVisitor);
+        match.setStatus(MatchStatus.FINISHED);
+        MatchEntity saved = matchRepository.save(match);
 
         log.info("Resultado registrado — {} {} : {} {}",
                 match.getLocalTeam().getTeamName(), match.getScoreLocal(),
                 match.getScoreVisitor(), match.getVisitorTeam().getTeamName());
-        return toResponse(match);
-    }
 
-    // READ
-
-    @Override
-    public MatchResponse findById(String matchId) {
-        Match match = matches.get(matchId);
-        if (match == null) {
-            throw new MatchException("matchId",
-                    String.format(MatchException.MATCH_NOT_FOUND, matchId));
-        }
-        return toResponse(match);
+        return MatchPersistenceMapper.toDomain(saved);
     }
 
     @Override
-    public List<MatchResponse> findAll() {
-        return matches.values().stream().map(this::toResponse).toList();
+    @Transactional(readOnly = true)
+    public Match findById(String matchId) {
+        MatchEntity entity = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchException("matchId",
+                        String.format(MatchException.MATCH_NOT_FOUND, matchId)));
+        return MatchPersistenceMapper.toDomain(entity);
     }
 
     @Override
-    public List<MatchResponse> findByTeamId(String teamId) {
-        return matches.values().stream()
-                .filter(m -> m.getLocalTeam().getId().equals(teamId)
-                        || m.getVisitorTeam().getId().equals(teamId))
-                .map(this::toResponse)
+    @Transactional(readOnly = true)
+    public List<Match> findAll() {
+        return matchRepository.findAll().stream()
+                .map(MatchPersistenceMapper::toDomainShallow)
                 .toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Match> findByTeamId(String teamId) {
+        return matchRepository.findByLocalTeamIdOrVisitorTeamId(teamId, teamId).stream()
+                .map(MatchPersistenceMapper::toDomainShallow)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public boolean isResultRegistered(String matchId) {
-        return MatchStatus.FINISHED.equals(matchStatusMap.get(matchId));
+        return matchRepository.findById(matchId)
+                .map(m -> m.getStatus() == MatchStatus.FINISHED)
+                .orElse(false);
     }
 
     @Override
-    public void registerMatch(Match match) {
-        matches.put(match.getId(), match);
-        matchStatusMap.putIfAbsent(match.getId(), MatchStatus.SCHEDULED);
-        matchEvents.putIfAbsent(match.getId(), new ArrayList<>());
+    @Transactional
+    public void registerMatch(MatchEntity match) {
+        if (!matchRepository.existsById(match.getId())) {
+            matchRepository.save(match);
+        }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Match> getMatches() {
-        return matches;
+        return matchRepository.findAll().stream()
+                .map(MatchPersistenceMapper::toDomainShallow)
+                .collect(Collectors.toMap(Match::getId, m -> m));
     }
-    private boolean isPlayerInTeam(String playerId, Team team) {
+
+    private boolean isPlayerInTeam(String playerId, TeamEntity team) {
         if (team.getPlayers() == null) return false;
         return team.getPlayers().stream().anyMatch(p -> p.getId().equals(playerId));
-    }
-
-    private MatchResponse toResponse(Match m) {
-        List<MatchEventResponse> events = matchEvents.getOrDefault(m.getId(), List.of())
-                .stream().map(e -> new MatchEventResponse(
-                        e.getId(), e.getType(), e.getMinute(),
-                        e.getPlayer() != null ? e.getPlayer().getId() : null,
-                        e.getPlayer() != null ? e.getPlayer().getFullname() : null
-                )).toList();
-
-        String status = matchStatusMap.getOrDefault(m.getId(), MatchStatus.SCHEDULED).name();
-
-        return new MatchResponse(
-                m.getId(),
-                m.getLocalTeam().getId(),  m.getLocalTeam().getTeamName(),
-                m.getVisitorTeam().getId(), m.getVisitorTeam().getTeamName(),
-                m.getDateTime(),
-                m.getScoreLocal(), m.getScoreVisitor(),
-                m.getYellowCards(), m.getRedCards(),
-                m.getField(), status, events
-        );
     }
 }

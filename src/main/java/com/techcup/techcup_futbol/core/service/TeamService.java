@@ -11,13 +11,16 @@ public interface TeamService {
     Team createTeam(Team team);
 
     void invitePlayer(String teamId, Player player);
-    void removePlayer(String teamId, String playerId);   // desvincula jugador del equipo
+    void removePlayer(String teamId, String playerId);
 
-    void validateTeamForTournament(Team team);           // ahora sí está en la interfaz
+    void validateTeamForTournament(Team team);
 
     List<Team> getAllTeams();
-    Optional<Team> buscarPorId(String id);               // consistente con PlayerService
-    Team obtenerPorId(String id);                        // lanza TeamException si no existe
+    Optional<Team> buscarPorId(String id);
+    Team obtenerPorId(String id);
 
-    void deleteTeam(String id);                          // lanza TeamException si no existe
+    void deleteTeam(String id);
+    boolean existsByTeamName(String teamName);
+    List<Team> findByCaptainId(String captainId);
+
 }

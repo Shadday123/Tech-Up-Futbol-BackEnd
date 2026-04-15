@@ -1,21 +1,27 @@
 package com.techcup.techcup_futbol.core.service;
 
-import com.techcup.techcup_futbol.core.model.DataStore;
 import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.PositionEnum;
 import com.techcup.techcup_futbol.core.validator.EmailValidator;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
+import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
+import com.techcup.techcup_futbol.persistence.entity.UserEntity;
+import com.techcup.techcup_futbol.persistence.mapper.PlayerPersistenceMapper;
+import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
+import com.techcup.techcup_futbol.persistence.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import com.techcup.techcup_futbol.util.IdGenerator;
+import org.springframework.transaction.annotation.Transactional;
+import com.techcup.techcup_futbol.core.util.IdGenerator;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -23,19 +29,37 @@ public class PlayerServiceImpl implements PlayerService {
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    // CREATE
+    private final PlayerRepository playerRepository;
+    private final PlayerValidator playerValidator;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+
+    public PlayerServiceImpl(PlayerRepository playerRepository,
+                             PlayerValidator playerValidator,
+                             UserRepository userRepository,
+                             PasswordEncoder passwordEncoder) {
+        this.playerRepository = playerRepository;
+        this.playerValidator = playerValidator;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
+    @Transactional
     public void registrar(Player jugador, String correo) {
-        String ts = LocalDateTime.now().format(FMT);
+        if (playerRepository.existsByEmailIgnoreCase(correo)) {
+            throw new PlayerException("email",
+                    String.format(PlayerException.EMAIL_ALREADY_REGISTERED, correo));
+        }
 
         jugador.setId(IdGenerator.generateId());
-        log.debug("[{}] ID generado: {}", ts, jugador.getId());
+        log.debug("[{}] ID generado: {}", LocalDateTime.now().format(FMT), jugador.getId());
 
         log.info("[{}] Iniciando registro — jugador: {} | email: {}",
-                ts, jugador.getFullname(), correo);
+                LocalDateTime.now().format(FMT), jugador.getFullname(), correo);
 
-        PlayerValidator.validate(jugador, correo);
+        playerValidator.validate(jugador, correo);
 
         if (EmailValidator.esCorreoInstitucional(correo)) {
             log.debug("Email institucional detectado: {}", correo);
@@ -44,29 +68,44 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         jugador.setEmail(correo);
-        DataStore.jugadores.put(jugador.getId(), jugador);
 
-        log.info("Jugador registrado — ID: {} | Email: {} | Total: {}",
-                jugador.getId(), correo, DataStore.jugadores.size());
+        PlayerEntity entity = PlayerPersistenceMapper.toEntity(jugador);
+        String hashedPassword = passwordEncoder.encode(entity.getPasswordHash());
+        entity.setPasswordHash(hashedPassword);
+        playerRepository.save(entity);
+
+        log.info("Jugador registrado — ID: {} | Email: {}", jugador.getId(), correo);
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(correo);
+        userEntity.setPasswordHash(hashedPassword);
+        userEntity.setRole(entity.getSystemRole());
+        userRepository.save(userEntity);
+
+        log.info("Usuario de autenticación creado — Email: {}", correo);
     }
 
-    // UPDATE
-
     @Override
+    @Transactional
     public void actualizarPerfil(Player jugador, String foto) {
-        String ts = LocalDateTime.now().format(FMT);
-        log.info("[{}] Actualizando foto del jugador ID: {}", ts, jugador.getId());
+        log.info("[{}] Actualizando foto del jugador ID: {}",
+                LocalDateTime.now().format(FMT), jugador.getId());
+
         Player persistido = obtenerPorId(jugador.getId());
         log.debug("URL anterior: {} | URL nueva: {}", persistido.getPhotoUrl(), foto);
         persistido.setPhotoUrl(foto);
+
+        PlayerEntity entity = PlayerPersistenceMapper.toEntity(persistido);
+        playerRepository.save(entity);
+
         log.info("Foto actualizada para jugador: {}", persistido.getFullname());
     }
 
     @Override
+    @Transactional
     public void cambiarDisponibilidad(Player jugador, boolean disponible) {
-        String ts = LocalDateTime.now().format(FMT);
         log.info("[{}] Cambiando disponibilidad — jugador: {} | solicitado: {}",
-                ts, jugador.getFullname(), disponible);
+                LocalDateTime.now().format(FMT), jugador.getFullname(), disponible);
 
         Player persistido = obtenerPorId(jugador.getId());
 
@@ -74,20 +113,26 @@ public class PlayerServiceImpl implements PlayerService {
             String msg = disponible
                     ? String.format(PlayerException.PLAYER_ALREADY_AVAILABLE, persistido.getFullname())
                     : String.format(PlayerException.PLAYER_ALREADY_UNAVAILABLE, persistido.getFullname());
-            throw new PlayerException("disponibilidad", msg);
+            throw new PlayerException("availability", msg);
         }
 
         persistido.setDisponible(disponible);
+
+        PlayerEntity entity = PlayerPersistenceMapper.toEntity(persistido);
+        playerRepository.save(entity);
+
         log.info("Disponibilidad actualizada — jugador: {} | disponible ahora: {}",
                 persistido.getFullname(), disponible);
     }
 
-    // READ
-
     @Override
+    @Transactional(readOnly = true)
     public List<Player> listarJugadores() {
         log.info("[{}] Listando todos los jugadores del sistema", LocalDateTime.now().format(FMT));
-        List<Player> jugadores = new ArrayList<>(DataStore.jugadores.values());
+        List<Player> jugadores = playerRepository.findAll()
+                .stream()
+                .map(PlayerPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
         if (jugadores.isEmpty()) {
             log.warn("No hay jugadores registrados en el sistema.");
         } else {
@@ -96,10 +141,59 @@ public class PlayerServiceImpl implements PlayerService {
         return jugadores;
     }
 
+    @Transactional(readOnly = true)
+    public List<Player> listarJugadoresSinEquipo() {
+        log.info("[{}] Listando jugadores sin equipo", LocalDateTime.now().format(FMT));
+        List<Player> disponibles = playerRepository.findByHaveTeamFalse()
+                .stream()
+                .map(PlayerPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+        log.info("Jugadores sin equipo encontrados: {}", disponibles.size());
+        return disponibles;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Player> listarPorPosicion(PositionEnum posicion) {
+        log.info("[{}] Listando jugadores por posición: {}",
+                LocalDateTime.now().format(FMT), posicion);
+        List<Player> jugadores = playerRepository.findByPosition(posicion)
+                .stream()
+                .map(PlayerPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+        log.info("Jugadores de {} encontrados: {}", posicion, jugadores.size());
+        return jugadores;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Player> buscarPorEmail(String emailFragmento) {
+        log.info("[{}] Buscando jugadores por email: {}",
+                LocalDateTime.now().format(FMT), emailFragmento);
+        List<Player> resultados = playerRepository.findByEmailContaining(emailFragmento)
+                .stream()
+                .map(PlayerPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+        log.info("Coincidencias de email encontradas: {}", resultados.size());
+        return resultados;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Player> listarEstudiantesPorSemestre(Integer semestre) {
+        log.info("[{}] Listando estudiantes del semestre: {}",
+                LocalDateTime.now().format(FMT), semestre);
+        List<Player> estudiantes = playerRepository.findBySemester(semestre)
+                .stream()
+                .map(PlayerPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+        log.info("Estudiantes del semestre {} encontrados: {}", semestre, estudiantes.size());
+        return estudiantes;
+    }
+
     @Override
+    @Transactional(readOnly = true)
     public Optional<Player> buscarPorId(String id) {
         log.info("[{}] Buscando jugador con ID: {}", LocalDateTime.now().format(FMT), id);
-        Optional<Player> resultado = Optional.ofNullable(DataStore.jugadores.get(id));
+        Optional<Player> resultado = playerRepository.findById(id)
+                .map(PlayerPersistenceMapper::toDomain);
         if (resultado.isPresent()) {
             log.info("Jugador encontrado — Nombre: {}", resultado.get().getFullname());
         } else {
@@ -114,14 +208,13 @@ public class PlayerServiceImpl implements PlayerService {
                 new PlayerException("id", String.format(PlayerException.PLAYER_NOT_FOUND, id)));
     }
 
-    // DELETE
-
     @Override
+    @Transactional
     public void eliminarJugador(String id) {
         log.info("[{}] Eliminando jugador con ID: {}", LocalDateTime.now().format(FMT), id);
         Player jugador = obtenerPorId(id);
         log.info("Eliminando jugador: {} | Email: {}", jugador.getFullname(), jugador.getEmail());
-        DataStore.jugadores.remove(id);
-        log.info("Jugador eliminado. Total restante: {}", DataStore.jugadores.size());
+        playerRepository.deleteById(id);
+        log.info("Jugador eliminado correctamente");
     }
 }

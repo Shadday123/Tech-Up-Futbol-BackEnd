@@ -6,4 +6,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class RelativePlayer extends Player {
+
+    private String parentship;
 }

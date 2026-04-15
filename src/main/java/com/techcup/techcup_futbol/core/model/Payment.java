@@ -11,6 +11,8 @@ public class Payment {
 
     private String id;
 
+    private String teamId;
+
     private String receiptUrl;
 
     private Double amount;

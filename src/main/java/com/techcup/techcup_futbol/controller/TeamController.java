@@ -1,0 +1,139 @@
+package com.techcup.techcup_futbol.controller;
+
+import com.techcup.techcup_futbol.controller.dto.CreateTeamRequest;
+import com.techcup.techcup_futbol.controller.dto.TeamResponse;
+import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.model.Team;
+import com.techcup.techcup_futbol.core.service.PlayerService;
+import com.techcup.techcup_futbol.core.service.TeamService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/teams")
+@Tag(name = "Equipos", description = "Creación de equipos, invitación y remoción de jugadores")
+public class TeamController {
+
+    private static final Logger log = LoggerFactory.getLogger(TeamController.class);
+
+    private final TeamService teamService;
+    private final PlayerService playerService;
+
+    public TeamController(TeamService teamService, PlayerService playerService) {
+        this.teamService = teamService;
+        this.playerService = playerService;
+    }
+
+    @Operation(summary = "Crear equipo", description = "Crea un nuevo equipo")
+    @ApiResponse(responseCode = "201", description = "Equipo creado correctamente")
+    @PostMapping
+    public ResponseEntity<TeamResponse> create(
+            @Valid @RequestBody CreateTeamRequest request) {
+
+        log.info("POST /api/teams — nombre: {}", request.getTeamName());
+
+        Player capitan = playerService.obtenerPorId(request.getCaptainId());
+
+        List<Player> jugadores = request.getPlayerIds().stream()
+                .map(playerService::obtenerPorId)
+                .toList();
+
+        Team teamEntity = new Team();
+        teamEntity.setTeamName(request.getTeamName());
+        teamEntity.setShieldUrl(request.getShieldUrl());
+        teamEntity.setUniformColors(request.getUniformColors());
+        teamEntity.setCaptain(capitan);
+        teamEntity.setPlayers(new java.util.ArrayList<>(jugadores));
+
+        Team saved = teamService.createTeam(teamEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(saved));
+    }
+
+    @Operation(summary = "Listar equipos", description = "Obtiene todos los equipos")
+    @ApiResponse(responseCode = "200", description = "Lista de equipos")
+    @GetMapping
+    public ResponseEntity<List<TeamResponse>> findAll() {
+        log.info("GET /api/teams");
+        List<TeamResponse> response = teamService.getAllTeams().stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Buscar equipo por ID", description = "Obtiene un equipo por su ID")
+    @ApiResponse(responseCode = "200", description = "Equipo encontrado")
+    @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
+    @GetMapping("/{id}")
+    public ResponseEntity<TeamResponse> findById(
+            @Parameter(description = "ID del equipo") @PathVariable String id) {
+
+        log.info("GET /api/teams/{}", id);
+        return teamService.buscarPorId(id)
+                .map(t -> ResponseEntity.ok(toResponse(t)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "Eliminar equipo", description = "Elimina un equipo por ID")
+    @ApiResponse(responseCode = "204", description = "Equipo eliminado")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "ID del equipo") @PathVariable String id) {
+
+        log.info("DELETE /api/teams/{}", id);
+        teamService.deleteTeam(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Invitar jugador", description = "Agrega un jugador a un equipo")
+    @ApiResponse(responseCode = "200", description = "Jugador agregado al equipo")
+    @PostMapping("/{teamId}/players/{playerId}")
+    public ResponseEntity<Void> invitePlayer(
+            @Parameter(description = "ID del equipo") @PathVariable String teamId,
+            @Parameter(description = "ID del jugador") @PathVariable String playerId) {
+
+        log.info("POST /api/teams/{}/players/{}", teamId, playerId);
+        Player player = playerService.obtenerPorId(playerId);
+        teamService.invitePlayer(teamId, player);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Remover jugador", description = "Elimina un jugador de un equipo")
+    @ApiResponse(responseCode = "204", description = "Jugador removido del equipo")
+    @DeleteMapping("/{teamId}/players/{playerId}")
+    public ResponseEntity<Void> removePlayer(
+            @Parameter(description = "ID del equipo") @PathVariable String teamId,
+            @Parameter(description = "ID del jugador") @PathVariable String playerId) {
+
+        log.info("DELETE /api/teams/{}/players/{}", teamId, playerId);
+        teamService.removePlayer(teamId, playerId);
+        return ResponseEntity.noContent().build();
+    }
+
+    private TeamResponse toResponse(Team t) {
+        return new TeamResponse(
+                t.getId(),
+                t.getTeamName(),
+                t.getShieldUrl(),
+                t.getUniformColors(),
+                t.getCaptain() != null ? t.getCaptain().getFullname() : null,
+                t.getPlayers() != null
+                        ? t.getPlayers().stream().map(Player::getId).collect(Collectors.toList())
+                        : List.of()
+        );
+    }
+
+
+}
