@@ -8,4 +8,7 @@ import jakarta.persistence.DiscriminatorValue;
 @Data
 @DiscriminatorValue("EXTERNAL")
 public class ExternalPlayerEntity extends PlayerEntity {
+
+    private String relationship;
+    private int relativeId;
 }

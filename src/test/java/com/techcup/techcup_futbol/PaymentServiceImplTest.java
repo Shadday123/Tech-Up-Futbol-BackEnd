@@ -77,7 +77,7 @@ class PaymentServiceImplTest {
         newPaymentEntity.setId("pay-new");
         newPaymentEntity.setTeamId("team-001");
         newPaymentEntity.setAmount(550.0); // 50*11
-        newPaymentEntity.setCurrentStatus(PaymentStatus.PENDING);
+        newPaymentEntity.setCurrentStatus(PaymentStatus.UNDER_REVIEW);
         newPaymentEntity.setReceiptUrl("http://receipt.com/img.jpg");
 
         when(paymentRepository.save(any(PaymentEntity.class))).thenReturn(newPaymentEntity);
@@ -98,6 +98,7 @@ class PaymentServiceImplTest {
         when(paymentRepository.findByTeamId("team-001")).thenReturn(Optional.of(existingPaymentEntity));
 
         existingPaymentEntity.setReceiptUrl("http://receipt.com/new.jpg");
+        existingPaymentEntity.setCurrentStatus(PaymentStatus.UNDER_REVIEW);
         when(paymentRepository.save(existingPaymentEntity)).thenReturn(existingPaymentEntity);
 
         Payment result = paymentService.uploadReceipt("team-001", "http://receipt.com/new.jpg");

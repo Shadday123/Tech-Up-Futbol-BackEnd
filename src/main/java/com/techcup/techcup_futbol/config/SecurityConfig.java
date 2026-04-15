@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs", "/api-docs/**", "/api-docs").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/brackets/**").permitAll()
                         .requestMatchers("/api/standings/**").permitAll()

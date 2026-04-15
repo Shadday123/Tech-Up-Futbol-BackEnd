@@ -1,6 +1,7 @@
 package com.techcup.techcup_futbol.core.model;
 
 import lombok.Data;
+
 import java.util.List;
 
 @Data
@@ -17,8 +18,8 @@ public class Team {
 
     private Player captain;
 
+    private List<Player> players;
+
     private TeamStatus status;
 
-
-    private List<Player> players;
 }

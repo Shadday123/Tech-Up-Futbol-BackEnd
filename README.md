@@ -8,7 +8,7 @@ creación y gestión de torneos, y reduciendo la carga operativa asociada a proc
 El sistema consiste en una plataforma web orientada a la gestión de torneos de fútbol dentro de la Escuela Colombiana de Ingeniería Julio Garavito. El backend del sistema se encarga de procesar la lógica de negocio, gestionar la información y servir como intermediario entre el cliente (frontend) y la base de datos.
 
 ## Integrantes 
-- Jeimy Vanessa Torres
+- Jeimmy Vanessa Torres
 - David Shadday Correa
 - Juan Esteban Rodríguez
 - David Santiago Cajamarca
@@ -46,12 +46,18 @@ El diagrama de contexto usa los siguientes componentes importantes:
 [AnalisisDePatrones.md](AnalisisDePatrones.md)
 
 ## Diagrama de Despliegue
+![Despliegue.png](docs/Images/Despliegue.png)
 
 ## Diagrama de Clase
 ![Diagrama_Clases.jpg](docs/Images/Diagrama_Clases.jpg)
 Este diagrama modela el dominio de nuestra app TECHCUP usando principios de "clean code" y patrónes de diseños.
 
 ## Diagrama de Componentes
+
+### General
+![ComponentesGeneral.png](docs/Images/ComponentesGeneral.png)
+### Especifico
+![ComponentesEspecifico.png](docs/Images/ComponentesEspecifico.png)
 
 ## Diagrama de Entidad-Relacion (Base de datos)
 ![Diagrama Entidad_Relacion.jpg](docs/Images/Diagrama%20Entidad_Relacion.jpg)
@@ -61,5 +67,25 @@ partidos, donde se almacenan atributos de resultados y métricas de los encuentr
 estableciendo relaciones de pertenencia y roles como capitán, mientras que las alineaciones se crean de manera táctica.
 En conjunto, el modelo garantiza consistencia en los datos, soporte transacional y una adecuada separación de responsabilidades a nivel de persistencia.
 
+## Documentación API (Swagger)
+El proyecto utiliza Swagger para documentar la API REST. Con este link se accede:
+[](http://localhost:8081/swagger-ui/index.html)
 
+![VistaSwagger.png](docs/Images/VistaSwagger.png)
 
+### Ejemplo de login
+Aqui un ejemplo de como usamos nuestra API para logrearnos al TECHCUP
+![EndpointPOST.png](docs/Images/EndpointPOST.png)
+Usamos el endpoint de POST para logearnos y luego se muestra los siguientes errores
+![Ejemplo.png](docs/Images/Ejemplo.png)
+
+El manejo de response se plantea con 200´s y 400´s indicando los de 200 aprobaciones y 400 con rechazos.
+
+Aqui en el siguiente archivo, se puede ver los "Happy path" y "Error path":
+
+[Pruebas.md](Pruebas.md)
+
+## Diagrama de secuencia
+![Diagrama Secuencia.jpeg](docs/Images/Diagrama%20Secuencia.jpeg)
+
+azure full
