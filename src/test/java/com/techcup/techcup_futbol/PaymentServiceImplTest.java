@@ -87,7 +87,7 @@ class PaymentServiceImplTest {
         assertEquals("pay-new", result.getId());
         assertEquals("team-001", result.getTeamId());
         assertEquals(550.0, result.getAmount());
-        assertEquals(PaymentStatus.PENDING, result.getCurrentStatus());
+        assertEquals(PaymentStatus.UNDER_REVIEW, result.getCurrentStatus());
         assertEquals("http://receipt.com/img.jpg", result.getReceiptUrl());
         verify(paymentRepository).save(any(PaymentEntity.class));
     }
@@ -104,7 +104,7 @@ class PaymentServiceImplTest {
         Payment result = paymentService.uploadReceipt("team-001", "http://receipt.com/new.jpg");
 
         assertEquals("pay-001", result.getId());
-        assertEquals(PaymentStatus.PENDING, result.getCurrentStatus());
+        assertEquals(PaymentStatus.UNDER_REVIEW, result.getCurrentStatus());
         assertEquals("http://receipt.com/new.jpg", result.getReceiptUrl());
         verify(paymentRepository).save(existingPaymentEntity);
     }

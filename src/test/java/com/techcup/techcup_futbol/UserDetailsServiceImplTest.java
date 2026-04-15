@@ -6,6 +6,7 @@ import com.techcup.techcup_futbol.core.model.SystemRole;
 import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
 import com.techcup.techcup_futbol.persistence.entity.StudentPlayerEntity;
 import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
+import com.techcup.techcup_futbol.persistence.repository.UserRepository;
 import com.techcup.techcup_futbol.core.security.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,9 @@ class UserDetailsServiceImplTest {
 
     @Mock
     private PlayerRepository playerRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private UserDetailsServiceImpl userDetailsService;
