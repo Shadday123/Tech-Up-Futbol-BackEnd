@@ -4,7 +4,7 @@ import com.techcup.techcup_futbol.core.exception.PlayerException;
 
 public class EmailValidator {
 
-    private static final String SCHOOL_DOMAIN = "@escuelaing.edu.co";
+    private static final String SCHOOL_DOMAIN = "@mail.escuelaing.edu.co";
     private static final String GMAIL_DOMAIN  = "@gmail.com";
 
     private EmailValidator() {}
@@ -27,7 +27,7 @@ public class EmailValidator {
     public static boolean esCorreoValido(String correo) {
         if (correo == null) return false;
         return correo.matches(
-                "^[A-Za-z0-9+_.-]+@(escuelaing\\.edu\\.co|gmail\\.com)$"
+                "^[A-Za-z0-9+_.-]+@(mail\\.escuelaing\\.edu\\.co|gmail\\.com)$"
         );
     }
 
