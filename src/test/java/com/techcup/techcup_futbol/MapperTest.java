@@ -73,7 +73,7 @@ class MapperTest {
         player.setId("p3");
         player.setFullname("Pedro");
         player.setRelationship("Familiar");
-        player.setRelativeId("r1");
+        player.setRelativeId(1);
 
         PlayerEntity entity = PlayerPersistenceMapper.toEntity(player);
         assertInstanceOf(ExternalPlayerEntity.class, entity);
