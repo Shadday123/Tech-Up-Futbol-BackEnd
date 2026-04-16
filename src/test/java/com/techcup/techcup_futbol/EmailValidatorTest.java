@@ -10,7 +10,7 @@ class EmailValidatorTest {
 
     @Test
     void validate_withValidData_doesNotThrow() {
-        assertDoesNotThrow(() -> EmailValidator.validate("carlos@escuelaing.edu.co"));
+        assertDoesNotThrow(() -> EmailValidator.validate("carlos@mail.escuelaing.edu.co"));
         assertDoesNotThrow(() -> EmailValidator.validate("juan@gmail.com"));
     }
 
@@ -44,7 +44,7 @@ class EmailValidatorTest {
 
     @Test
     void esCorreoValido_withValid_returnsTrue() {
-        assertTrue(EmailValidator.esCorreoValido("test@escuelaing.edu.co"));
+        assertTrue(EmailValidator.esCorreoValido("test@mail.escuelaing.edu.co"));
         assertTrue(EmailValidator.esCorreoValido("test@gmail.com"));
     }
 
@@ -56,7 +56,7 @@ class EmailValidatorTest {
 
     @Test
     void esCorreoInstitucional_withSchool_returnsTrue() {
-        assertTrue(EmailValidator.esCorreoInstitucional("admin@escuelaing.edu.co"));
+        assertTrue(EmailValidator.esCorreoInstitucional("admin@mail.escuelaing.edu.co"));
     }
 
     @Test
