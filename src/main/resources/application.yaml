@@ -55,6 +55,9 @@ jwt:
   secret: ${JWT_SECRET:TechCupFutbol2026ClaveSecretaMuyLargaParaQueSean256BitsMinimo1234567890abcdef}
   expiration-ms: ${JWT_EXPIRATION_MS:86400000}
 
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
+
 management:
   endpoints:
     web:
