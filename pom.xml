@@ -142,6 +142,10 @@
                       <goal>report</goal>
                    </goals>
                    <configuration>
+                      <formats>
+                         <format>XML</format>
+                         <format>HTML</format>
+                      </formats>
                       <excludes>
                          <exclude>**/controller/dto/**</exclude>
                          <exclude>**/persistence/entity/**</exclude>

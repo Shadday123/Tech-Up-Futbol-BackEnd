@@ -7,6 +7,7 @@ import com.techcup.techcup_futbol.persistence.entity.UserEntity;
 import com.techcup.techcup_futbol.persistence.mapper.PlayerPersistenceMapper;
 import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
 import com.techcup.techcup_futbol.persistence.repository.UserRepository;
+import com.techcup.techcup_futbol.core.util.Base64Util;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             SystemRole systemRole = player.getSystemRole() != null
                     ? player.getSystemRole() : SystemRole.JUGADOR;
             String password = player.getPasswordHash() != null
-                    ? player.getPasswordHash() : "";
+                    ? Base64Util.decode(player.getPasswordHash()) : "";
             return new User(
                     player.getEmail(),
                     password,
@@ -55,7 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new User(
                 userEntity.getEmail(),
-                userEntity.getPasswordHash(),
+                Base64Util.decode(userEntity.getPasswordHash()),
                 List.of(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole().name()))
         );
     }
