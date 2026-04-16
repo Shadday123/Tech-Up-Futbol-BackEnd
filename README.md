@@ -87,6 +87,8 @@ Aqui en el siguiente archivo, se puede ver los "Happy path" y "Error path":
 
 ## Diagrama de secuencia
 ![Diagrama Secuencia.jpeg](docs/Images/Diagrama%20Secuencia.jpeg)
+![Player Registration-2026-03-29-210707.png](docs/Images/Player%20Registration-2026-03-29-210707.png)
+![Tournament Creation Workflow-2026-03-29-203432.png](docs/Images/Tournament%20Creation%20Workflow-2026-03-29-203432.png)
 
 ## Pipeline CI/CD
 
