@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.techcup.techcup_futbol.core.util.Base64Util;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,10 +63,11 @@ class UserDetailsServiceImplTest {
 
     @Test
     void loadUserByUsername_withExistingPlayer_returnsUserDetails() {
+        String encodedHash = Base64Util.encode("$2a$10$hash");
         StudentPlayerEntity playerEntity = buildPlayerEntity("J001", "test@mail.escuelaing.edu.co",
-                SystemRole.JUGADOR, "$2a$10$hash");
+                SystemRole.JUGADOR, encodedHash);
         StudentPlayer player = buildPlayer("J001", "test@mail.escuelaing.edu.co",
-                SystemRole.JUGADOR, "$2a$10$hash");
+                SystemRole.JUGADOR, encodedHash);
 
         when(playerRepository.findByEmailIgnoreCase("test@mail.escuelaing.edu.co"))
                 .thenReturn(Optional.of(playerEntity));
@@ -81,7 +84,7 @@ class UserDetailsServiceImplTest {
     @Test
     void loadUserByUsername_withOrganizador_returnsCorrectRole() {
         StudentPlayerEntity playerEntity = buildPlayerEntity("J-ORG", "org@mail.escuelaing.edu.co",
-                SystemRole.ORGANIZADOR, "$2a$10$hash");
+                SystemRole.ORGANIZADOR, Base64Util.encode("$2a$10$hash"));
         when(playerRepository.findByEmailIgnoreCase("org@mail.escuelaing.edu.co"))
                 .thenReturn(Optional.of(playerEntity));
 
@@ -130,7 +133,7 @@ class UserDetailsServiceImplTest {
     @Test
     void loadUserByUsername_caseInsensitiveEmail_returnsUserDetails() {
         StudentPlayerEntity playerEntity = buildPlayerEntity("J004", "TEST@ESCUELAING.EDU.CO",
-                SystemRole.JUGADOR, "$2a$10$hash");
+                SystemRole.JUGADOR, Base64Util.encode("$2a$10$hash"));
         when(playerRepository.findByEmailIgnoreCase("test@mail.escuelaing.edu.co"))
                 .thenReturn(Optional.of(playerEntity));
 
