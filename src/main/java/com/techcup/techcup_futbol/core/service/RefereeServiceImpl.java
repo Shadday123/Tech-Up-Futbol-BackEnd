@@ -3,6 +3,7 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.core.model.Referee;
 import com.techcup.techcup_futbol.core.model.SystemRole;
 import com.techcup.techcup_futbol.core.exception.RefereeException;
+import com.techcup.techcup_futbol.core.util.Base64Util;
 import com.techcup.techcup_futbol.core.util.IdGenerator;
 import com.techcup.techcup_futbol.persistence.entity.MatchEntity;
 import com.techcup.techcup_futbol.persistence.entity.RefereeEntity;
@@ -50,7 +51,7 @@ public class RefereeServiceImpl implements RefereeService {
                     String.format(RefereeException.EMAIL_ALREADY_REGISTERED, email));
         }
 
-        String hashedPassword = passwordEncoder.encode(password);
+        String hashedPassword = Base64Util.encode(passwordEncoder.encode(password));
 
         RefereeEntity entity = new RefereeEntity();
         entity.setId(IdGenerator.generateId());

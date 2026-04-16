@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/tournaments/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/players/search").permitAll()
 
-                        // 🔐 PROTEGIDOS POR ROLES
+                        // PROTEGIDOS POR ROLES
                         .requestMatchers(HttpMethod.POST, "/api/tournaments/**").hasRole("ORGANIZADOR")
                         .requestMatchers(HttpMethod.PUT, "/api/tournaments/**").hasRole("ORGANIZADOR")
                         .requestMatchers(HttpMethod.POST, "/api/referees/registro").permitAll()

@@ -88,4 +88,42 @@ Aqui en el siguiente archivo, se puede ver los "Happy path" y "Error path":
 ## Diagrama de secuencia
 ![Diagrama Secuencia.jpeg](docs/Images/Diagrama%20Secuencia.jpeg)
 
-azure full
+## Pipeline CI/CD
+
+El proyecto usa **GitHub Actions** con dos workflows diferenciados:
+
+### Deploy a QA (`develop`)
+Se activa en cada push a la rama `develop`.
+
+| Paso | Herramienta | Descripcion |
+|------|-------------|-------------|
+| Checkout | actions/checkout@v4 | Clona el repositorio |
+| Build | Maven `mvn clean package` | Compila y ejecuta tests |
+| Cobertura | JaCoCo | Genera reporte HTML y XML en `target/site/jacoco/` |
+| Analisis estatico | SonarCloud | Envia metricas de calidad y cobertura a sonarcloud.io |
+| Artefacto | actions/upload-artifact@v4 | Guarda el reporte JaCoCo 7 dias |
+| Deploy | azure/webapps-deploy@v3 | Despliega el JAR a **techcup-qa** en Azure |
+
+**Secrets requeridos:** `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `AZURE_WEBAPP_PUBLISH_PROFILE_QA`, `SONAR_TOKEN`, `SONAR_PROJECT_KEY`, `SONAR_ORGANIZATION`
+
+### Deploy a Produccion (`main`)
+Se activa en cada push a la rama `main`.
+
+| Paso | Herramienta | Descripcion |
+|------|-------------|-------------|
+| Checkout | actions/checkout@v4 | Clona el repositorio |
+| Build | Maven `mvn clean package -DskipTests` | Compila sin ejecutar tests |
+| Login ACR | docker/login-action@v3 | Autentica en Azure Container Registry |
+| Docker build & push | docker/build-push-action@v5 | Construye imagen y la sube al ACR |
+| Deploy | azure/webapps-deploy@v3 | Despliega la imagen Docker a **techcup-prod** (requiere aprobacion manual en GitHub) |
+
+**Secrets requeridos:** `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `ACR_LOGIN_SERVER`, `ACR_USERNAME`, `ACR_PASSWORD`, `AZURE_WEBAPP_PUBLISH_PROFILE_PROD`
+
+### Variables de entorno en Azure (Application Settings)
+Ambos entornos deben tener configuradas en Azure Portal:
+
+```
+DB_URL, DB_USER, DB_PASS, DB_DRIVER, JPA_DIALECT
+JWT_SECRET, JWT_EXPIRATION_MS
+GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+```

@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.techcup.techcup_futbol.core.util.Base64Util;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -90,7 +91,7 @@ public class AuthController {
 
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(request.email());
-        userEntity.setPasswordHash(passwordEncoder.encode(request.password()));
+        userEntity.setPasswordHash(Base64Util.encode(passwordEncoder.encode(request.password())));
         userEntity.setRole(SystemRole.ORGANIZADOR);
         userRepository.save(userEntity);
 

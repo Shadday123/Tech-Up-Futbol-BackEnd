@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.techcup.techcup_futbol.core.util.Base64Util;
 import com.techcup.techcup_futbol.core.util.IdGenerator;
 
 import java.time.LocalDateTime;
@@ -70,7 +71,7 @@ public class PlayerServiceImpl implements PlayerService {
         jugador.setEmail(correo);
 
         PlayerEntity entity = PlayerPersistenceMapper.toEntity(jugador);
-        String hashedPassword = passwordEncoder.encode(entity.getPasswordHash());
+        String hashedPassword = Base64Util.encode(passwordEncoder.encode(entity.getPasswordHash()));
         entity.setPasswordHash(hashedPassword);
         playerRepository.save(entity);
 
