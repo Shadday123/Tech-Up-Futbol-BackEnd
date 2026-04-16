@@ -69,6 +69,7 @@ class PlayerServiceImplTest {
     void registrar_validPlayer_setsIdAndSaves() {
         String correo = "juan@gmail.com";
         when(playerRepository.existsByEmailIgnoreCase(correo)).thenReturn(false);
+        when(passwordEncoder.encode(any())).thenReturn("$2a$10$mockedBcryptHash");
         doNothing().when(playerValidator).validate(studentPlayer, correo);
 
         playerService.registrar(studentPlayer, correo);
