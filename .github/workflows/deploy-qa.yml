@@ -35,6 +35,7 @@ jobs:
           retention-days: 7
 
       - name: SonarCloud Analysis
+        if: ${{ secrets.SONAR_TOKEN != '' && secrets.SONAR_PROJECT_KEY != '' && secrets.SONAR_ORGANIZATION != '' }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
