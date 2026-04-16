@@ -26,9 +26,6 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.ACR_LOGIN_SERVER }}/techcup-futbol:latest
-          build-args: |
-            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -36,9 +33,18 @@ jobs:
     environment: production
 
     steps:
-      - name: Deploy to Azure Web App Production
-        uses: azure/webapps-deploy@v3
+      - name: Login to Azure CLI
+        uses: azure/login@v1
         with:
-          app-name: 'techcup-prod'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
-          images: ${{ secrets.ACR_LOGIN_SERVER }}/techcup-futbol:latest
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Configure container and deploy
+        run: |
+          az webapp config container set \
+            --name techcup-prod \
+            --resource-group techcup-rg \
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/techcup-futbol:latest \
+            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
+            --container-registry-user ${{ secrets.ACR_USERNAME }} \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+          az webapp restart --name techcup-prod --resource-group techcup-rg
