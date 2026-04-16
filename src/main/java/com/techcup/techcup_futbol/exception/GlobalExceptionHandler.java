@@ -67,7 +67,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RefereeException.class)
     public ResponseEntity<Map<String, Object>> handleRefereeException(RefereeException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, ex.getField(), ex.getMessage());
+        HttpStatus status = "email".equals(ex.getField()) ? HttpStatus.CONFLICT : HttpStatus.BAD_REQUEST;
+        return buildResponse(status, ex.getField(), ex.getMessage());
     }
 
 

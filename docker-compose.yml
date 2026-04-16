@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: techcup-backend
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/techcupdb
+      DB_USER: techcup
+      DB_PASS: techcup123
+      DB_DRIVER: org.postgresql.Driver
+      JPA_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      JWT_SECRET: TechCupFutbol2026ClaveSecretaMuyLargaParaQueSean256BitsMinimo1234567890abcdef
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-placeholder}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-placeholder}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - techcup-net
+
+  db:
+    image: postgres:16-alpine
+    container_name: techcup-db
+    environment:
+      POSTGRES_DB: techcupdb
+      POSTGRES_USER: techcup
+      POSTGRES_PASSWORD: techcup123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U techcup -d techcupdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - techcup-net
+
+volumes:
+  pgdata:
+
+networks:
+  techcup-net:
+    driver: bridge

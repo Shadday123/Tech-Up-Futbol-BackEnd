@@ -32,7 +32,10 @@ public abstract class PlayerEntity {
     private PositionEnum position;
 
     private int dorsalNumber;
+
+    @Column(columnDefinition = "TEXT")
     private String photoUrl;
+
     private boolean haveTeam;
     private boolean disponible = true;
 

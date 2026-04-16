@@ -21,7 +21,12 @@ public class PlayerMapper {
                 yield s;
             }
             case "INSTITUTIONAL" -> new InstitutionalPlayer();
-            case "EXTERNAL"      -> new ExternalPlayer();
+            case "EXTERNAL" -> {
+                new ExternalPlayer();
+                ExternalPlayer s = new ExternalPlayer();
+                s.setRelationship(dto.getRelationship() != null ? dto.getRelationship() : null);
+                yield s;
+            }
             default -> throw new IllegalArgumentException(
                     "Tipo de jugador no válido: " + dto.getPlayerType());
         };

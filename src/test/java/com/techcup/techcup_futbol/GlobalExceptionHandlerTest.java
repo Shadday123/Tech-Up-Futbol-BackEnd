@@ -1,6 +1,9 @@
 package com.techcup.techcup_futbol;
 
 import com.techcup.techcup_futbol.core.exception.BracketException;
+import com.techcup.techcup_futbol.core.exception.LineupException;
+import com.techcup.techcup_futbol.core.exception.RefereeException;
+import org.springframework.validation.FieldError;
 import com.techcup.techcup_futbol.core.exception.PaymentException;
 import com.techcup.techcup_futbol.core.exception.MatchException;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
@@ -106,5 +109,45 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("payment", response.getBody().get("field"));
+    }
+
+    @Test
+    void handleLineupException_returnsBadRequest() {
+        LineupException ex = new LineupException("lineup", "Alineación inválida");
+        ResponseEntity<Map<String, Object>> response = handler.handleLineupException(ex);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("lineup", response.getBody().get("field"));
+    }
+
+    @Test
+    void handleRefereeException_withEmailField_returnsConflict() {
+        RefereeException ex = new RefereeException("email", "Email duplicado");
+        ResponseEntity<Map<String, Object>> response = handler.handleRefereeException(ex);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertEquals("email", response.getBody().get("field"));
+    }
+
+    @Test
+    void handleRefereeException_withOtherField_returnsBadRequest() {
+        RefereeException ex = new RefereeException("name", "Nombre inválido");
+        ResponseEntity<Map<String, Object>> response = handler.handleRefereeException(ex);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    void handleValidationErrors_returnsBadRequest() {
+        var bindingResult = new BeanPropertyBindingResult(new Object(), "object");
+        bindingResult.addError(new FieldError("object", "email", "Email inválido"));
+        MethodArgumentNotValidException ex = new MethodArgumentNotValidException(null, bindingResult);
+
+        ResponseEntity<Map<String, Object>> response = handler.handleValidationErrors(ex);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        @SuppressWarnings("unchecked")
+        Map<String, String> fields = (Map<String, String>) response.getBody().get("fields");
+        assertEquals("Email inválido", fields.get("email"));
     }
 }

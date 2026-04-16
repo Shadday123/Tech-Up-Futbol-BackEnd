@@ -9,7 +9,7 @@ public class PlayerException extends RuntimeException {
     public static final String EMAIL_NULL_OR_BLANK =
             "El correo no puede ser nulo o vacío.";
     public static final String EMAIL_INVALID_DOMAIN =
-            "Correo no válido. Solo se permiten dominios: @escuelaing.edu.co o @gmail.com. Valor recibido: %s";
+            "Correo no válido. Solo se permiten dominios: @mail.escuelaing.edu.co o @gmail.com. Valor recibido: %s";
     public static final String EMAIL_ALREADY_REGISTERED =
             "El correo '%s' ya se encuentra registrado.";
     public static final String NUMBER_ID_NULL =

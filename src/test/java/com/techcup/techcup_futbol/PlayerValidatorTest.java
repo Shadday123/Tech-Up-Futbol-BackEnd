@@ -40,10 +40,10 @@ class PlayerValidatorTest {
 
     @Test
     void validate_withValidData_doesNotThrow() {
-        when(playerRepository.existsByEmailIgnoreCase("carlos@escuelaing.edu.co")).thenReturn(false);
+        when(playerRepository.existsByEmailIgnoreCase("carlos@mail.escuelaing.edu.co")).thenReturn(false);
         when(playerRepository.existsByNumberID(123456)).thenReturn(false);
 
-        assertDoesNotThrow(() -> playerValidator.validate(validPlayer, "carlos@escuelaing.edu.co"));
+        assertDoesNotThrow(() -> playerValidator.validate(validPlayer, "carlos@mail.escuelaing.edu.co"));
     }
 
     // ── validateFullname ─────────────────────────────────────────────────
@@ -53,7 +53,7 @@ class PlayerValidatorTest {
         validPlayer.setFullname(null);
 
         PlayerException ex = assertThrows(PlayerException.class,
-                () -> playerValidator.validate(validPlayer, "test@escuelaing.edu.co"));
+                () -> playerValidator.validate(validPlayer, "test@mail.escuelaing.edu.co"));
         assertEquals("fullname", ex.getField());
     }
 
@@ -62,7 +62,7 @@ class PlayerValidatorTest {
         validPlayer.setFullname("   ");
 
         PlayerException ex = assertThrows(PlayerException.class,
-                () -> playerValidator.validate(validPlayer, "test@escuelaing.edu.co"));
+                () -> playerValidator.validate(validPlayer, "test@mail.escuelaing.edu.co"));
         assertEquals("fullname", ex.getField());
     }
 
@@ -73,7 +73,7 @@ class PlayerValidatorTest {
         validPlayer.setAge(14);
 
         PlayerException ex = assertThrows(PlayerException.class,
-                () -> playerValidator.validate(validPlayer, "test@escuelaing.edu.co"));
+                () -> playerValidator.validate(validPlayer, "test@mail.escuelaing.edu.co"));
         assertEquals("age", ex.getField());
     }
 
@@ -82,7 +82,7 @@ class PlayerValidatorTest {
         validPlayer.setAge(111);
 
         PlayerException ex = assertThrows(PlayerException.class,
-                () -> playerValidator.validate(validPlayer, "test@escuelaing.edu.co"));
+                () -> playerValidator.validate(validPlayer, "test@mail.escuelaing.edu.co"));
         assertEquals("age", ex.getField());
     }
 
@@ -90,23 +90,23 @@ class PlayerValidatorTest {
 
     @Test
     void validate_withDuplicateEmail_throwsException() {
-        when(playerRepository.existsByEmailIgnoreCase("carlos@escuelaing.edu.co")).thenReturn(true);
+        when(playerRepository.existsByEmailIgnoreCase("carlos@mail.escuelaing.edu.co")).thenReturn(true);
 
         PlayerException ex = assertThrows(PlayerException.class,
-                () -> playerValidator.validate(validPlayer, "carlos@escuelaing.edu.co"));
+                () -> playerValidator.validate(validPlayer, "carlos@mail.escuelaing.edu.co"));
         assertEquals("email", ex.getField());
-        assertTrue(ex.getMessage().contains("carlos@escuelaing.edu.co"));
+        assertTrue(ex.getMessage().contains("carlos@mail.escuelaing.edu.co"));
     }
 
     // ── validateUniqueNumberID ───────────────────────────────────────────
 
     @Test
     void validate_withDuplicateNumberID_throwsException() {
-        when(playerRepository.existsByEmailIgnoreCase("test@escuelaing.edu.co")).thenReturn(false);
+        when(playerRepository.existsByEmailIgnoreCase("test@mail.escuelaing.edu.co")).thenReturn(false);
         when(playerRepository.existsByNumberID(123456)).thenReturn(true);
 
         PlayerException ex = assertThrows(PlayerException.class,
-                () -> playerValidator.validate(validPlayer, "test@escuelaing.edu.co"));
+                () -> playerValidator.validate(validPlayer, "test@mail.escuelaing.edu.co"));
         assertEquals("numberID", ex.getField());
     }
 

@@ -1,0 +1,41 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: techcup-futbol-test
+  datasource:
+    url: jdbc:h2:mem:techcuptest;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+
+jwt:
+  secret: TechCupFutbol2026ClaveSecretaMuyLargaParaQueSean256BitsMinimo1234567890abcdef
+  expiration-ms: 3600000
+
+logging:
+  level:
+    root: WARN
+    com.techcup.techcup_futbol: WARN
+    org.springframework.security: WARN
