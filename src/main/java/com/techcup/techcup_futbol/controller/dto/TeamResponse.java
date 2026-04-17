@@ -16,5 +16,6 @@ public class TeamResponse {
     private String shieldUrl;
     private List<String> uniformColors;
     private String captainName;
+    private String captainId;
     private List<String> players;
 }

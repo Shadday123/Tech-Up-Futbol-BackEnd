@@ -129,6 +129,7 @@ public class TeamController {
                 t.getShieldUrl(),
                 t.getUniformColors(),
                 t.getCaptain() != null ? t.getCaptain().getFullname() : null,
+                t.getCaptain() != null ? t.getCaptain().getId() : null,
                 t.getPlayers() != null
                         ? t.getPlayers().stream().map(Player::getId).collect(Collectors.toList())
                         : List.of()
