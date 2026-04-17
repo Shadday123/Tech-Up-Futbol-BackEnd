@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.test.util.ReflectionTestUtils;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -50,6 +52,7 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(authController, "orgToken", "TECHCUP-ORG-2025");
         loginRequest = new AuthController.LoginRequest("test@example.com", "Pass123");
         orgRequest = new AuthController.OrganizerRegistrationRequest(
                 "Juan Admin", "admin@example.com", "Admin123", "TECHCUP-ORG-2025");

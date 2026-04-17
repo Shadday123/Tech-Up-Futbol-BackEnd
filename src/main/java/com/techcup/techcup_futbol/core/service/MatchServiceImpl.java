@@ -3,7 +3,6 @@ package com.techcup.techcup_futbol.core.service;
 import com.techcup.techcup_futbol.core.model.*;
 import com.techcup.techcup_futbol.core.exception.MatchException;
 import com.techcup.techcup_futbol.persistence.entity.MatchEntity;
-import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
 import com.techcup.techcup_futbol.persistence.entity.TeamEntity;
 import com.techcup.techcup_futbol.persistence.mapper.MatchPersistenceMapper;
 import com.techcup.techcup_futbol.persistence.repository.MatchEventRepository;
@@ -112,7 +111,7 @@ public class MatchServiceImpl implements MatchService {
 
             int yellowCount = 0, redCount = 0;
             for (MatchEventInput er : events) {
-                PlayerEntity player = playerRepository.findById(er.playerId())
+                playerRepository.findById(er.playerId())
                         .orElseThrow(() -> new MatchException("events",
                                 String.format(MatchException.PLAYER_NOT_IN_LINEUP, er.playerId())));
 

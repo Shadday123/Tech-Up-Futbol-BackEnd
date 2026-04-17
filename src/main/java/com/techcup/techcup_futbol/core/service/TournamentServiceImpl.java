@@ -40,10 +40,6 @@ public class TournamentServiceImpl implements TournamentService {
                     String.format(TournamentException.TOURNAMENT_NAME_EXISTS, tournament.getName()));
         }
 
-        if (tournament == null) {
-            throw new TournamentException("request", "No puede ser null");
-        }
-
         TournamentValidator.validate(tournament);
 
         tournament.setId(IdGenerator.generateId());

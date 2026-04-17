@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.techcup.techcup_futbol.core.util.Base64Util;
@@ -25,7 +26,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private static final String ORG_TOKEN = "TECHCUP-ORG-2025";
+    @Value("${app.org-token}")
+    private String orgToken;
 
     private final AuthenticationManager authManager;
     private final JwtUtil jwtUtil;
@@ -79,7 +81,7 @@ public class AuthController {
     public ResponseEntity<LoginResponse> registrarOrganizador(
             @Valid @RequestBody OrganizerRegistrationRequest request) {
 
-        if (!ORG_TOKEN.equals(request.authToken())) {
+        if (!orgToken.equals(request.authToken())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new LoginResponse(null, null, null, "Token de autorización inválido", null));
         }

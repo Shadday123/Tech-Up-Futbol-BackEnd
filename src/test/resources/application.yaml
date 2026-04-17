@@ -31,8 +31,11 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/google"
 
 jwt:
-  secret: TechCupFutbol2026ClaveSecretaMuyLargaParaQueSean256BitsMinimo1234567890abcdef
+  secret: ${JWT_SECRET:TechCupFutbol2026TestSecretKeyNotForProduction1234567890abcdef}
   expiration-ms: 3600000
+
+app:
+  org-token: TECHCUP-ORG-2025
 
 logging:
   level:
