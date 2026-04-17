@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(grep -E \"[0-9]{3,}\")"
-    ]
-  }
-}
