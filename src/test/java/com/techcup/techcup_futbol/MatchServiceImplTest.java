@@ -144,4 +144,114 @@ class MatchServiceImplTest {
 
         assertEquals(1, result.size());
     }
+
+    @Test
+    void create_visitorTeamNotFound_throwsException() {
+        when(teamRepository.findById("team1")).thenReturn(Optional.of(localTeamEntity));
+        when(teamRepository.findById("team2")).thenReturn(Optional.empty());
+
+        MatchException ex = assertThrows(MatchException.class,
+                () -> matchService.create("team1", "team2", testDateTime, "ref1", 1));
+        assertEquals("visitorTeamId", ex.getField());
+    }
+
+    @Test
+    void registerResult_withNullEvents_registersResult() {
+        when(matchRepository.findById("match1")).thenReturn(Optional.of(matchEntity));
+        when(matchRepository.save(any(MatchEntity.class))).thenReturn(matchEntity);
+
+        var result = matchService.registerResult("match1", 0, 0, null);
+
+        assertNotNull(result);
+        verify(matchRepository).save(any(MatchEntity.class));
+    }
+
+    @Test
+    void registerResult_withValidEvents_registersResult() {
+        var localPlayer = new com.techcup.techcup_futbol.persistence.entity.StudentPlayerEntity();
+        localPlayer.setId("p1");
+        localTeamEntity.setPlayers(List.of(localPlayer));
+
+        var visitorPlayer = new com.techcup.techcup_futbol.persistence.entity.StudentPlayerEntity();
+        visitorPlayer.setId("p2");
+        visitorTeamEntity.setPlayers(List.of(visitorPlayer));
+
+        matchEntity.setLocalTeam(localTeamEntity);
+        matchEntity.setVisitorTeam(visitorTeamEntity);
+
+        var goal = new com.techcup.techcup_futbol.core.model.MatchEventInput("GOAL", 30, "p1");
+        var yellow = new com.techcup.techcup_futbol.core.model.MatchEventInput("YELLOW_CARD", 45, "p1");
+        var red = new com.techcup.techcup_futbol.core.model.MatchEventInput("RED_CARD", 60, "p2");
+
+        when(matchRepository.findById("match1")).thenReturn(Optional.of(matchEntity));
+        when(playerRepository.findById("p1")).thenReturn(Optional.of(localPlayer));
+        when(playerRepository.findById("p2")).thenReturn(Optional.of(visitorPlayer));
+        when(matchRepository.save(any(MatchEntity.class))).thenReturn(matchEntity);
+        doNothing().when(matchEventRepository).deleteByMatchId("match1");
+
+        var result = matchService.registerResult("match1", 1, 0, List.of(goal, yellow, red));
+        assertNotNull(result);
+    }
+
+    @Test
+    void registerResult_goalsMismatch_throwsException() {
+        var player = new com.techcup.techcup_futbol.persistence.entity.StudentPlayerEntity();
+        player.setId("p1");
+        localTeamEntity.setPlayers(List.of(player));
+        visitorTeamEntity.setPlayers(List.of());
+
+        var goal = new com.techcup.techcup_futbol.core.model.MatchEventInput("GOAL", 30, "p1");
+
+        when(matchRepository.findById("match1")).thenReturn(Optional.of(matchEntity));
+
+        MatchException ex = assertThrows(MatchException.class,
+                () -> matchService.registerResult("match1", 2, 0, List.of(goal)));
+        assertEquals("events", ex.getField());
+    }
+
+    @Test
+    void findAll_returnsList() {
+        when(matchRepository.findAll()).thenReturn(List.of(matchEntity));
+
+        var result = matchService.findAll();
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void findByTeamId_returnsMatches() {
+        when(matchRepository.findByLocalTeamIdOrVisitorTeamId("team1", "team1"))
+                .thenReturn(List.of(matchEntity));
+
+        var result = matchService.findByTeamId("team1");
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void isResultRegistered_notFound_returnsFalse() {
+        when(matchRepository.findById("match999")).thenReturn(Optional.empty());
+
+        boolean result = matchService.isResultRegistered("match999");
+
+        assertFalse(result);
+    }
+
+    @Test
+    void registerMatch_notExists_saves() {
+        when(matchRepository.existsById("match1")).thenReturn(false);
+
+        matchService.registerMatch(matchEntity);
+
+        verify(matchRepository).save(matchEntity);
+    }
+
+    @Test
+    void registerMatch_alreadyExists_doesNotSave() {
+        when(matchRepository.existsById("match1")).thenReturn(true);
+
+        matchService.registerMatch(matchEntity);
+
+        verify(matchRepository, never()).save(any());
+    }
 }
