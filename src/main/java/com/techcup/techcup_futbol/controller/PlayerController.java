@@ -5,6 +5,7 @@ import com.techcup.techcup_futbol.controller.dto.PlayerResponse;
 import com.techcup.techcup_futbol.controller.dto.PlayerStatsResponse;
 import com.techcup.techcup_futbol.controller.mapper.PlayerMapper;
 import com.techcup.techcup_futbol.core.model.Player;
+import com.techcup.techcup_futbol.core.security.JwtUtil;
 import com.techcup.techcup_futbol.core.service.PlayerService;
 import com.techcup.techcup_futbol.core.service.StandingsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,10 +28,12 @@ public class PlayerController {
 
     private final PlayerService playerService;
     private final StandingsService standingsService;
+    private final JwtUtil jwtUtil;
 
-    public PlayerController(PlayerService playerService, StandingsService standingsService) {
+    public PlayerController(PlayerService playerService, StandingsService standingsService, JwtUtil jwtUtil) {
         this.playerService = playerService;
         this.standingsService = standingsService;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -104,5 +107,14 @@ public class PlayerController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/capitan")
+    public ResponseEntity<CapitanResponse> convertirCapitan(@PathVariable String id) {
+        log.info("PATCH /api/players/{}/capitan", id);
+        Player jugador = playerService.convertirCapitan(id);
+        String newToken = jwtUtil.generateToken(jugador.getEmail(), "ROLE_CAPITAN");
+        return ResponseEntity.ok(new CapitanResponse(newToken, jugador.getEmail(), "ROLE_CAPITAN", "Ahora eres capitán", id));
+    }
+
+    public record CapitanResponse(String token, String email, String rol, String mensaje, String userId) {}
 
 }

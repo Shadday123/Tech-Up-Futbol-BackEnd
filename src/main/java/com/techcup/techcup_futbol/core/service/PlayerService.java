@@ -13,6 +13,7 @@ public interface PlayerService {
     // UPDATE
     void actualizarPerfil(Player jugador, String foto);
     void cambiarDisponibilidad(Player jugador, boolean disponible);
+    Player convertirCapitan(String id);
 
     // READ
     List<Player> listarJugadores();

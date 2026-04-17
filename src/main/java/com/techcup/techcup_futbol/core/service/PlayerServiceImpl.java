@@ -2,6 +2,7 @@ package com.techcup.techcup_futbol.core.service;
 
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.model.PositionEnum;
+import com.techcup.techcup_futbol.core.model.SystemRole;
 import com.techcup.techcup_futbol.core.validator.EmailValidator;
 import com.techcup.techcup_futbol.core.validator.PlayerValidator;
 import com.techcup.techcup_futbol.core.exception.PlayerException;
@@ -207,6 +208,28 @@ public class PlayerServiceImpl implements PlayerService {
     public Player obtenerPorId(String id) {
         return buscarPorId(id).orElseThrow(() ->
                 new PlayerException("id", String.format(PlayerException.PLAYER_NOT_FOUND, id)));
+    }
+
+    @Override
+    @Transactional
+    public Player convertirCapitan(String id) {
+        log.info("[{}] Convirtiendo jugador {} en capitán", LocalDateTime.now().format(FMT), id);
+
+        Player jugador = obtenerPorId(id);
+        jugador.setCaptain(true);
+        jugador.setSystemRole(SystemRole.CAPITAN);
+
+        PlayerEntity entity = PlayerPersistenceMapper.toEntity(jugador);
+        playerRepository.save(entity);
+
+        // Actualizar UserEntity para que el próximo login emita ROLE_CAPITAN
+        userRepository.findByEmail(jugador.getEmail()).ifPresent(user -> {
+            user.setRole(SystemRole.CAPITAN);
+            userRepository.save(user);
+        });
+
+        log.info("Jugador {} ahora es capitán (ID: {})", jugador.getFullname(), id);
+        return jugador;
     }
 
     @Override
