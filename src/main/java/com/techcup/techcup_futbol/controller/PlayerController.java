@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -108,9 +110,13 @@ public class PlayerController {
     }
 
     @PatchMapping("/{id}/capitan")
-    public ResponseEntity<CapitanResponse> convertirCapitan(@PathVariable String id) {
+    public ResponseEntity<CapitanResponse> convertirCapitan(@PathVariable String id, Authentication auth) {
         log.info("PATCH /api/players/{}/capitan", id);
-        Player jugador = playerService.convertirCapitan(id);
+        Player jugador = playerService.obtenerPorId(id);
+        if (!jugador.getEmail().equals(auth.getName())) {
+            throw new AccessDeniedException("Solo puedes convertirte en capitán a ti mismo");
+        }
+        playerService.convertirCapitan(id);
         String newToken = jwtUtil.generateToken(jugador.getEmail(), "ROLE_CAPITAN");
         return ResponseEntity.ok(new CapitanResponse(newToken, jugador.getEmail(), "ROLE_CAPITAN", "Ahora eres capitán", id));
     }
