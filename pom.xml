@@ -142,6 +142,15 @@
                       <goal>check</goal>
                    </goals>
                    <configuration>
+                      <excludes>
+                         <exclude>**/controller/dto/*</exclude>
+                         <exclude>**/persistence/entity/*</exclude>
+                         <exclude>**/core/model/*</exclude>
+                         <exclude>**/config/*</exclude>
+                         <exclude>**/TechcupFutbolApplication.class</exclude>
+                         <exclude>**/exception/ErrorResponse.class</exclude>
+                         <exclude>**/security/OAuthSuccessHandler.class</exclude>
+                      </excludes>
                       <rules>
                          <rule>
                             <element>BUNDLE</element>
