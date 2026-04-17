@@ -6,7 +6,6 @@ import com.techcup.techcup_futbol.core.model.StudentPlayer;
 import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +16,11 @@ public class PlayerSearchServiceImpl implements PlayerSearchService {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerSearchServiceImpl.class);
 
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
+
+    public PlayerSearchServiceImpl(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
     @Override
     public List<Player> search(PositionEnum position, Integer semester, Integer minAge,
@@ -47,7 +49,7 @@ public class PlayerSearchServiceImpl implements PlayerSearchService {
             stream = stream.filter(p -> p.getFullname().toLowerCase().contains(lowerName));
         }
         if (numberID != null) {
-            stream = stream.filter(p -> p.getNumberID() == numberID);
+            stream = stream.filter(p -> numberID.equals(p.getNumberID()));
         }
         if (semester != null) {
             stream = stream.filter(p -> p instanceof StudentPlayer s

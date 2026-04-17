@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Objects;
 
 @Service
 public class LineupServiceImpl implements LineupService {
@@ -84,8 +83,7 @@ public class LineupServiceImpl implements LineupService {
         List<PlayerEntity> substitutes = new ArrayList<>();
         if (substituteIds != null) {
             substitutes = substituteIds.stream()
-                    .map(id -> playerRepository.findById(id).orElse(null))
-                    .filter(Objects::nonNull)
+                    .flatMap(id -> playerRepository.findById(id).stream())
                     .toList();
         }
 

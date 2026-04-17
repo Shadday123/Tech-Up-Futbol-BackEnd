@@ -136,7 +136,7 @@ public class BracketServiceImpl implements BracketService {
 
         if (allFinished && currentPhase.getPhase() != PhaseEnum.FINAL) {
             List<TeamEntity> winners = currentPhase.getMatches().stream()
-                    .map(m -> m.getWinner())
+                    .map(MatchEntity::getWinner)
                     .filter(Objects::nonNull)
                     .toList();
 
