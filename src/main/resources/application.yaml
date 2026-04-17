@@ -13,6 +13,10 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  sql:
+    init:
+      mode: ${SQL_INIT_MODE:never}
+      platform: postgresql
   jpa:
     hibernate:
       ddl-auto: update
