@@ -42,21 +42,18 @@ public class TeamServiceImpl implements TeamService {
         team.setId(IdGenerator.generateId());
         log.info("[{}] Creando equipo: {} | ID: {}", ts, team.getTeamName(), team.getId());
 
-        if (team.getPlayers() == null) {
-            team.setPlayers(new ArrayList<>());
-        }
-
-        TeamValidator.validateTeamName(team.getTeamName(),getAllTeams());
+        TeamValidator.validateTeamName(team.getTeamName(), getAllTeams());
         TeamValidator.validateCaptain(team);
-        TeamValidator.validateCreationPlayers(team);
+
+        // No insertar jugadores al crear — se agregan después via invitePlayer
+        team.setPlayers(new ArrayList<>());
 
         TeamEntity entity = TeamPersistenceMapper.toEntity(team);
         TeamEntity saved = teamRepository.save(entity);
 
-        log.info("Equipo creado — ID: {} | Capitán: {} | Jugadores: {}",
+        log.info("Equipo creado — ID: {} | Capitán: {}",
                 saved.getId(),
-                team.getCaptain() != null ? team.getCaptain().getFullname() : "N/A",
-                team.getPlayers().size());
+                team.getCaptain() != null ? team.getCaptain().getFullname() : "N/A");
 
         return TeamPersistenceMapper.toDomain(saved);
     }
@@ -76,10 +73,11 @@ public class TeamServiceImpl implements TeamService {
         }
 
         TeamEntity entity = teamRepository.findById(teamId).orElseThrow();
+        playerRepository.findById(player.getId()).ifPresent(p -> entity.getPlayers().add(p));
         teamRepository.save(entity);
 
         log.info("Jugador '{}' agregado al equipo '{}' — Total jugadores: {}",
-                player.getFullname(), team.getTeamName(), team.getPlayers().size());
+                player.getFullname(), team.getTeamName(), entity.getPlayers().size());
     }
 
     @Override
