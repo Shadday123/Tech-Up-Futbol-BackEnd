@@ -10,7 +10,9 @@ import com.techcup.techcup_futbol.persistence.entity.PlayerEntity;
 import com.techcup.techcup_futbol.persistence.entity.StudentPlayerEntity;
 import com.techcup.techcup_futbol.persistence.mapper.PlayerPersistenceMapper;
 import com.techcup.techcup_futbol.persistence.repository.PlayerRepository;
+import com.techcup.techcup_futbol.persistence.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,6 +31,12 @@ class PlayerServiceImplTest {
 
     @Mock
     private PlayerRepository playerRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Mock
     private PlayerValidator playerValidator;
