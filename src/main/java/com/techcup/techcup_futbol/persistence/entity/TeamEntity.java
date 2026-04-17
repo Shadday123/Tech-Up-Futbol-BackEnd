@@ -35,7 +35,10 @@ public class TeamEntity  {
     @JoinTable(
             name = "team_players",
             joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "players_id")
+            inverseJoinColumns = {
+                    @JoinColumn(name = "players_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "player_id", referencedColumnName = "id")
+            }
     )
     private List<PlayerEntity> players;
 }
