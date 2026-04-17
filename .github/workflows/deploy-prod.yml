@@ -47,4 +47,8 @@ jobs:
             --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
+          az webapp config appsettings set \
+            --name techcup-prod \
+            --resource-group techcup-rg \
+            --settings SQL_INIT_MODE=always
           az webapp restart --name techcup-prod --resource-group techcup-rg

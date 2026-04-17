@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS team_players ALTER COLUMN players_id DROP NOT NULL;
