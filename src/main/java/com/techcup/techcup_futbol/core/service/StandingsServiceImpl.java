@@ -85,6 +85,18 @@ public class StandingsServiceImpl implements StandingsService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Standings> findByPlayerId(String playerId) {
+        return standingsRepository.findByTeamPlayersId(playerId).stream()
+                .map(StandingsPersistenceMapper::toDomain)
+                .sorted(Comparator
+                        .comparingInt(Standings::getPoints).reversed()
+                        .thenComparingInt(Standings::getGoalsDifference).reversed()
+                        .thenComparingInt(Standings::getGoalsFor).reversed())
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Standings> findByTournamentId(String tournamentId) {
         tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new TournamentException("id",

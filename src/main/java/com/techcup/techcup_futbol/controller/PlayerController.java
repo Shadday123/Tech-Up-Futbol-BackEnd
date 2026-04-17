@@ -2,9 +2,11 @@ package com.techcup.techcup_futbol.controller;
 
 import com.techcup.techcup_futbol.controller.dto.PlayerDTO;
 import com.techcup.techcup_futbol.controller.dto.PlayerResponse;
+import com.techcup.techcup_futbol.controller.dto.PlayerStatsResponse;
 import com.techcup.techcup_futbol.controller.mapper.PlayerMapper;
 import com.techcup.techcup_futbol.core.model.Player;
 import com.techcup.techcup_futbol.core.service.PlayerService;
+import com.techcup.techcup_futbol.core.service.StandingsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -24,9 +26,11 @@ public class PlayerController {
     private static final Logger log = LoggerFactory.getLogger(PlayerController.class);
 
     private final PlayerService playerService;
+    private final StandingsService standingsService;
 
-    public PlayerController(PlayerService playerService) {
+    public PlayerController(PlayerService playerService, StandingsService standingsService) {
         this.playerService = playerService;
+        this.standingsService = standingsService;
     }
 
 
@@ -81,6 +85,16 @@ public class PlayerController {
         return playerService.buscarPorId(id)
                 .map(p -> ResponseEntity.ok(PlayerMapper.mapToResponse(p)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<PlayerStatsResponse> obtenerStats(@PathVariable String id) {
+        log.info("GET /api/players/{}/stats", id);
+        int matchesPlayed = standingsService.findByPlayerId(id).stream()
+                .mapToInt(s -> s.getMatchesPlayed())
+                .findFirst()
+                .orElse(0);
+        return ResponseEntity.ok(new PlayerStatsResponse(matchesPlayed, 0, 0, 0));
     }
 
     @DeleteMapping("/{id}")

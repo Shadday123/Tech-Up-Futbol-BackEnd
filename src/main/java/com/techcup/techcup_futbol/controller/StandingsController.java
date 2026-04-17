@@ -43,6 +43,19 @@ public class StandingsController {
         return ResponseEntity.ok(StandingsMapper.toResponse(tournamentId, tournament.getName(), sorted));
     }
 
+    @GetMapping("/player/{playerId}")
+    public ResponseEntity<StandingsResponse> findByPlayer(
+            @PathVariable String playerId) {
+        log.info("GET /api/standings/player/{}", playerId);
+        List<Standings> standings = standingsService.findByPlayerId(playerId);
+        if (standings.isEmpty()) {
+            return ResponseEntity.ok(StandingsMapper.toResponse("", "Sin torneo activo", standings));
+        }
+        String tournamentId = standings.get(0).getTournamentId();
+        Tournament tournament = tournamentService.findById(tournamentId);
+        return ResponseEntity.ok(StandingsMapper.toResponse(tournamentId, tournament.getName(), standings));
+    }
+
     @PostMapping("/tournament/{tournamentId}/register-team/{teamId}")
     public ResponseEntity<String> registerTeam(
             @PathVariable String tournamentId,

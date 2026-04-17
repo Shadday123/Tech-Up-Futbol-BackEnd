@@ -10,6 +10,8 @@ public interface StandingsService {
 
     List<Standings> findByTournamentId(String tournamentId);
 
+    List<Standings> findByPlayerId(String playerId);
+
     void updateFromMatch(Match match);
 
     void registerTeamInTournament(String tournamentId, Team team);
